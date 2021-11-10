@@ -14,4 +14,10 @@ public interface SeriesRepository extends BaseRepository<SeriesEntity> {
      */
     @Query(name = "findSeriesByName")
     SeriesEntity findSeriesByName(@Param("name") String name);
+
+    /**
+     * Возвращает обхее количество серий наборов.
+     */
+    @Query(name = "getSeriesCount")
+    Long getCount();
 }

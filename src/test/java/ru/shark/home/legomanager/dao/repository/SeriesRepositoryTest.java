@@ -29,4 +29,13 @@ public class SeriesRepositoryTest extends DaoServiceTest {
         // TEN
         Assertions.assertTrue(new ReflectionEquals(entity).matches(foundEntity));
     }
+
+    @Test
+    public void getCount() {
+        // WHEN
+        Long count = seriesRepository.getCount();
+
+        // THEN
+        Assertions.assertEquals(1L, count);
+    }
 }

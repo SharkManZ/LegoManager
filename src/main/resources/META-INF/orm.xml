@@ -6,4 +6,7 @@
     <named-query name="findSeriesByName">
         <query>select s from SeriesEntity s where lower(s.name) = lower(:name)</query>
     </named-query>
+    <named-query name="getSeriesCount">
+        <query>select count(s.id) from SeriesEntity s</query>
+    </named-query>
 </entity-mappings>
