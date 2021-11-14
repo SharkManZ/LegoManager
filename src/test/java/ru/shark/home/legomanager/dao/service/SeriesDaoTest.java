@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
+import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.text.MessageFormat;
 import java.util.Comparator;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,25 +28,39 @@ public class SeriesDaoTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadSeries("SeriesDaoTest/series.json");
+        loadSets("SeriesDaoTest/sets.json");
     }
 
     @Test
     public void getWithPagination() {
         // GIVEN
-        Ordering<SeriesEntity> ordering = new Ordering<SeriesEntity>() {
+        Ordering<SeriesFullDto> ordering = new Ordering<SeriesFullDto>() {
             @Override
-            public int compare(@Nullable SeriesEntity seriesEntity, @Nullable SeriesEntity t1) {
-                return Comparator.comparing(SeriesEntity::getName)
+            public int compare(@Nullable SeriesFullDto seriesEntity, @Nullable SeriesFullDto t1) {
+                return Comparator.comparing(SeriesFullDto::getName)
                         .compare(seriesEntity, t1);
             }
         };
 
         // WHEN
-        PageableList<SeriesEntity> list = seriesDao.getWithPagination(new RequestCriteria(0, 10));
+        PageableList<SeriesFullDto> list = seriesDao.getWithPagination(new RequestCriteria(0, 10));
 
         // THEN
-        checkPagingList(list, 3, 3L);
+        checkPagingDtoList(list, 4, 4L);
         assertTrue(ordering.isOrdered(list.getData()));
+        boolean setsCountChecked = false;
+        for (SeriesFullDto item : list.getData()) {
+            if (item.getName().equalsIgnoreCase("technic")) {
+                Assertions.assertEquals(2, item.getSetsCount());
+                setsCountChecked = true;
+            }
+            Assertions.assertEquals(item.getImgName(), item.getName()
+                    .toLowerCase()
+                    .replaceAll(" ", "_")
+                    .replaceAll("-", "_"));
+        }
+
+        Assertions.assertTrue(setsCountChecked);
     }
 
     @Test
@@ -54,10 +70,10 @@ public class SeriesDaoTest extends DaoServiceTest {
         requestCriteria.setSearch("Technic");
 
         // WHEN
-        PageableList<SeriesEntity> list = seriesDao.getWithPagination(requestCriteria);
+        PageableList<SeriesFullDto> list = seriesDao.getWithPagination(requestCriteria);
 
         // THEN
-        checkPagingList(list, 1, 1L);
+        checkPagingDtoList(list, 1, 1L);
     }
 
     @Test

@@ -8,6 +8,7 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.SeriesDto;
+import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.datamanager.SeriesDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
@@ -37,7 +38,7 @@ public class SeriesServiceTest extends BaseServiceTest {
     public void getList() {
         // GIVEN
         PageRequest request = new PageRequest(0, 10);
-        PageableList<SeriesDto> pageList = new PageableList<>(Arrays.asList(new SeriesDto()), 1L);
+        PageableList<SeriesFullDto> pageList = new PageableList<>(Arrays.asList(new SeriesFullDto()), 1L);
         when(seriesDataManager.getWithPagination(any(RequestCriteria.class))).thenReturn(pageList);
 
         // WHEN

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.shark.home.common.dao.common.PageableList;
+import ru.shark.home.common.dao.dto.Dto;
 import ru.shark.home.common.dao.entity.BaseEntity;
 
 import javax.persistence.EntityManager;
@@ -35,8 +36,19 @@ public class DaoServiceTest {
         Assertions.assertEquals(list.getTotalCount(), total);
     }
 
+    protected <T extends Dto> void checkPagingDtoList(PageableList<T> list, Integer count, Long total) {
+        Assertions.assertNotNull(list);
+        Assertions.assertNotNull(list.getData());
+        Assertions.assertEquals(count, list.getData().size());
+        Assertions.assertEquals(list.getTotalCount(), total);
+    }
+
     protected void loadSeries(String... files) {
         testDataLoader.loadSeries(files);
+    }
+
+    protected void loadSets(String... files) {
+        testDataLoader.loadSets(files);
     }
 
     protected <E extends BaseEntity> boolean isDeleted(E entity) {

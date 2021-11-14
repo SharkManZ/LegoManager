@@ -8,10 +8,15 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.entity.BaseEntity;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.common.dao.util.SpecificationUtils;
+import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.dao.repository.SeriesRepository;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
 
@@ -25,9 +30,30 @@ public class SeriesDao extends BaseDao<SeriesEntity> {
         super(SeriesEntity.class);
     }
 
-    public PageableList<SeriesEntity> getWithPagination(RequestCriteria request) {
+    public PageableList<SeriesFullDto> getWithPagination(RequestCriteria request) {
         Specification<BaseEntity> searchSpec = SpecificationUtils.searchSpecification(request.getSearch(), NAME_FIELD);
-        return seriesRepository.getWithPagination(request, searchSpec, NAME_FIELD);
+        return getListWithAdditionalFields(seriesRepository.getWithPagination(request, searchSpec, NAME_FIELD));
+    }
+
+    private PageableList<SeriesFullDto> getListWithAdditionalFields(PageableList<SeriesEntity> list) {
+        List<Map<String, Object>> counts = seriesRepository.getSeriesSetsCountByIds(list.getData()
+                .stream()
+                .map(SeriesEntity::getId).collect(Collectors.toList()));
+        List<SeriesFullDto> result = new ArrayList<>();
+        list.getData().forEach(entity -> {
+            SeriesFullDto dto = new SeriesFullDto();
+            dto.setId(entity.getId());
+            dto.setName(entity.getName());
+            Map<String, Object> map = counts.stream()
+                    .filter(mapItem -> mapItem.get("id").equals(entity.getId()))
+                    .findFirst().orElse(null);
+            dto.setSetsCount((Long) map.get("cnt"));
+            dto.setImgName(entity.getName().toLowerCase()
+                    .replaceAll(" ", "_")
+                    .replaceAll("-", "_"));
+            result.add(dto);
+        });
+        return new PageableList<>(result, list.getTotalCount());
     }
 
     @Override

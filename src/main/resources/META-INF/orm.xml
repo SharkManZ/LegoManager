@@ -3,10 +3,21 @@
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
         http://java.sun.com/xml/ns/persistence/orm_2_0.xsd ">
+    <!-- Серии наборов-->
     <named-query name="findSeriesByName">
         <query>select s from SeriesEntity s where lower(s.name) = lower(:name)</query>
     </named-query>
     <named-query name="getSeriesCount">
         <query>select count(s.id) from SeriesEntity s</query>
+    </named-query>
+    <named-query name="getSeriesSetsCountByIds">
+        <query>select new Map(s.id as id, (select count(1) from SetEntity se where se.series.id = s.id) as cnt)
+            from SeriesEntity s where s.id in (:ids)
+        </query>
+    </named-query>
+
+    <!-- Наборы-->
+    <named-query name="findSetByNumber">
+        <query>select s from SetEntity s where lower(s.number) = lower(:number)</query>
     </named-query>
 </entity-mappings>
