@@ -12,13 +12,14 @@ import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
+import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.Comparator;
-import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
+import static ru.shark.home.legomanager.common.ErrorConstants.SERIES_DELETE_WITH_SETS;
 
 public class SeriesDaoTest extends DaoServiceTest {
 
@@ -123,13 +124,25 @@ public class SeriesDaoTest extends DaoServiceTest {
     @Test
     public void deleteById() {
         // GIVEN
-        Long id = entityFinder.findSeriesId("Technic");
+        Long id = entityFinder.findSeriesId("Creator 3-in-1");
 
         // WHEN
         seriesDao.deleteById(id);
 
         // THEN
         assertTrue(isDeleted(id, SeriesEntity.class));
+    }
+
+    @Test
+    public void deleteByIdWithSets() {
+        // GIVEN
+        Long id = entityFinder.findSeriesId("Technic");
+
+        // WHEN
+        ValidationException validationException = assertThrows(ValidationException.class, () -> seriesDao.deleteById(id));
+
+        // THEN
+        Assertions.assertEquals(SERIES_DELETE_WITH_SETS, validationException.getMessage());
     }
 
     private SeriesEntity prepareEntity() {

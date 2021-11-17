@@ -11,7 +11,9 @@ import ru.shark.home.common.dao.util.SpecificationUtils;
 import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.dao.repository.SeriesRepository;
+import ru.shark.home.legomanager.dao.repository.SetRepository;
 
+import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.legomanager.common.ErrorConstants.SERIES_DELETE_WITH_SETS;
 
 @Component
 public class SeriesDao extends BaseDao<SeriesEntity> {
     private static final String NAME_FIELD = "name";
 
     private SeriesRepository seriesRepository;
+    private SetRepository setRepository;
 
     protected SeriesDao() {
         super(SeriesEntity.class);
@@ -79,6 +83,9 @@ public class SeriesDao extends BaseDao<SeriesEntity> {
             throw new IllegalArgumentException(MessageFormat.format(ENTITY_NOT_FOUND_BY_ID,
                     SeriesEntity.getDescription(), id));
         }
+        if (setRepository.getSetCountBySeries(id) > 0) {
+            throw new ValidationException(SERIES_DELETE_WITH_SETS);
+        }
 
         super.deleteById(id);
     }
@@ -86,5 +93,10 @@ public class SeriesDao extends BaseDao<SeriesEntity> {
     @Autowired
     public void setSeriesRepository(SeriesRepository seriesRepository) {
         this.seriesRepository = seriesRepository;
+    }
+
+    @Autowired
+    public void setSetRepository(SetRepository setRepository) {
+        this.setRepository = setRepository;
     }
 }

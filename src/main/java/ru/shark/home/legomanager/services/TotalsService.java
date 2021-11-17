@@ -30,7 +30,7 @@ public class TotalsService {
     private TotalsDto getTotalsData() {
         TotalsDto dto = new TotalsDto();
         dto.setSeries(totalsDao.getSeriesTotal());
-        dto.setSets(new TotalDto(0L, 0L));
+        dto.setSets(totalsDao.getSetsTotal());
         dto.setDiffParts(new TotalDto(0L, 0L));
         dto.setParts(new TotalDto(0L, 0L));
         return dto;

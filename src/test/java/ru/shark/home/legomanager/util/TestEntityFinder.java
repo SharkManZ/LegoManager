@@ -24,15 +24,15 @@ public class TestEntityFinder {
                 .getSingleResult();
     }
 
-    public SetEntity findSet(Integer number) {
-        return (SetEntity) em.createQuery("select s from SetEntity s where s.number = :number")
-                .setParameter("number", number)
+    public SetEntity findSet(String number) {
+        return (SetEntity) em.createQuery("select s from SetEntity s where lower(s.number) = :number")
+                .setParameter("number", number.toLowerCase())
                 .getSingleResult();
     }
 
-    public Long findSetId(Integer number) {
-        return (Long) em.createQuery("select s.id from SetEntity s where s.number = :number")
-                .setParameter("number", number)
+    public Long findSetId(String number) {
+        return (Long) em.createQuery("select s.id from SetEntity s where lower(s.number) = :number")
+                .setParameter("number", number.toLowerCase())
                 .getSingleResult();
     }
 }

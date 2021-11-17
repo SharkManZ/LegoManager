@@ -7,6 +7,7 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
+import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.dao.dto.SetFullDto;
 import ru.shark.home.legomanager.datamanager.SetDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
@@ -44,5 +45,25 @@ public class SetServiceTest extends BaseServiceTest {
         // THEN
         checkPagingResponse(response);
         verify(setDataManager, times(1)).getWithPagination(any(RequestCriteria.class));
+    }
+
+    @Test
+    public void save() {
+        // WHEN
+        BaseResponse response = service.save(new SetDto());
+
+        // THEN
+        checkResponse(response);
+        verify(setDataManager, times(1)).save(any(SetDto.class));
+    }
+
+    @Test
+    public void delete() {
+        // WHEN
+        BaseResponse response = service.delete(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(setDataManager, times(1)).deleteById(eq(1L));
     }
 }

@@ -26,4 +26,25 @@ public class SetRepositoryTest extends DaoServiceTest {
         Assertions.assertNotNull(entity);
         Assertions.assertEquals(entity.getNumber(), "42082");
     }
+
+    @Test
+    public void getSetCountBySeries() {
+        // GIVEN
+        Long seriesId = entityFinder.findSeriesId("Technic");
+
+        // WHEN
+        Long count = setRepository.getSetCountBySeries(seriesId);
+
+        // THEN
+        Assertions.assertEquals(2L, count);
+    }
+
+    @Test
+    public void getCount() {
+        // WHEN
+        Long count = setRepository.getCount();
+
+        // THEN
+        Assertions.assertEquals(3L, count);
+    }
 }

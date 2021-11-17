@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.shark.home.common.services.dto.PageRequest;
+import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.services.SetService;
 import ru.shark.home.legomanager.util.BaseEndpointTest;
 
@@ -39,5 +40,25 @@ public class SetEndpointTest extends BaseEndpointTest {
         // THEN
         checkResponse(response);
         verify(service, times(1)).getList(any(PageRequest.class));
+    }
+
+    @Test
+    public void save() {
+        // WHEN
+        Response response = setEndpoint.save(new SetDto());
+
+        // WHEN
+        checkResponse(response);
+        verify(service, times(1)).save(any(SetDto.class));
+    }
+
+    @Test
+    public void delete() {
+        // WHEN
+        Response response = setEndpoint.delete(1L);
+
+        // WHEN
+        checkResponse(response);
+        verify(service, times(1)).delete(eq(1L));
     }
 }

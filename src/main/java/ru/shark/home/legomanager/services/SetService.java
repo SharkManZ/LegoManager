@@ -29,6 +29,33 @@ public class SetService extends BaseLogicService {
         return response;
     }
 
+    public BaseResponse save(SetDto dto) {
+        BaseResponse response;
+        try {
+            response = new BaseResponse();
+            response.setBody(setDataManager.save(dto));
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при сохранении набора: " + e.getMessage());
+        }
+
+        return response;
+    }
+
+    public BaseResponse delete(Long id) {
+        BaseResponse response;
+
+        try {
+            response = new BaseResponse();
+            setDataManager.deleteById(id);
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при удалении набора: " + e.getMessage());
+        }
+
+        return response;
+    }
+
     @Autowired
     public void setSetDataManager(SetDataManager setDataManager) {
         this.setDataManager = setDataManager;

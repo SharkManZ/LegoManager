@@ -44,7 +44,7 @@ public class SeriesRepositoryTest extends DaoServiceTest {
         Long count = seriesRepository.getCount();
 
         // THEN
-        Assertions.assertEquals(1L, count);
+        Assertions.assertEquals(2L, count);
     }
 
     @Test

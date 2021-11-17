@@ -20,4 +20,10 @@
     <named-query name="findSetByNumber">
         <query>select s from SetEntity s where lower(s.number) = lower(:number)</query>
     </named-query>
+    <named-query name="getSetCountBySeries">
+        <query>select count(1) from SetEntity s where s.series.id = :seriesId</query>
+    </named-query>
+    <named-query name="getSetsCount">
+        <query>select count(s.id) from SetEntity s</query>
+    </named-query>
 </entity-mappings>

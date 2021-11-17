@@ -14,6 +14,7 @@ public class TotalsDaoTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadSeries("TotalsDaoTest/series.json");
+        loadSets("TotalsDaoTest/sets.json");
     }
 
     @Test
@@ -25,5 +26,16 @@ public class TotalsDaoTest extends DaoServiceTest {
         Assertions.assertNotNull(seriesTotal);
         Assertions.assertEquals(3L, seriesTotal.getTotal());
         Assertions.assertEquals(0L, seriesTotal.getInStock());
+    }
+
+    @Test
+    public void getSetsTotal() {
+        // WHEN
+        TotalDto setsTotal = totalsDao.getSetsTotal();
+
+        // THEN
+        Assertions.assertNotNull(setsTotal);
+        Assertions.assertEquals(3L, setsTotal.getTotal());
+        Assertions.assertEquals(0L, setsTotal.getInStock());
     }
 }

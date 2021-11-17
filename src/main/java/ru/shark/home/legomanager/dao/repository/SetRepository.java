@@ -14,4 +14,19 @@ public interface SetRepository extends BaseRepository<SetEntity> {
      */
     @Query(name = "findSetByNumber")
     SetEntity findSetByNumber(@Param("number") String number);
+
+    /**
+     * Возвращает количество наборов по идентификатору серии
+     *
+     * @param seriesId идентификатор серии
+     * @return количество наборов
+     */
+    @Query(name = "getSetCountBySeries")
+    Long getSetCountBySeries(@Param("seriesId") Long seriesId);
+
+    /**
+     * Возвращает обхее количество серий наборов.
+     */
+    @Query(name = "getSetsCount")
+    Long getCount();
 }
