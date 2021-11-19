@@ -14,6 +14,7 @@ import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -97,6 +98,25 @@ public class SeriesDataManagerTest extends DaoServiceTest {
 
         // THEN
         assertTrue(isDeleted(id, SeriesEntity.class));
+    }
+
+    @Test
+    public void getAllSeries() {
+        // GIVEN
+        Ordering<SeriesDto> ordering = new Ordering<SeriesDto>() {
+            @Override
+            public int compare(@Nullable SeriesDto seriesDto, @Nullable SeriesDto t1) {
+                return Comparator.comparing(SeriesDto::getName)
+                        .compare(seriesDto, t1);
+            }
+        };
+
+        // WHEN
+        List<SeriesDto> allSeries = seriesDataManager.getAllSeries();
+
+        // THEN
+        Assertions.assertEquals(4L, allSeries.size());
+        Assertions.assertTrue(ordering.isOrdered(allSeries));
     }
 
     private SeriesDto prepareDto(Long id, String name) {

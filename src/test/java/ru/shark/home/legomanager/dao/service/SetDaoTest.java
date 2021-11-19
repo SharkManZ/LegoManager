@@ -122,6 +122,21 @@ public class SetDaoTest extends DaoServiceTest {
     }
 
     @Test
+    public void saveWithUpdateAndExists() {
+        // GIVEN
+        SetEntity entity = prepareEntity();
+        entity.setId(entityFinder.findSetId("42082"));
+        entity.setNumber("42100");
+
+        // WHEN
+        ValidationException validationException = assertThrows(ValidationException.class, () -> setDao.save(entity));
+
+        // THEN
+        Assertions.assertEquals(MessageFormat.format(ENTITY_ALREADY_EXISTS, SetEntity.getDescription(),
+                entity.getNumber()), validationException.getMessage());
+    }
+
+    @Test
     public void saveWithValidation() {
         // GIVEN
         SetEntity entityNoName = prepareEntity();

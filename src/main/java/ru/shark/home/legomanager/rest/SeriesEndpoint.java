@@ -24,6 +24,12 @@ public class SeriesEndpoint {
     }
 
     @POST
+    @Path("/list/all")
+    public Response getAllList() {
+        return Response.ok(seriesService.getAllList()).build();
+    }
+
+    @POST
     @Path("/save")
     public Response save(SeriesDto dto) {
         return Response.ok(seriesService.save(dto)).build();

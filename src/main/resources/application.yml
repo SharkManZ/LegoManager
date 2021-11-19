@@ -9,3 +9,5 @@ spring:
     driver-class-name: org.postgresql.Driver
   jackson:
     default-property-inclusion: non_null
+  profiles:
+    active: @spring.profiles.active@

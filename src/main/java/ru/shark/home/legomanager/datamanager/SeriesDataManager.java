@@ -9,6 +9,8 @@ import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.dao.service.SeriesDao;
 
+import java.util.List;
+
 @Component
 public class SeriesDataManager extends BaseDataManager<SeriesEntity, SeriesDto> {
     protected SeriesDataManager(SeriesDao dao) {
@@ -19,5 +21,10 @@ public class SeriesDataManager extends BaseDataManager<SeriesEntity, SeriesDto> 
         SeriesDao dao = (SeriesDao) getDao();
         return dao.getWithPagination(request);
 
+    }
+
+    public List<SeriesDto> getAllSeries() {
+        SeriesDao dao = (SeriesDao) getDao();
+        return getConverterUtil().entityListToDtoList(dao.getAllSeries(), SeriesDto.class);
     }
 }

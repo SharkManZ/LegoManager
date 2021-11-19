@@ -60,6 +60,10 @@ public class SeriesDao extends BaseDao<SeriesEntity> {
         return new PageableList<>(result, list.getTotalCount());
     }
 
+    public List<SeriesEntity> getAllSeries() {
+        return seriesRepository.getAllSeries();
+    }
+
     @Override
     public SeriesEntity save(SeriesEntity entity) {
         if (entity == null) {

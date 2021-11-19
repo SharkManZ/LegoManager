@@ -12,6 +12,7 @@ import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.datamanager.SeriesDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -47,6 +48,19 @@ public class SeriesServiceTest extends BaseServiceTest {
         // THEN
         checkPagingResponse(response);
         verify(seriesDataManager, times(1)).getWithPagination(any(RequestCriteria.class));
+    }
+
+    @Test
+    public void getAllList() {
+        // GIVEN
+        when(seriesDataManager.getAllSeries()).thenReturn(new ArrayList<>());
+
+        // WHEN
+        BaseResponse allList = seriesService.getAllList();
+
+        // THEN
+        checkResponseWithBody(allList);
+        verify(seriesDataManager, times(1)).getAllSeries();
     }
 
     @Test

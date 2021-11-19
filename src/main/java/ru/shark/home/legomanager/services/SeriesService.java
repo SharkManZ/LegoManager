@@ -29,6 +29,20 @@ public class SeriesService extends BaseLogicService {
         return response;
     }
 
+    public BaseResponse getAllList() {
+        BaseResponse response;
+        try {
+            response = new BaseResponse();
+            response.setBody(seriesDataManager.getAllSeries());
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при получении списка всех серий: " +
+                    e.getMessage());
+        }
+
+        return response;
+    }
+
     public BaseResponse save(SeriesDto dto) {
         BaseResponse response;
 

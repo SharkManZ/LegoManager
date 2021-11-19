@@ -1,17 +1,17 @@
 package ru.shark.home.legomanager.dao.repository;
 
+import com.google.common.collect.Ordering;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -65,5 +65,24 @@ public class SeriesRepositoryTest extends DaoServiceTest {
         list.forEach(item -> {
             Assertions.assertEquals(counts.get(item.get("id")), (Long) item.get("cnt"));
         });
+    }
+
+    @Test
+    public void getAllSeries() {
+        // GIVEN
+        Ordering<SeriesEntity> ordering = new Ordering<SeriesEntity>() {
+            @Override
+            public int compare(@Nullable SeriesEntity seriesEntity, @Nullable SeriesEntity t1) {
+                return Comparator.comparing(SeriesEntity::getName)
+                        .compare(seriesEntity, t1);
+            }
+        };
+
+        // WHEN
+        List<SeriesEntity> allSeries = seriesRepository.getAllSeries();
+
+        // THEN
+        Assertions.assertEquals(2L, allSeries.size());
+        Assertions.assertTrue(ordering.isOrdered(allSeries));
     }
 }

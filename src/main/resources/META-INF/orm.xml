@@ -15,6 +15,9 @@
             from SeriesEntity s where s.id in (:ids)
         </query>
     </named-query>
+    <named-query name="getAllSeries">
+        <query>select s from SeriesEntity s order by s.name</query>
+    </named-query>
 
     <!-- Наборы-->
     <named-query name="findSetByNumber">

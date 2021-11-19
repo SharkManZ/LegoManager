@@ -52,6 +52,7 @@ public class SetDao extends BaseDao<SetEntity> {
             dto.setYear(entity.getYear());
             dto.setSeries(new SeriesDto());
             dto.getSeries().setId(entity.getSeries().getId());
+            dto.getSeries().setName(entity.getSeries().getName());
 
             dtoList.add(dto);
         }
@@ -65,7 +66,7 @@ public class SetDao extends BaseDao<SetEntity> {
         }
         validateFields(entity);
         SetEntity setByNumber = setRepository.findSetByNumber(entity.getNumber());
-        if (setByNumber != null && (entity.getId() == null || entity.getId().equals(setByNumber.getId()))) {
+        if (setByNumber != null && (entity.getId() == null || !entity.getId().equals(setByNumber.getId()))) {
             throw new ValidationException(MessageFormat.format(ENTITY_ALREADY_EXISTS, SetEntity.getDescription(),
                     entity.getNumber()));
         }

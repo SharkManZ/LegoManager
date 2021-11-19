@@ -15,6 +15,7 @@ import ru.shark.home.legomanager.util.DaoServiceTest;
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -143,6 +144,25 @@ public class SeriesDaoTest extends DaoServiceTest {
 
         // THEN
         Assertions.assertEquals(SERIES_DELETE_WITH_SETS, validationException.getMessage());
+    }
+
+    @Test
+    public void getAllSeries() {
+        // GIVEN
+        Ordering<SeriesEntity> ordering = new Ordering<SeriesEntity>() {
+            @Override
+            public int compare(@Nullable SeriesEntity seriesEntity, @Nullable SeriesEntity t1) {
+                return Comparator.comparing(SeriesEntity::getName)
+                        .compare(seriesEntity, t1);
+            }
+        };
+
+        // WHEN
+        List<SeriesEntity> allSeries = seriesDao.getAllSeries();
+
+        // THEN
+        Assertions.assertEquals(4L, allSeries.size());
+        Assertions.assertTrue(ordering.isOrdered(allSeries));
     }
 
     private SeriesEntity prepareEntity() {

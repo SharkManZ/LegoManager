@@ -32,4 +32,10 @@ public interface SeriesRepository extends BaseRepository<SeriesEntity> {
      */
     @Query(name = "getSeriesSetsCountByIds")
     List<Map<String, Object>> getSeriesSetsCountByIds(@Param("ids") List<Long> ids);
+
+    /**
+     * Возвращает все серии с сортировкой по названию.
+     */
+    @Query(name = "getAllSeries")
+    List<SeriesEntity> getAllSeries();
 }

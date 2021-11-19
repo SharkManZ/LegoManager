@@ -44,6 +44,16 @@ public class SeriesEndpointTest extends BaseEndpointTest {
     }
 
     @Test
+    public void getAllList() {
+        // WHEN
+        Response allList = seriesEndpoint.getAllList();
+
+        // THEN
+        checkResponse(allList);
+        verify(seriesService, times(1)).getAllList();
+    }
+
+    @Test
     public void save() {
         // WHEN
         Response response = seriesEndpoint.save(new SeriesDto());
