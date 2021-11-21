@@ -2,6 +2,7 @@ package ru.shark.home.legomanager.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 
@@ -33,6 +34,18 @@ public class TestEntityFinder {
     public Long findSetId(String number) {
         return (Long) em.createQuery("select s.id from SetEntity s where lower(s.number) = :number")
                 .setParameter("number", number.toLowerCase())
+                .getSingleResult();
+    }
+
+    public ColorEntity findColor(String name) {
+        return (ColorEntity) em.createQuery("select c from ColorEntity c where lower(c.name) = :name")
+                .setParameter("name", name.toLowerCase())
+                .getSingleResult();
+    }
+
+    public Long findColorId(String name) {
+        return (Long) em.createQuery("select c.id from ColorEntity c where lower(c.name) = :name")
+                .setParameter("name", name.toLowerCase())
                 .getSingleResult();
     }
 }

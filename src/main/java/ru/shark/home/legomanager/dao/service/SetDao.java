@@ -36,7 +36,7 @@ public class SetDao extends BaseDao<SetEntity> {
     }
 
     public PageableList<SetFullDto> getWithPagination(RequestCriteria request) {
-        Specification<BaseEntity> searchSpec = SpecificationUtils.searchSpecification(request.getSearch(),
+        Specification<SetEntity> searchSpec = SpecificationUtils.searchSpecification(request.getSearch(),
                 NAME_FIELD, NUMBER_FIELD);
         return getListWithAdditionalFields(setRepository.getWithPagination(request, searchSpec, NUMBER_FIELD));
     }

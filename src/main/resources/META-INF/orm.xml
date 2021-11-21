@@ -29,4 +29,9 @@
     <named-query name="getSetsCount">
         <query>select count(s.id) from SetEntity s</query>
     </named-query>
+
+    <!-- Цвета-->
+    <named-query name="findColorByName">
+        <query>select c from ColorEntity c where lower(c.name) = lower(:name)</query>
+    </named-query>
 </entity-mappings>

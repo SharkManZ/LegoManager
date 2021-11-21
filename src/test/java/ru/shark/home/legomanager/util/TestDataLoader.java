@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
+import ru.shark.home.legomanager.dao.repository.ColorRepository;
 import ru.shark.home.legomanager.dao.repository.SeriesRepository;
 import ru.shark.home.legomanager.dao.repository.SetRepository;
 import ru.shark.home.legomanager.util.dto.SetTestDto;
@@ -25,6 +27,7 @@ import java.util.List;
 public class TestDataLoader {
     private static final ObjectMapper mapper = new JsonMapper();
     private static final List<String> cleanUpLst = Arrays.asList(
+            "LEGO_COLOR",
             "LEGO_SET",
             "LEGO_SERIES"
     );
@@ -37,6 +40,9 @@ public class TestDataLoader {
 
     @Autowired
     private SetRepository setRepository;
+
+    @Autowired
+    private ColorRepository colorRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -81,6 +87,29 @@ public class TestDataLoader {
                     entity.setSeries(new SeriesEntity());
                     entity.getSeries().setId(entityFinder.findSeriesId(dto.getSeries()));
                     setRepository.save(entity);
+                });
+            } catch (URISyntaxException e) {
+                System.out.println("missing file: " + "/json/" + file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Загружает файлы с данными для тестов.
+     *
+     * @param files массив
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void loadColors(String... files) {
+        for (String file : files) {
+            try {
+                File fl = new File(this.getClass().getResource("/testData/" + file).toURI());
+                List<ColorEntity> list = mapper.readValue(fl, new TypeReference<List<ColorEntity>>() {
+                });
+                list.forEach(entity -> {
+                    colorRepository.save(entity);
                 });
             } catch (URISyntaxException e) {
                 System.out.println("missing file: " + "/json/" + file);

@@ -20,7 +20,6 @@ public class SeriesDataManager extends BaseDataManager<SeriesEntity, SeriesDto> 
     public PageableList<SeriesFullDto> getWithPagination(RequestCriteria request) {
         SeriesDao dao = (SeriesDao) getDao();
         return dao.getWithPagination(request);
-
     }
 
     public List<SeriesDto> getAllSeries() {
