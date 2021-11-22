@@ -21,7 +21,7 @@ public class ColorEntity extends BaseEntity {
     @Column(name = "LEGO_NAME", nullable = false)
     private String name;
 
-    @Column(name = "LEGO_HEX_COLOR", length = 7, nullable = false)
+    @Column(name = "LEGO_HEX_COLOR", length = 6, nullable = false)
     private String hexColor;
 
     @Override
