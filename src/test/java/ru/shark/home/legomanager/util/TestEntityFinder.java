@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
+import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 
@@ -45,6 +46,18 @@ public class TestEntityFinder {
 
     public Long findColorId(String name) {
         return (Long) em.createQuery("select c.id from ColorEntity c where lower(c.name) = :name")
+                .setParameter("name", name.toLowerCase())
+                .getSingleResult();
+    }
+
+    public PartCategoryEntity findPartCategory(String name) {
+        return (PartCategoryEntity) em.createQuery("select p from PartCategoryEntity p where lower(p.name) = :name")
+                .setParameter("name", name.toLowerCase())
+                .getSingleResult();
+    }
+
+    public Long findPartCategoryId(String name) {
+        return (Long) em.createQuery("select p.id from PartCategoryEntity p where lower(p.name) = :name")
                 .setParameter("name", name.toLowerCase())
                 .getSingleResult();
     }
