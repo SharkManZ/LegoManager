@@ -39,4 +39,15 @@
     <named-query name="findPartCategoryByName">
         <query>select p from PartCategoryEntity p where lower(p.name) = lower(:name)</query>
     </named-query>
+
+    <!-- Детали-->
+    <named-query name="findPartByNumber">
+        <query>select p from PartEntity p where lower(p.number) = lower(:number)</query>
+    </named-query>
+    <named-query name="getPartCountByCategory">
+        <query>select count(1) from PartEntity p where p.category.id = :categoryId</query>
+    </named-query>
+    <named-query name="getPartsCount">
+        <query>select count(p.id) from PartEntity p</query>
+    </named-query>
 </entity-mappings>

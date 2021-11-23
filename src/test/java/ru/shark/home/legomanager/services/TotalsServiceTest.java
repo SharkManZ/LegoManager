@@ -33,6 +33,7 @@ public class TotalsServiceTest extends BaseServiceTest {
         // GIVEN
         when(totalsDao.getSeriesTotal()).thenReturn(new TotalDto());
         when(totalsDao.getSetsTotal()).thenReturn(new TotalDto());
+        when(totalsDao.getPartsTotal()).thenReturn(new TotalDto());
 
         // WHEN
         BaseResponse response = totalsService.getTotals();
@@ -46,5 +47,6 @@ public class TotalsServiceTest extends BaseServiceTest {
         Assertions.assertNotNull(body.getParts());
         verify(totalsDao, times(1)).getSeriesTotal();
         verify(totalsDao, times(1)).getSetsTotal();
+        verify(totalsDao, times(1)).getPartsTotal();
     }
 }

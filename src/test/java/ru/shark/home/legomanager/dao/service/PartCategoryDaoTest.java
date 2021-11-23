@@ -11,6 +11,7 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
+import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.Comparator;
 
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
+import static ru.shark.home.legomanager.common.ErrorConstants.PART_CATEGORY_DELETE_WITH_SETS;
 
 public class PartCategoryDaoTest extends DaoServiceTest {
 
@@ -27,6 +29,7 @@ public class PartCategoryDaoTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadPartCategories("PartCategoryDaoTest/partCats.json");
+        loadParts("PartCategoryDaoTest/parts.json");
     }
 
     @Test
@@ -145,6 +148,18 @@ public class PartCategoryDaoTest extends DaoServiceTest {
         Assertions.assertNotNull(illegalArgumentException);
         Assertions.assertEquals(MessageFormat.format(ENTITY_NOT_FOUND_BY_ID,
                 PartCategoryEntity.getDescription(), id), illegalArgumentException.getMessage());
+    }
+
+    @Test
+    public void deleteByIdWithParts() {
+        // GIVEN
+        Long id = entityFinder.findPartCategoryId("Brick");
+
+        // WHEN
+        ValidationException validationException = assertThrows(ValidationException.class, () -> partCategoryDao.deleteById(id));
+
+        // THEN
+        Assertions.assertEquals(PART_CATEGORY_DELETE_WITH_SETS, validationException.getMessage());
     }
 
     private PartCategoryEntity prepareEntity() {

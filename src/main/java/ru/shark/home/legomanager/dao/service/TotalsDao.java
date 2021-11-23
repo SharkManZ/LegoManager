@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.dao.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.legomanager.dao.dto.TotalDto;
+import ru.shark.home.legomanager.dao.repository.PartRepository;
 import ru.shark.home.legomanager.dao.repository.SeriesRepository;
 import ru.shark.home.legomanager.dao.repository.SetRepository;
 
@@ -10,6 +11,7 @@ import ru.shark.home.legomanager.dao.repository.SetRepository;
 public class TotalsDao {
     private SeriesRepository seriesRepository;
     private SetRepository setRepository;
+    private PartRepository partRepository;
 
     public TotalDto getSeriesTotal() {
         TotalDto dto = new TotalDto();
@@ -26,6 +28,13 @@ public class TotalsDao {
         return dto;
     }
 
+    public TotalDto getPartsTotal() {
+        TotalDto dto = new TotalDto();
+        dto.setTotal(partRepository.getPartsCount());
+        dto.setInStock(0L);
+        return dto;
+    }
+
     @Autowired
     public void setSeriesRepository(SeriesRepository seriesRepository) {
         this.seriesRepository = seriesRepository;
@@ -34,5 +43,10 @@ public class TotalsDao {
     @Autowired
     public void setSetRepository(SetRepository setRepository) {
         this.setRepository = setRepository;
+    }
+
+    @Autowired
+    public void setPartRepository(PartRepository partRepository) {
+        this.partRepository = partRepository;
     }
 }

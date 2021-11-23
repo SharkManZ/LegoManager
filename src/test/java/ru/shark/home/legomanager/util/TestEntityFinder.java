@@ -2,10 +2,7 @@ package ru.shark.home.legomanager.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.shark.home.legomanager.dao.entity.ColorEntity;
-import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
-import ru.shark.home.legomanager.dao.entity.SeriesEntity;
-import ru.shark.home.legomanager.dao.entity.SetEntity;
+import ru.shark.home.legomanager.dao.entity.*;
 
 import javax.persistence.EntityManager;
 
@@ -59,6 +56,18 @@ public class TestEntityFinder {
     public Long findPartCategoryId(String name) {
         return (Long) em.createQuery("select p.id from PartCategoryEntity p where lower(p.name) = :name")
                 .setParameter("name", name.toLowerCase())
+                .getSingleResult();
+    }
+
+    public PartEntity findPart(String number) {
+        return (PartEntity) em.createQuery("select p from PartEntity p where lower(p.number) = :number")
+                .setParameter("number", number.toLowerCase())
+                .getSingleResult();
+    }
+
+    public Long findPartId(String number) {
+        return (Long) em.createQuery("select p.id from PartEntity p where lower(p.number) = :number")
+                .setParameter("number", number.toLowerCase())
                 .getSingleResult();
     }
 }

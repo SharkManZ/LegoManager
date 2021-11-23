@@ -9,16 +9,20 @@ import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.common.dao.util.SpecificationUtils;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.dao.repository.PartCategoryRepository;
+import ru.shark.home.legomanager.dao.repository.PartRepository;
 
+import javax.validation.ValidationException;
 import java.text.MessageFormat;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.legomanager.common.ErrorConstants.PART_CATEGORY_DELETE_WITH_SETS;
 
 @Component
 public class PartCategoryDao extends BaseDao<PartCategoryEntity> {
     private static String NAME_FIELD = "name";
 
     private PartCategoryRepository partCategoryRepository;
+    private PartRepository partRepository;
 
     public PartCategoryDao() {
         super(PartCategoryEntity.class);
@@ -54,11 +58,20 @@ public class PartCategoryDao extends BaseDao<PartCategoryEntity> {
                     PartCategoryEntity.getDescription(), id));
         }
 
+        if (partRepository.getPartCountByCategory(id) > 0) {
+            throw new ValidationException(PART_CATEGORY_DELETE_WITH_SETS);
+        }
+
         super.deleteById(id);
     }
 
     @Autowired
     public void setPartCategoryRepository(PartCategoryRepository partCategoryRepository) {
         this.partCategoryRepository = partCategoryRepository;
+    }
+
+    @Autowired
+    public void setPartRepository(PartRepository partRepository) {
+        this.partRepository = partRepository;
     }
 }

@@ -1732,8 +1732,8 @@ DESTINATION 0 Arial Unicode MS,8,N</a:FontList>
 <o:ReferenceSymbol Id="o18">
 <a:CreationDate>1636113976</a:CreationDate>
 <a:ModificationDate>1636113976</a:ModificationDate>
-<a:Rect>((839,-15251), (6674,-14001))</a:Rect>
-<a:ListOfPoints>((6274,-14626),(1239,-14626))</a:ListOfPoints>
+<a:Rect>((2074,-15251), (6674,-14001))</a:Rect>
+<a:ListOfPoints>((6274,-14626),(2474,-14626))</a:ListOfPoints>
 <a:CornerStyle>1</a:CornerStyle>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>12615680</a:LineColor>
@@ -1754,8 +1754,8 @@ DESTINATION 0 Arial Unicode MS,8,N</a:FontList>
 <o:ReferenceSymbol Id="o21">
 <a:CreationDate>1637682193</a:CreationDate>
 <a:ModificationDate>1637682193</a:ModificationDate>
-<a:Rect>((-8052,-21600), (-6802,-17150))</a:Rect>
-<a:ListOfPoints>((-7427,-17550),(-7427,-21200))</a:ListOfPoints>
+<a:Rect>((-8055,-21600), (-6805,-17150))</a:Rect>
+<a:ListOfPoints>((-7430,-17550),(-7430,-21200))</a:ListOfPoints>
 <a:CornerStyle>1</a:CornerStyle>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>12615680</a:LineColor>
@@ -1852,7 +1852,7 @@ LABL 0 Arial Unicode MS,8,N</a:FontList>
 <a:CreationDate>1636107586</a:CreationDate>
 <a:ModificationDate>1637682193</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
-<a:Rect>((-16013,-17550), (1239,-11702))</a:Rect>
+<a:Rect>((-17248,-17550), (2474,-11702))</a:Rect>
 <a:LineColor>12615680</a:LineColor>
 <a:FillColor>16570034</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -2208,11 +2208,11 @@ LABL 0 Arial Unicode MS,8,N</a:FontList>
 </o:Column>
 <o:Column Id="o47">
 <a:ObjectID>5FA723A5-96D7-4C1F-B7D8-1CC6508C2C48</a:ObjectID>
-<a:Name>LEGO_CATEGORY_ID</a:Name>
-<a:Code>LEGO_CATEGORY_ID</a:Code>
+<a:Name>LEGO_PART_CATEGORY_ID</a:Name>
+<a:Code>LEGO_PART_CATEGORY_ID</a:Code>
 <a:CreationDate>1637682117</a:CreationDate>
 <a:Creator>Shark</a:Creator>
-<a:ModificationDate>1637682222</a:ModificationDate>
+<a:ModificationDate>1637695245</a:ModificationDate>
 <a:Modifier>Shark</a:Modifier>
 <a:DataType>NUMERIC</a:DataType>
 <a:Column.Mandatory>1</a:Column.Mandatory>

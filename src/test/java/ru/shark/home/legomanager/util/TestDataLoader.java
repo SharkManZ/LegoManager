@@ -7,14 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.shark.home.legomanager.dao.entity.ColorEntity;
-import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
-import ru.shark.home.legomanager.dao.entity.SeriesEntity;
-import ru.shark.home.legomanager.dao.entity.SetEntity;
-import ru.shark.home.legomanager.dao.repository.ColorRepository;
-import ru.shark.home.legomanager.dao.repository.PartCategoryRepository;
-import ru.shark.home.legomanager.dao.repository.SeriesRepository;
-import ru.shark.home.legomanager.dao.repository.SetRepository;
+import ru.shark.home.legomanager.dao.entity.*;
+import ru.shark.home.legomanager.dao.repository.*;
+import ru.shark.home.legomanager.util.dto.PartTestDto;
 import ru.shark.home.legomanager.util.dto.SetTestDto;
 
 import javax.persistence.EntityManager;
@@ -29,6 +24,7 @@ import java.util.List;
 public class TestDataLoader {
     private static final ObjectMapper mapper = new JsonMapper();
     private static final List<String> cleanUpLst = Arrays.asList(
+            "LEGO_PART",
             "LEGO_PART_CATEGORY",
             "LEGO_COLOR",
             "LEGO_SET",
@@ -49,6 +45,9 @@ public class TestDataLoader {
 
     @Autowired
     private PartCategoryRepository partCategoryRepository;
+
+    @Autowired
+    private PartRepository partRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -148,11 +147,45 @@ public class TestDataLoader {
         }
     }
 
+    /**
+     * Загружает файлы с данными для тестов.
+     *
+     * @param files массив
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void loadParts(String... files) {
+        for (String file : files) {
+            try {
+                File fl = new File(this.getClass().getResource("/testData/" + file).toURI());
+                List<PartTestDto> list = mapper.readValue(fl, new TypeReference<List<PartTestDto>>() {
+                });
+                list.forEach(dto -> {
+                    PartEntity entity = mapTestPartToEntity(dto);
+                    entity.setCategory(new PartCategoryEntity());
+                    entity.getCategory().setId(entityFinder.findPartCategoryId(dto.getCategory()));
+                    partRepository.save(entity);
+                });
+            } catch (URISyntaxException e) {
+                System.out.println("missing file: " + "/json/" + file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private SetEntity mapTestSetToEntity(SetTestDto dto) {
         SetEntity entity = new SetEntity();
         entity.setName(dto.getName());
         entity.setNumber(dto.getNumber());
         entity.setYear(dto.getYear());
+
+        return entity;
+    }
+
+    private PartEntity mapTestPartToEntity(PartTestDto dto) {
+        PartEntity entity = new PartEntity();
+        entity.setName(dto.getName());
+        entity.setNumber(dto.getNumber());
 
         return entity;
     }

@@ -25,7 +25,7 @@ public interface SetRepository extends BaseRepository<SetEntity> {
     Long getSetCountBySeries(@Param("seriesId") Long seriesId);
 
     /**
-     * Возвращает обхее количество серий наборов.
+     * Возвращает общее количество серий наборов.
      */
     @Query(name = "getSetsCount")
     Long getCount();
