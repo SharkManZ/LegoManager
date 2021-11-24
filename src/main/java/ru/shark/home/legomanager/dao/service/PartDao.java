@@ -18,8 +18,11 @@ import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.springframework.util.ObjectUtils.isEmpty;
 import static ru.shark.home.common.common.ErrorConstants.*;
 
 @Component
@@ -42,12 +45,19 @@ public class PartDao extends BaseDao<PartEntity> {
 
     private PageableList<PartFullDto> getListWithAdditionalFields(PageableList<PartEntity> list) {
         List<PartFullDto> dtoList = new ArrayList<>();
+        List<Map<String, Long>> partColorsCountByIds = new ArrayList<>();
+        if (!isEmpty(list.getData())) {
+            partColorsCountByIds = partRepository.getPartColorsCountByIds(list.getData().stream().map(entity -> entity.getId()).collect(Collectors.toList()));
+        }
         for (PartEntity entity : list.getData()) {
             PartFullDto dto = new PartFullDto();
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setNumber(entity.getNumber());
-            dto.setColorsCount(0);
+            dto.setColorsCount(partColorsCountByIds.stream()
+                    .filter(item -> item.get("id").equals(dto.getId()))
+                    .findFirst()
+                    .map(item -> item.get("cnt")).orElse(0L).intValue());
             dto.setCategory(new PartCategoryDto());
             dto.getCategory().setId(entity.getCategory().getId());
             dto.getCategory().setName(entity.getCategory().getName());

@@ -17,6 +17,8 @@ import ru.shark.home.legomanager.util.DaoServiceTest;
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,6 +32,7 @@ public class PartDaoTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadPartCategories("PartDaoTest/partCats.json");
+        loadColors("PartDaoTest/colors.json");
         loadParts("PartDaoTest/parts.json");
     }
 
@@ -43,6 +46,10 @@ public class PartDaoTest extends DaoServiceTest {
                         .compare(partDto, t1);
             }
         };
+        Map<Long, Integer> counts = new HashMap<>();
+        counts.put(entityFinder.findPartId("3010"), 2);
+        counts.put(entityFinder.findPartId("3001"), 0);
+
 
         // WHEN
         PageableList<PartFullDto> list = partDao.getWithPagination(new RequestCriteria(0, 10));
@@ -50,6 +57,9 @@ public class PartDaoTest extends DaoServiceTest {
         // THEN
         checkPagingDtoList(list, 2, 2L);
         assertTrue(ordering.isOrdered(list.getData()));
+        list.getData().forEach(item -> {
+            Assertions.assertEquals(counts.get(item.getId()), item.getColorsCount());
+        });
     }
 
     @Test

@@ -1,9 +1,12 @@
 package ru.shark.home.legomanager.util.dto;
 
+import java.util.List;
+
 public class PartTestDto {
     private String name;
     private String number;
     private String category;
+    private List<PartColorTestDto> colors;
 
     public String getName() {
         return name;
@@ -27,5 +30,13 @@ public class PartTestDto {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public List<PartColorTestDto> getColors() {
+        return colors;
+    }
+
+    public void setColors(List<PartColorTestDto> colors) {
+        this.colors = colors;
     }
 }

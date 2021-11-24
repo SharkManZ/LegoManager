@@ -53,4 +53,9 @@
     <named-query name="getPartsCount">
         <query>select count(p.id) from PartEntity p</query>
     </named-query>
+    <named-query name="getPartColorsCountByIds">
+        <query>select new Map(p.id as id, (select count(1) from PartColorEntity pc where pc.part.id = p.id) as cnt)
+            from PartEntity p where p.id in (:ids)
+        </query>
+    </named-query>
 </entity-mappings>

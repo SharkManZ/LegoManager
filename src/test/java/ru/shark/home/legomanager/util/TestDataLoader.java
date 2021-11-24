@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import ru.shark.home.legomanager.dao.entity.*;
 import ru.shark.home.legomanager.dao.repository.*;
+import ru.shark.home.legomanager.util.dto.PartColorTestDto;
 import ru.shark.home.legomanager.util.dto.PartTestDto;
 import ru.shark.home.legomanager.util.dto.SetTestDto;
 
@@ -20,10 +22,13 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Component
 public class TestDataLoader {
     private static final ObjectMapper mapper = new JsonMapper();
     private static final List<String> cleanUpLst = Arrays.asList(
+            "LEGO_PART_COLOR",
             "LEGO_PART",
             "LEGO_PART_CATEGORY",
             "LEGO_COLOR",
@@ -48,6 +53,9 @@ public class TestDataLoader {
 
     @Autowired
     private PartRepository partRepository;
+
+    @Autowired
+    private PartColorRepository partColorRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -163,7 +171,17 @@ public class TestDataLoader {
                     PartEntity entity = mapTestPartToEntity(dto);
                     entity.setCategory(new PartCategoryEntity());
                     entity.getCategory().setId(entityFinder.findPartCategoryId(dto.getCategory()));
-                    partRepository.save(entity);
+                    entity = partRepository.save(entity);
+                    if (!isEmpty(dto.getColors())) {
+                        for (PartColorTestDto color : dto.getColors()) {
+                            PartColorEntity partColorEntity = new PartColorEntity();
+                            partColorEntity.setColor(entityFinder.findColor(color.getColor()));
+                            partColorEntity.setPart(entity);
+                            partColorEntity.setNumber(color.getNumber());
+                            partColorRepository.save(partColorEntity);
+                        }
+                    }
+
                 });
             } catch (URISyntaxException e) {
                 System.out.println("missing file: " + "/json/" + file);
@@ -186,7 +204,6 @@ public class TestDataLoader {
         PartEntity entity = new PartEntity();
         entity.setName(dto.getName());
         entity.setNumber(dto.getNumber());
-
         return entity;
     }
 

@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.shark.home.common.dao.repository.BaseRepository;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
-import ru.shark.home.legomanager.dao.entity.SetEntity;
+
+import java.util.List;
+import java.util.Map;
 
 public interface PartRepository extends BaseRepository<PartEntity> {
     /**
@@ -30,4 +32,10 @@ public interface PartRepository extends BaseRepository<PartEntity> {
      */
     @Query(name = "getPartsCount")
     Long getPartsCount();
+
+    /**
+     * Возвращает количество цветов по переданным видам деталей.
+     */
+    @Query(name = "getPartColorsCountByIds")
+    List<Map<String, Long>> getPartColorsCountByIds(@Param("ids") List<Long> ids);
 }
