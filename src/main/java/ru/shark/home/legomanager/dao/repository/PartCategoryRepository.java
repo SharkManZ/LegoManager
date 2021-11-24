@@ -5,6 +5,8 @@ import org.springframework.data.repository.query.Param;
 import ru.shark.home.common.dao.repository.BaseRepository;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 
+import java.util.List;
+
 public interface PartCategoryRepository extends BaseRepository<PartCategoryEntity> {
     /**
      * Возвращает категорию детали по названию.
@@ -14,4 +16,10 @@ public interface PartCategoryRepository extends BaseRepository<PartCategoryEntit
      */
     @Query(name = "findPartCategoryByName")
     PartCategoryEntity findPartCategoryByName(@Param("name") String name);
+
+    /**
+     * Возвращает все категории деталей с сортировкой по названию.
+     */
+    @Query(name = "getAllCategories")
+    List<PartCategoryEntity> getAllCategories();
 }

@@ -39,6 +39,9 @@
     <named-query name="findPartCategoryByName">
         <query>select p from PartCategoryEntity p where lower(p.name) = lower(:name)</query>
     </named-query>
+    <named-query name="getAllCategories">
+        <query>select p from PartCategoryEntity p order by p.name</query>
+    </named-query>
 
     <!-- Детали-->
     <named-query name="findPartByNumber">

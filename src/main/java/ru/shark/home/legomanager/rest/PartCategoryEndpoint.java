@@ -24,6 +24,12 @@ public class PartCategoryEndpoint {
     }
 
     @POST
+    @Path("/list/all")
+    public Response getAllList() {
+        return Response.ok(partCategoryService.getAllList()).build();
+    }
+
+    @POST
     @Path("/save")
     public Response save(PartCategoryDto dto) {
         return Response.ok(partCategoryService.save(dto)).build();

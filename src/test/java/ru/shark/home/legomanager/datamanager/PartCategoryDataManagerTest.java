@@ -13,6 +13,7 @@ import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -68,6 +69,25 @@ public class PartCategoryDataManagerTest extends DaoServiceTest {
 
         // THEN
         Assertions.assertTrue(isDeleted(id, PartCategoryEntity.class));
+    }
+
+    @Test
+    public void getAllCategories() {
+        // GIVEN
+        Ordering<PartCategoryDto> ordering = new Ordering<PartCategoryDto>() {
+            @Override
+            public int compare(@Nullable PartCategoryDto partCategoryDto, @Nullable PartCategoryDto t1) {
+                return Comparator.comparing(PartCategoryDto::getName)
+                        .compare(partCategoryDto, t1);
+            }
+        };
+
+        // WHEN
+        List<PartCategoryDto> allSeries = partCategoryDataManager.getAllCategories();
+
+        // THEN
+        Assertions.assertEquals(2L, allSeries.size());
+        Assertions.assertTrue(ordering.isOrdered(allSeries));
     }
 
     private PartCategoryDto prepareDto() {

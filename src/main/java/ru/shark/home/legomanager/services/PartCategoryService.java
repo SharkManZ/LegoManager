@@ -29,6 +29,20 @@ public class PartCategoryService extends BaseLogicService {
         return response;
     }
 
+    public BaseResponse getAllList() {
+        BaseResponse response;
+        try {
+            response = new BaseResponse();
+            response.setBody(partCategoryDataManager.getAllCategories());
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при получении списка всех категорий деталей: " +
+                    e.getMessage());
+        }
+
+        return response;
+    }
+
     public BaseResponse save(PartCategoryDto dto) {
         BaseResponse response;
 

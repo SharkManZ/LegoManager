@@ -8,6 +8,8 @@ import ru.shark.home.legomanager.dao.dto.PartCategoryDto;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.dao.service.PartCategoryDao;
 
+import java.util.List;
+
 @Component
 public class PartCategoryDataManager extends BaseDataManager<PartCategoryEntity, PartCategoryDto> {
     public PartCategoryDataManager(PartCategoryDao partCategoryDao) {
@@ -17,5 +19,10 @@ public class PartCategoryDataManager extends BaseDataManager<PartCategoryEntity,
     public PageableList<PartCategoryDto> getWithPagination(RequestCriteria request) {
         PartCategoryDao dao = (PartCategoryDao) getDao();
         return getConverterUtil().entityListToDtoPageableList(dao.getWithPagination(request), PartCategoryDto.class);
+    }
+
+    public List<PartCategoryDto> getAllCategories() {
+        PartCategoryDao dao = (PartCategoryDao) getDao();
+        return getConverterUtil().entityListToDtoList(dao.getAllCategories(), PartCategoryDto.class);
     }
 }

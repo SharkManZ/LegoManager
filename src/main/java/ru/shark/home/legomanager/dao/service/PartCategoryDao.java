@@ -13,6 +13,7 @@ import ru.shark.home.legomanager.dao.repository.PartRepository;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
+import java.util.List;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
 import static ru.shark.home.legomanager.common.ErrorConstants.PART_CATEGORY_DELETE_WITH_SETS;
@@ -32,6 +33,10 @@ public class PartCategoryDao extends BaseDao<PartCategoryEntity> {
         Specification<PartCategoryEntity> searchSpec = SpecificationUtils.searchSpecification(request.getSearch(),
                 NAME_FIELD);
         return partCategoryRepository.getWithPagination(request, searchSpec, NAME_FIELD);
+    }
+
+    public List<PartCategoryEntity> getAllCategories() {
+        return partCategoryRepository.getAllCategories();
     }
 
     @Override

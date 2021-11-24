@@ -44,6 +44,16 @@ public class PartCategoryEndpointTest extends BaseEndpointTest {
     }
 
     @Test
+    public void getAllList() {
+        // WHEN
+        Response allList = partCategoryEndpoint.getAllList();
+
+        // THEN
+        checkResponse(allList);
+        verify(partCategoryService, times(1)).getAllList();
+    }
+
+    @Test
     public void save() {
         // WHEN
         Response response = partCategoryEndpoint.save(new PartCategoryDto());

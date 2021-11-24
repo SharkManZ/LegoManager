@@ -14,6 +14,7 @@ import ru.shark.home.legomanager.util.DaoServiceTest;
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -160,6 +161,25 @@ public class PartCategoryDaoTest extends DaoServiceTest {
 
         // THEN
         Assertions.assertEquals(PART_CATEGORY_DELETE_WITH_SETS, validationException.getMessage());
+    }
+
+    @Test
+    public void getAllCategories() {
+        // GIVEN
+        Ordering<PartCategoryEntity> ordering = new Ordering<PartCategoryEntity>() {
+            @Override
+            public int compare(@Nullable PartCategoryEntity partCategoryEntity, @Nullable PartCategoryEntity t1) {
+                return Comparator.comparing(PartCategoryEntity::getName)
+                        .compare(partCategoryEntity, t1);
+            }
+        };
+
+        // WHEN
+        List<PartCategoryEntity> allSeries = partCategoryDao.getAllCategories();
+
+        // THEN
+        Assertions.assertEquals(2L, allSeries.size());
+        Assertions.assertTrue(ordering.isOrdered(allSeries));
     }
 
     private PartCategoryEntity prepareEntity() {
