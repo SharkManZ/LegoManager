@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Brick 1x4",
+    "number": "3010",
+    "category": "Brick",
+    "colors": [
+      {
+        "color": "Black",
+        "number": "112231"
+      },
+      {
+        "color": "Red",
+        "number": "332221"
+      }
+    ]
+  },
+  {
+    "name": "Brick 2x4",
+    "number": "3001",
+    "category": "Brick"
+  }
+]

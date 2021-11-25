@@ -70,4 +70,16 @@ public class TestEntityFinder {
                 .setParameter("number", number.toLowerCase())
                 .getSingleResult();
     }
+
+    public PartColorEntity findPartColor(String number) {
+        return (PartColorEntity) em.createQuery("select p from PartColorEntity p where lower(p.number) = :number")
+                .setParameter("number", number.toLowerCase())
+                .getSingleResult();
+    }
+
+    public Long findPartColorId(String number) {
+        return (Long) em.createQuery("select p.id from PartColorEntity p where lower(p.number) = :number")
+                .setParameter("number", number.toLowerCase())
+                .getSingleResult();
+    }
 }

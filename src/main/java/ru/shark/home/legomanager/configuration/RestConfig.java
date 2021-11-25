@@ -13,5 +13,6 @@ public class RestConfig extends ResourceConfig {
         register(ColorEndpoint.class);
         register(PartCategoryEndpoint.class);
         register(PartEndpoint.class);
+        register(PartColorEndpoint.class);
     }
 }

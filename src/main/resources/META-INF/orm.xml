@@ -58,4 +58,15 @@
             from PartEntity p where p.id in (:ids)
         </query>
     </named-query>
+
+    <!-- Цвета деталей-->
+    <named-query name="getPartColorsByPartId">
+        <query>select pc from PartColorEntity pc where pc.part.id = :partId</query>
+    </named-query>
+    <named-query name="getPartColorByNumber">
+        <query>select pc from PartColorEntity pc where lower(pc.number) = lower(:number)</query>
+    </named-query>
+    <named-query name="getPartColorByPartAndColor">
+        <query>select pc from PartColorEntity pc where pc.part.id = :partId and pc.color.id = :colorId</query>
+    </named-query>
 </entity-mappings>

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.legomanager.dao.dto.PartDto;
+import ru.shark.home.legomanager.services.PartColorService;
 import ru.shark.home.legomanager.services.PartService;
 import ru.shark.home.legomanager.util.BaseEndpointTest;
 
@@ -16,17 +17,20 @@ import static org.mockito.Mockito.*;
 public class PartEndpointTest extends BaseEndpointTest {
     private PartEndpoint partEndpoint;
     private PartService partService;
+    private PartColorService partColorService;
 
     @BeforeAll
     public void init() {
         partService = mock(PartService.class);
+        partColorService = mock(PartColorService.class);
         partEndpoint = new PartEndpoint();
         partEndpoint.setService(partService);
+        partEndpoint.setPartColorService(partColorService);
     }
 
     @BeforeEach
     public void initMethod() {
-        reset(partService);
+        reset(partService, partColorService);
     }
 
     @Test
@@ -57,8 +61,18 @@ public class PartEndpointTest extends BaseEndpointTest {
         // WHEN
         Response response = partEndpoint.delete(1L);
 
-        // WHEN
+        // THEN
         checkResponse(response);
         verify(partService, times(1)).delete(eq(1L));
+    }
+
+    @Test
+    public void getColorList() {
+        // WHEN
+        Response response = partEndpoint.getColorList(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(partColorService, times(1)).getListByPart(anyLong());
     }
 }
