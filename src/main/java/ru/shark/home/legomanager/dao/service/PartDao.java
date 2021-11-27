@@ -45,19 +45,23 @@ public class PartDao extends BaseDao<PartEntity> {
 
     private PageableList<PartFullDto> getListWithAdditionalFields(PageableList<PartEntity> list) {
         List<PartFullDto> dtoList = new ArrayList<>();
-        List<Map<String, Long>> partColorsCountByIds = new ArrayList<>();
+        List<Map<String, Object>> partColorsCountByIds = new ArrayList<>();
         if (!isEmpty(list.getData())) {
-            partColorsCountByIds = partRepository.getPartColorsCountByIds(list.getData().stream().map(entity -> entity.getId()).collect(Collectors.toList()));
+            partColorsCountByIds = partRepository.getPartAdditionalDataByIds(list.getData().stream().map(entity -> entity.getId()).collect(Collectors.toList()));
         }
         for (PartEntity entity : list.getData()) {
             PartFullDto dto = new PartFullDto();
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setNumber(entity.getNumber());
-            dto.setColorsCount(partColorsCountByIds.stream()
+            dto.setColorsCount(((Long) partColorsCountByIds.stream()
                     .filter(item -> item.get("id").equals(dto.getId()))
                     .findFirst()
-                    .map(item -> item.get("cnt")).orElse(0L).intValue());
+                    .map(item -> item.get("cnt")).orElse(0L)).intValue());
+            dto.setMinColorNumber((String) partColorsCountByIds.stream()
+                    .filter(item -> item.get("id").equals(dto.getId()))
+                    .findFirst()
+                    .map(item -> item.get("minColorNumber")).orElse(null));
             dto.setCategory(new PartCategoryDto());
             dto.getCategory().setId(entity.getCategory().getId());
             dto.getCategory().setName(entity.getCategory().getName());

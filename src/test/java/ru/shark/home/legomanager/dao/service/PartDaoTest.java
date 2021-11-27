@@ -1,6 +1,7 @@
 package ru.shark.home.legomanager.dao.service;
 
 import com.google.common.collect.Ordering;
+import org.apache.commons.lang3.tuple.Pair;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,9 +47,9 @@ public class PartDaoTest extends DaoServiceTest {
                         .compare(partDto, t1);
             }
         };
-        Map<Long, Integer> counts = new HashMap<>();
-        counts.put(entityFinder.findPartId("3010"), 2);
-        counts.put(entityFinder.findPartId("3001"), 0);
+        Map<Long, Pair<Integer, String>> counts = new HashMap<>();
+        counts.put(entityFinder.findPartId("3010"), Pair.of(2, "112231"));
+        counts.put(entityFinder.findPartId("3001"), Pair.of(0, null));
 
 
         // WHEN
@@ -58,7 +59,8 @@ public class PartDaoTest extends DaoServiceTest {
         checkPagingDtoList(list, 2, 2L);
         assertTrue(ordering.isOrdered(list.getData()));
         list.getData().forEach(item -> {
-            Assertions.assertEquals(counts.get(item.getId()), item.getColorsCount());
+            Assertions.assertEquals(counts.get(item.getId()).getLeft(), item.getColorsCount());
+            Assertions.assertEquals(counts.get(item.getId()).getRight(), item.getMinColorNumber());
         });
     }
 

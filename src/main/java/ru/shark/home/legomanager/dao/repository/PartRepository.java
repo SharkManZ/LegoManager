@@ -34,8 +34,10 @@ public interface PartRepository extends BaseRepository<PartEntity> {
     Long getPartsCount();
 
     /**
-     * Возвращает количество цветов по переданным видам деталей.
+     * Возвращает дополнительные данные по деталям:
+     * количество цветов
+     * один из кодов цветов деталей (минимальный по номеру)
      */
-    @Query(name = "getPartColorsCountByIds")
-    List<Map<String, Long>> getPartColorsCountByIds(@Param("ids") List<Long> ids);
+    @Query(name = "getPartAdditionalDataByIds")
+    List<Map<String, Object>> getPartAdditionalDataByIds(@Param("ids") List<Long> ids);
 }

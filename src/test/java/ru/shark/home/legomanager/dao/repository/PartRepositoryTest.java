@@ -1,5 +1,6 @@
 package ru.shark.home.legomanager.dao.repository;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -57,17 +58,18 @@ public class PartRepositoryTest extends DaoServiceTest {
     @Test
     public void getPartColorsCountByIds() {
         // GIVEN
-        Map<Long, Long> counts = new HashMap<>();
-        counts.put(entityFinder.findPartId("3010"), 2L);
-        counts.put(entityFinder.findPartId("3001"), 0L);
+        Map<Long, Pair<Long, String>> counts = new HashMap<>();
+        counts.put(entityFinder.findPartId("3010"), Pair.of(2L, "112231"));
+        counts.put(entityFinder.findPartId("3001"), Pair.of(0L, null));
 
         // WHEN
-        List<Map<String, Long>> partCounts = partRepository.getPartColorsCountByIds(new ArrayList<>(counts.keySet()));
+        List<Map<String, Object>> partCounts = partRepository.getPartAdditionalDataByIds(new ArrayList<>(counts.keySet()));
 
         // THEN
         Assertions.assertEquals(counts.size(), partCounts.size());
         partCounts.forEach(count -> {
-            Assertions.assertEquals(counts.get(count.get("id")), count.get("cnt"));
+            Assertions.assertEquals(counts.get(count.get("id")).getLeft(), count.get("cnt"));
+            Assertions.assertEquals(counts.get(count.get("id")).getRight(), count.get("minColorNumber"));
         });
     }
 }
