@@ -11,7 +11,9 @@ import ru.shark.home.legomanager.dao.dto.ColorDto;
 import ru.shark.home.legomanager.datamanager.ColorDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -46,6 +48,19 @@ public class ColorServiceTest extends BaseServiceTest {
         // THEN
         checkPagingResponse(response);
         verify(colorDataManager, times(1)).getWithPagination(any(RequestCriteria.class));
+    }
+
+    @Test
+    public void getAllList() {
+        // GIVEN
+        when(colorDataManager.getAllColors()).thenReturn(new ArrayList<>());
+
+        // WHEN
+        BaseResponse allList = colorService.getAllList();
+
+        // THEN
+        checkResponse(allList);
+        verify(colorDataManager, times(1)).getAllColors();
     }
 
     @Test

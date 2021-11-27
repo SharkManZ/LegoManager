@@ -34,6 +34,9 @@
     <named-query name="findColorByName">
         <query>select c from ColorEntity c where lower(c.name) = lower(:name)</query>
     </named-query>
+    <named-query name="getAllColors">
+        <query>select c from ColorEntity c order by c.name</query>
+    </named-query>
 
     <!-- Категории деталей-->
     <named-query name="findPartCategoryByName">

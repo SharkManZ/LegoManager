@@ -13,6 +13,7 @@ import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -42,6 +43,25 @@ public class ColorDataManagerTest extends DaoServiceTest {
         // THEN
         checkPagingDtoList(list, 2, 2L);
         assertTrue(ordering.isOrdered(list.getData()));
+    }
+
+    @Test
+    public void getAllColors() {
+        // GIVEN
+        Ordering<ColorDto> ordering = new Ordering<ColorDto>() {
+            @Override
+            public int compare(@Nullable ColorDto colorDto, @Nullable ColorDto t1) {
+                return Comparator.comparing(ColorDto::getName)
+                        .compare(colorDto, t1);
+            }
+        };
+
+        // WHEN
+        List<ColorDto> colors = colorDataManager.getAllColors();
+
+        // THEN
+        Assertions.assertEquals(2, colors.size());
+        Assertions.assertTrue(ordering.isOrdered(colors));
     }
 
     @Test

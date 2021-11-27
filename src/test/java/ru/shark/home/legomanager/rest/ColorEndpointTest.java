@@ -44,6 +44,16 @@ public class ColorEndpointTest extends BaseEndpointTest {
     }
 
     @Test
+    public void getAllList() {
+        // WHEN
+        Response response = colorEndpoint.getAllList();
+
+        // THEN
+        checkResponse(response);
+        verify(colorService, times(1)).getAllList();
+    }
+
+    @Test
     public void save() {
         // WHEN
         Response response = colorEndpoint.save(new ColorDto());

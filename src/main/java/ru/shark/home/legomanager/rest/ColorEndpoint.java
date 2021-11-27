@@ -23,6 +23,12 @@ public class ColorEndpoint {
         return Response.ok(colorService.getList(request)).build();
     }
 
+    @GET
+    @Path("/list/all")
+    public Response getAllList() {
+        return Response.ok(colorService.getAllList()).build();
+    }
+
     @POST
     @Path("/save")
     public Response save(ColorDto dto) {

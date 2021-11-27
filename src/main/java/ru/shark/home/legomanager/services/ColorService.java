@@ -29,6 +29,18 @@ public class ColorService extends BaseLogicService {
         return response;
     }
 
+    public BaseResponse getAllList() {
+        BaseResponse response;
+        try {
+            response = new BaseResponse();
+            response.setBody(colorDataManager.getAllColors());
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при получении полного списка цветов: " + e.getMessage());
+        }
+        return response;
+    }
+
     public BaseResponse save(ColorDto dto) {
         BaseResponse response;
 

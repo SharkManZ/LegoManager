@@ -8,6 +8,8 @@ import ru.shark.home.legomanager.dao.dto.ColorDto;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.service.ColorDao;
 
+import java.util.List;
+
 @Component
 public class ColorDataManager extends BaseDataManager<ColorEntity, ColorDto> {
     public ColorDataManager(ColorDao colorDao) {
@@ -17,5 +19,10 @@ public class ColorDataManager extends BaseDataManager<ColorEntity, ColorDto> {
     public PageableList<ColorDto> getWithPagination(RequestCriteria request) {
         ColorDao dao = (ColorDao) getDao();
         return getConverterUtil().entityListToDtoPageableList(dao.getWithPagination(request), ColorDto.class);
+    }
+
+    public List<ColorDto> getAllColors() {
+        ColorDao dao = (ColorDao) getDao();
+        return getConverterUtil().entityListToDtoList(dao.getAllColors(), ColorDto.class);
     }
 }
