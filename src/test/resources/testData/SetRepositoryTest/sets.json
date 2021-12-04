@@ -3,7 +3,17 @@
     "name": "Rough Terrain Crane",
     "number": 42082,
     "year": 2018,
-    "series": "technic"
+    "series": "technic",
+    "parts": [
+      {
+        "number": "112231",
+        "count": 10
+      },
+      {
+        "number": "55531",
+        "count": 3
+      }
+    ]
   },
   {
     "name": "Leibherr R 9800",

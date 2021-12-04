@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import ru.shark.home.legomanager.dao.entity.*;
 import ru.shark.home.legomanager.dao.repository.*;
 import ru.shark.home.legomanager.util.dto.PartColorTestDto;
 import ru.shark.home.legomanager.util.dto.PartTestDto;
+import ru.shark.home.legomanager.util.dto.SetPartTestDto;
 import ru.shark.home.legomanager.util.dto.SetTestDto;
 
 import javax.persistence.EntityManager;
@@ -28,6 +28,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class TestDataLoader {
     private static final ObjectMapper mapper = new JsonMapper();
     private static final List<String> cleanUpLst = Arrays.asList(
+            "LEGO_SET_PART",
             "LEGO_PART_COLOR",
             "LEGO_PART",
             "LEGO_PART_CATEGORY",
@@ -56,6 +57,9 @@ public class TestDataLoader {
 
     @Autowired
     private PartColorRepository partColorRepository;
+
+    @Autowired
+    private SetPartRepository setPartRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -100,12 +104,27 @@ public class TestDataLoader {
                     entity.setSeries(new SeriesEntity());
                     entity.getSeries().setId(entityFinder.findSeriesId(dto.getSeries()));
                     setRepository.save(entity);
+
+                    if (!isEmpty(dto.getParts())) {
+                        loadSetPartColors(dto.getParts(), entity);
+                    }
                 });
             } catch (URISyntaxException e) {
                 System.out.println("missing file: " + "/json/" + file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void loadSetPartColors(List<SetPartTestDto> list, SetEntity setEntity) {
+        for (SetPartTestDto dto : list) {
+            SetPartEntity entity = new SetPartEntity();
+            entity.setSet(setEntity);
+            entity.setPartColor(entityFinder.findPartColor(dto.getNumber()));
+            entity.setCount(dto.getCount());
+
+            setPartRepository.save(entity);
         }
     }
 

@@ -5,6 +5,9 @@ import org.springframework.data.repository.query.Param;
 import ru.shark.home.common.dao.repository.BaseRepository;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 
+import java.util.List;
+import java.util.Map;
+
 public interface SetRepository extends BaseRepository<SetEntity> {
     /**
      * Возвращает набор по номеру.
@@ -29,4 +32,13 @@ public interface SetRepository extends BaseRepository<SetEntity> {
      */
     @Query(name = "getSetsCount")
     Long getCount();
+
+    /**
+     * Возвращает дополнительные данные по переданным наборам. (Количество деталей)
+     *
+     * @param ids коллекция идентификаторов наборов
+     * @return дополнительные данные по наборам
+     */
+    @Query(name = "getSetsAdditionalData")
+    List<Map<String, Object>> getSetsAdditionalData(@Param("ids") List<Long> ids);
 }

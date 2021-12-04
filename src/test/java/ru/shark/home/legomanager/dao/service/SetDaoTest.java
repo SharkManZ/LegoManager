@@ -29,6 +29,9 @@ public class SetDaoTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadSeries("SetDaoTest/series.json");
+        loadColors("SetDaoTest/colors.json");
+        loadPartCategories("SetDaoTest/partCats.json");
+        loadParts("SetDaoTest/parts.json");
         loadSets("SetDaoTest/sets.json");
     }
 
@@ -48,6 +51,7 @@ public class SetDaoTest extends DaoServiceTest {
 
         // THEN
         checkPagingDtoList(list, 3, 3L);
+        Assertions.assertTrue(list.getData().stream().anyMatch(item -> item.getPartsCount() > 0));
         assertTrue(ordering.isOrdered(list.getData()));
     }
 

@@ -1,10 +1,13 @@
 package ru.shark.home.legomanager.util.dto;
 
+import java.util.List;
+
 public class SetTestDto {
     private String name;
     private String number;
     private Integer year;
     private String series;
+    private List<SetPartTestDto> parts;
 
     public String getName() {
         return name;
@@ -36,5 +39,13 @@ public class SetTestDto {
 
     public void setSeries(String series) {
         this.series = series;
+    }
+
+    public List<SetPartTestDto> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<SetPartTestDto> parts) {
+        this.parts = parts;
     }
 }

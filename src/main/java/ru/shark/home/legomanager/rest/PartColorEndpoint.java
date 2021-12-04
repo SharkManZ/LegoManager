@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.services.PartColorService;
+import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -25,6 +26,12 @@ public class PartColorEndpoint {
     @Path("/{id}/delete")
     public Response delete(@PathParam("id") Long id) {
         return Response.ok(partColorService.delete(id)).build();
+    }
+
+    @POST
+    @Path("/search")
+    public Response search(PartColorSearchDto dto) {
+        return Response.ok(partColorService.search(dto)).build();
     }
 
     @Autowired

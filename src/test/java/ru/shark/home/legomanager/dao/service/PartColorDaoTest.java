@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
+import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import javax.validation.ValidationException;
@@ -184,6 +185,20 @@ public class PartColorDaoTest extends DaoServiceTest {
                 PartColorEntity.getDescription()), noColorIdException.getMessage());
         Assertions.assertEquals(MessageFormat.format(ENTITY_NOT_FOUND_BY_ID, ColorEntity.getDescription(),
                 colorNotFound.getColor().getId()), colorNotFoundException.getMessage());
+    }
+
+    @Test
+    public void search() {
+        // GIVEN
+        PartColorSearchDto dto = new PartColorSearchDto();
+        dto.setSearchValue("112231");
+
+        // WHEN
+        PartColorEntity entity = partColorDao.search(dto);
+
+        // THEN
+        Assertions.assertNotNull(entity);
+        Assertions.assertEquals(entity.getNumber(), dto.getSearchValue());
     }
 
     private PartColorEntity prepareEntity() {

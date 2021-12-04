@@ -82,4 +82,20 @@ public class TestEntityFinder {
                 .setParameter("number", number.toLowerCase())
                 .getSingleResult();
     }
+
+    public SetPartEntity findSetPart(Long setId, Long partColorId) {
+        return (SetPartEntity) em.createQuery("select sp from SetPartEntity sp where sp.set.id = :setId " +
+                        "and sp.partColor.id = :partColorId")
+                .setParameter("setId", setId)
+                .setParameter("partColorId", partColorId)
+                .getSingleResult();
+    }
+
+    public Long findSetPartId(Long setId, Long partColorId) {
+        return (Long) em.createQuery("select sp.id from SetPartEntity sp where sp.set.id = :setId " +
+                        "and sp.partColor.id = :partColorId")
+                .setParameter("setId", setId)
+                .setParameter("partColorId", partColorId)
+                .getSingleResult();
+    }
 }

@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 public class SetRepositoryTest extends DaoServiceTest {
     @Autowired
     private SetRepository setRepository;
@@ -14,6 +18,9 @@ public class SetRepositoryTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadSeries("SetRepositoryTest/series.json");
+        loadColors("SetRepositoryTest/colors.json");
+        loadPartCategories("SetRepositoryTest/partCats.json");
+        loadParts("SetRepositoryTest/parts.json");
         loadSets("SetRepositoryTest/sets.json");
     }
 
@@ -46,5 +53,19 @@ public class SetRepositoryTest extends DaoServiceTest {
 
         // THEN
         Assertions.assertEquals(3L, count);
+    }
+
+    @Test
+    public void getSetsAdditionalData() {
+        // GIVEN
+        Long setWithParts = entityFinder.findSetId("42082");
+        List<Long> ids = Arrays.asList(setWithParts, entityFinder.findSetId("42100"));
+
+        // WHEN
+        List<Map<String, Object>> list = setRepository.getSetsAdditionalData(ids);
+
+        // THEN
+        Assertions.assertEquals(list.size(), 2);
+        Assertions.assertTrue(list.stream().anyMatch(item -> item.get("id").equals(setWithParts) && (Long)item.get("partsCount") == 2L));
     }
 }

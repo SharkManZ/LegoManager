@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.shark.home.common.services.dto.PageRequest;
+import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.SetDto;
+import ru.shark.home.legomanager.services.SetPartService;
 import ru.shark.home.legomanager.services.SetService;
 import ru.shark.home.legomanager.util.BaseEndpointTest;
 
@@ -16,17 +18,20 @@ import static org.mockito.Mockito.*;
 public class SetEndpointTest extends BaseEndpointTest {
     private SetEndpoint setEndpoint;
     private SetService service;
+    private SetPartService setPartService;
 
     @BeforeAll
     public void init() {
         service = mock(SetService.class);
+        setPartService = mock(SetPartService.class);
         setEndpoint = new SetEndpoint();
         setEndpoint.setService(service);
+        setEndpoint.setSetPartService(setPartService);
     }
 
     @BeforeEach
     public void initMethod() {
-        reset(service);
+        reset(service, setPartService);
     }
 
     @Test
@@ -60,5 +65,18 @@ public class SetEndpointTest extends BaseEndpointTest {
         // WHEN
         checkResponse(response);
         verify(service, times(1)).delete(eq(1L));
+    }
+
+    @Test
+    public void getPartsList() {
+        // GIVEN
+        when(setPartService.getListBySetId(anyLong())).thenReturn(new BaseResponse());
+
+        // WHEN
+        Response response = setEndpoint.getPartsList(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(setPartService, times(1)).getListBySetId(anyLong());
     }
 }

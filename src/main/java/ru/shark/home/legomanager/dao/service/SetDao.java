@@ -5,7 +5,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
-import ru.shark.home.common.dao.entity.BaseEntity;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.common.dao.util.SpecificationUtils;
 import ru.shark.home.legomanager.dao.dto.SeriesDto;
@@ -19,6 +18,8 @@ import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static ru.shark.home.common.common.ErrorConstants.*;
@@ -43,12 +44,19 @@ public class SetDao extends BaseDao<SetEntity> {
 
     private PageableList<SetFullDto> getListWithAdditionalFields(PageableList<SetEntity> list) {
         List<SetFullDto> dtoList = new ArrayList<>();
+        List<Map<String, Object>> additionalData = null;
+        if (list.getData().size() > 0) {
+            additionalData = setRepository.getSetsAdditionalData(list.getData().stream()
+                    .map(item -> item.getId()).collect(Collectors.toList()));
+        }
         for (SetEntity entity : list.getData()) {
             SetFullDto dto = new SetFullDto();
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setNumber(entity.getNumber());
-            dto.setPartsCount(0);
+            Map<String, Object> additional = additionalData.stream()
+                    .filter(item -> item.get("id").equals(entity.getId())).findFirst().orElse(null);
+            dto.setPartsCount(additional != null ? ((Long) additional.get("partsCount")).intValue() : 0);
             dto.setYear(entity.getYear());
             dto.setSeries(new SeriesDto());
             dto.getSeries().setId(entity.getSeries().getId());

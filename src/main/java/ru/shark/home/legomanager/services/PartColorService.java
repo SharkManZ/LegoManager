@@ -6,6 +6,7 @@ import ru.shark.home.common.services.BaseLogicService;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
+import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
 
 import static ru.shark.home.common.common.ErrorConstants.ERR_500;
 
@@ -50,6 +51,18 @@ public class PartColorService extends BaseLogicService {
             baseResponse = BaseResponse.buildError(ERR_500, "Ошибка при удалении цвета детали: " + e.getMessage());
         }
 
+        return baseResponse;
+    }
+
+    public BaseResponse search(PartColorSearchDto dto) {
+        BaseResponse baseResponse;
+        try {
+            baseResponse = new BaseResponse();
+            baseResponse.setBody(partColorDataManager.search(dto));
+            baseResponse.setSuccess(true);
+        } catch (Exception e) {
+            baseResponse = BaseResponse.buildError(ERR_500, "Ошибка при поиске цвета детали: " + e.getMessage());
+        }
         return baseResponse;
     }
 
