@@ -21,7 +21,7 @@ public class PartEntity extends BaseEntity {
     @Column(name = "LEGO_NAME", nullable = false)
     private String name;
 
-    @Column(name = "LEGO_NUMBER", length = 10, nullable = false)
+    @Column(name = "LEGO_NUMBER", length = 20, nullable = false)
     private String number;
 
     @ManyToOne
