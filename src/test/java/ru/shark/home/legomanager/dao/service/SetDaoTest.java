@@ -182,7 +182,7 @@ public class SetDaoTest extends DaoServiceTest {
     @Test
     public void deleteById() {
         // GIVEN
-        Long setId = entityFinder.findSetId("42082");
+        Long setId = entityFinder.findSetId("42100");
 
         // WHEN
         setDao.deleteById(setId);

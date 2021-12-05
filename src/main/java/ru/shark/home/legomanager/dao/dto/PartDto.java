@@ -5,6 +5,8 @@ import ru.shark.home.common.dao.dto.BaseDto;
 public class PartDto extends BaseDto {
     private String name;
     private String number;
+    private String alternateNumber;
+
     private PartCategoryDto category;
 
     public String getName() {
@@ -21,6 +23,14 @@ public class PartDto extends BaseDto {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getAlternateNumber() {
+        return alternateNumber;
+    }
+
+    public void setAlternateNumber(String alternateNumber) {
+        this.alternateNumber = alternateNumber;
     }
 
     public PartCategoryDto getCategory() {

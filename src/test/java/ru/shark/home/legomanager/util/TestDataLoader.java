@@ -223,6 +223,7 @@ public class TestDataLoader {
         PartEntity entity = new PartEntity();
         entity.setName(dto.getName());
         entity.setNumber(dto.getNumber());
+        entity.setAlternateNumber(dto.getAlternateNumber());
         return entity;
     }
 

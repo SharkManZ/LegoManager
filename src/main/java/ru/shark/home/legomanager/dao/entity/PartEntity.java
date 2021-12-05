@@ -24,6 +24,9 @@ public class PartEntity extends BaseEntity {
     @Column(name = "LEGO_NUMBER", length = 20, nullable = false)
     private String number;
 
+    @Column(name = "LEGO_ALTERNATE_NUMBER")
+    private String alternateNumber;
+
     @ManyToOne
     @JoinColumn(name = "LEGO_PART_CATEGORY_ID", nullable = false)
     private PartCategoryEntity category;
@@ -52,6 +55,14 @@ public class PartEntity extends BaseEntity {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getAlternateNumber() {
+        return alternateNumber;
+    }
+
+    public void setAlternateNumber(String alternateNumber) {
+        this.alternateNumber = alternateNumber;
     }
 
     public PartCategoryEntity getCategory() {

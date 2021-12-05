@@ -54,6 +54,7 @@ public class PartDataManagerTest extends DaoServiceTest {
         PartDto dto = new PartDto();
         dto.setName("plate 1x10");
         dto.setNumber("4477");
+        dto.setAlternateNumber("9876");
         dto.setCategory(new PartCategoryDto());
         dto.getCategory().setId(entityFinder.findPartCategoryId("brick"));
 
@@ -66,6 +67,7 @@ public class PartDataManagerTest extends DaoServiceTest {
         Assertions.assertEquals(dto.getNumber(), saved.getNumber());
         Assertions.assertEquals(dto.getName(), saved.getName());
         Assertions.assertEquals(dto.getCategory().getId(), saved.getCategory().getId());
+        Assertions.assertEquals(dto.getAlternateNumber(), saved.getAlternateNumber());
     }
 
     @Test

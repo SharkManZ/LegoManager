@@ -75,7 +75,7 @@ public class PartDaoTest extends DaoServiceTest {
             }
         };
         RequestCriteria requestCriteria = new RequestCriteria(0, 10);
-        requestCriteria.setSearch("300");
+        requestCriteria.setSearch("100");
 
         // WHEN
         PageableList<PartFullDto> list = partDao.getWithPagination(requestCriteria);
@@ -99,6 +99,7 @@ public class PartDaoTest extends DaoServiceTest {
         Assertions.assertEquals(entity.getName(), saved.getName());
         Assertions.assertEquals(entity.getNumber(), saved.getNumber());
         Assertions.assertEquals(entity.getCategory().getId(), saved.getCategory().getId());
+        Assertions.assertEquals(entity.getAlternateNumber(), saved.getAlternateNumber());
     }
 
     @Test
@@ -116,6 +117,7 @@ public class PartDaoTest extends DaoServiceTest {
         Assertions.assertEquals(entity.getName(), saved.getName());
         Assertions.assertEquals(entity.getNumber(), saved.getNumber());
         Assertions.assertEquals(entity.getCategory().getId(), saved.getCategory().getId());
+        Assertions.assertEquals(entity.getAlternateNumber(), saved.getAlternateNumber());
     }
 
     @Test
@@ -199,6 +201,7 @@ public class PartDaoTest extends DaoServiceTest {
         entity.getCategory().setId(entityFinder.findPartCategoryId("brick"));
         entity.setName("plate 1x10");
         entity.setNumber("4488");
+        entity.setAlternateNumber("8844");
         return entity;
     }
 }

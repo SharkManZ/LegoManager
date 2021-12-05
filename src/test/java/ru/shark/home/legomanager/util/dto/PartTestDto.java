@@ -5,6 +5,7 @@ import java.util.List;
 public class PartTestDto {
     private String name;
     private String number;
+    private String alternateNumber;
     private String category;
     private List<PartColorTestDto> colors;
 
@@ -22,6 +23,14 @@ public class PartTestDto {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getAlternateNumber() {
+        return alternateNumber;
+    }
+
+    public void setAlternateNumber(String alternateNumber) {
+        this.alternateNumber = alternateNumber;
     }
 
     public String getCategory() {

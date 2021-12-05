@@ -32,7 +32,7 @@ public class TotalsService {
         dto.setSeries(totalsDao.getSeriesTotal());
         dto.setSets(totalsDao.getSetsTotal());
         dto.setDiffParts(totalsDao.getPartsTotal());
-        dto.setParts(new TotalDto(0L, 0L));
+        dto.setParts(totalsDao.getSetPartsTotal());
         return dto;
     }
 

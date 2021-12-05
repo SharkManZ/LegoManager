@@ -17,6 +17,7 @@
   {
     "name": "Brick 2x4",
     "number": "3001",
-    "category": "Brick"
+    "category": "Brick",
+    "alternateNumber": "1003"
   }
 ]

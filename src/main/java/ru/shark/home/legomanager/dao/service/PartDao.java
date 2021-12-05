@@ -29,6 +29,7 @@ import static ru.shark.home.common.common.ErrorConstants.*;
 public class PartDao extends BaseDao<PartEntity> {
     private static String NAME_FIELD = "name";
     private static String NUMBER_FIELD = "number";
+    private static String ALTERNATE_NUMBER_FIELD = "alternateNumber";
 
     private PartRepository partRepository;
     private PartCategoryRepository partCategoryRepository;
@@ -39,7 +40,7 @@ public class PartDao extends BaseDao<PartEntity> {
 
     public PageableList<PartFullDto> getWithPagination(RequestCriteria request) {
         Specification<PartEntity> searchSpec = SpecificationUtils.searchSpecification(request.getSearch(),
-                NAME_FIELD, NUMBER_FIELD);
+                NAME_FIELD, NUMBER_FIELD, ALTERNATE_NUMBER_FIELD);
         return getListWithAdditionalFields(partRepository.getWithPagination(request, searchSpec, NUMBER_FIELD));
     }
 
@@ -54,6 +55,7 @@ public class PartDao extends BaseDao<PartEntity> {
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setNumber(entity.getNumber());
+            dto.setAlternateNumber(entity.getAlternateNumber());
             dto.setColorsCount(((Long) partColorsCountByIds.stream()
                     .filter(item -> item.get("id").equals(dto.getId()))
                     .findFirst()

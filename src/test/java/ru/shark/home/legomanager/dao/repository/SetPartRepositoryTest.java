@@ -66,4 +66,16 @@ public class SetPartRepositoryTest extends DaoServiceTest {
         Assertions.assertEquals(setId, setPartBySetAndPrtColorId.getSet().getId());
         Assertions.assertEquals(partColorId, setPartBySetAndPrtColorId.getPartColor().getId());
     }
+
+    @Test
+    public void getSetPartsCount() {
+        // GIVEN
+        Long expected = 13L;
+
+        // WHEN
+        Long count = setPartRepository.getSetPartsCount();
+
+        // THEN
+        Assertions.assertEquals(expected, count);
+    }
 }
