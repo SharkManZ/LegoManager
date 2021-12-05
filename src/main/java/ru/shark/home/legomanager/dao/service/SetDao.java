@@ -56,7 +56,8 @@ public class SetDao extends BaseDao<SetEntity> {
             dto.setNumber(entity.getNumber());
             Map<String, Object> additional = additionalData.stream()
                     .filter(item -> item.get("id").equals(entity.getId())).findFirst().orElse(null);
-            dto.setPartsCount(additional != null ? ((Long) additional.get("partsCount")).intValue() : 0);
+            dto.setPartsCount(additional != null && additional.get("partsCount") != null ?
+                    ((Long) additional.get("partsCount")).intValue() : 0);
             dto.setYear(entity.getYear());
             dto.setSeries(new SeriesDto());
             dto.getSeries().setId(entity.getSeries().getId());

@@ -66,6 +66,6 @@ public class SetRepositoryTest extends DaoServiceTest {
 
         // THEN
         Assertions.assertEquals(list.size(), 2);
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.get("id").equals(setWithParts) && (Long)item.get("partsCount") == 2L));
+        Assertions.assertTrue(list.stream().anyMatch(item -> item.get("id").equals(setWithParts) && (Long)item.get("partsCount") == 13L));
     }
 }
