@@ -67,20 +67,6 @@ public class PartColorDaoTest extends DaoServiceTest {
     }
 
     @Test
-    public void saveWithCreateExistsByNumber() {
-        // GIVEN
-        PartColorEntity entity = prepareEntity();
-        entity.setNumber("112231");
-
-        // WHEN
-        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(entity));
-
-        // THEN
-        Assertions.assertEquals(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartColorEntity.getDescription(),
-                entity.getNumber()), exception.getMessage());
-    }
-
-    @Test
     public void saveWithCreateExistsByPartAndColor() {
         // GIVEN
         PartColorEntity entity = prepareEntity();
@@ -110,21 +96,6 @@ public class PartColorDaoTest extends DaoServiceTest {
         Assertions.assertEquals(entity.getNumber(), saved.getNumber());
         Assertions.assertEquals(entity.getPart().getId(), saved.getPart().getId());
         Assertions.assertEquals(entity.getColor().getId(), saved.getColor().getId());
-    }
-
-    @Test
-    public void saveWithUpdateExistsByNumber() {
-        // GIVEN
-        PartColorEntity entity = prepareEntity();
-        entity.setId(entityFinder.findPartColorId("112231"));
-        entity.setNumber("332221");
-
-        // WHEN
-        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(entity));
-
-        // THEN
-        Assertions.assertEquals(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartColorEntity.getDescription(),
-                entity.getNumber()), exception.getMessage());
     }
 
     @Test
@@ -199,6 +170,21 @@ public class PartColorDaoTest extends DaoServiceTest {
         // THEN
         Assertions.assertNotNull(entity);
         Assertions.assertEquals(entity.getNumber(), dto.getSearchValue());
+    }
+
+    @Test
+    public void searchByColorAndPartNumbers() {
+        // GIVEN
+        PartColorSearchDto dto = new PartColorSearchDto();
+        dto.setSearchValue("112231 3010");
+
+        // WHEN
+        PartColorEntity entity = partColorDao.search(dto);
+
+        // THEN
+        Assertions.assertNotNull(entity);
+        Assertions.assertEquals("112231", entity.getNumber());
+        Assertions.assertEquals("3010", entity.getPart().getNumber());
     }
 
     private PartColorEntity prepareEntity() {

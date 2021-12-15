@@ -38,15 +38,10 @@ public class PartColorDao extends BaseDao<PartColorEntity> {
             return null;
         }
         validateFields(entity);
-        PartColorEntity byNumber = partColorRepository.getPartColorByNumber(entity.getNumber());
-        if (byNumber != null && (entity.getId() == null || entity.getId() != byNumber.getId())) {
-            throw new ValidationException(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartColorEntity.getDescription(),
-                    entity.getNumber()));
-        }
 
         PartColorEntity byPartAndColor = partColorRepository.getPartColorByPartAndColor(entity.getPart().getId(),
                 entity.getColor().getId());
-        if (byPartAndColor != null && (entity.getId() == null || entity.getId() != byPartAndColor.getId())) {
+        if (byPartAndColor != null && (entity.getId() == null || !entity.getId().equals(byPartAndColor.getId()))) {
             throw new ValidationException(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartColorEntity.getDescription(),
                     entity.getPart().getId() + " " + entity.getColor().getId()));
         }
@@ -76,7 +71,12 @@ public class PartColorDao extends BaseDao<PartColorEntity> {
     }
 
     public PartColorEntity search(PartColorSearchDto dto) {
-        return partColorRepository.getPartColorByNumber(dto.getSearchValue());
+        String[] searchParts = dto.getSearchValue().split(" ");
+        if (searchParts.length == 1) {
+            return partColorRepository.getPartColorByNumber(searchParts[0]);
+        } else {
+            return partColorRepository.getPartColorByNumberPartNumber(searchParts[0], searchParts[1]);
+        }
     }
 
     @Autowired

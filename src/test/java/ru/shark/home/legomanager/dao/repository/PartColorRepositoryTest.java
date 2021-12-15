@@ -56,6 +56,17 @@ public class PartColorRepositoryTest extends DaoServiceTest {
     }
 
     @Test
+    public void getPartColorByNumberPartNumber() {
+        // WHEN
+        PartColorEntity byNumber = partColorRepository.getPartColorByNumberPartNumber("112231", "3010");
+
+        // THEN
+        Assertions.assertNotNull(byNumber);
+        Assertions.assertEquals("112231", byNumber.getNumber());
+        Assertions.assertEquals("3010", byNumber.getPart().getNumber());
+    }
+
+    @Test
     public void getPartColorByPartAndColor() {
         // GIVEN
         Long partId = entityFinder.findPartId("3010");
