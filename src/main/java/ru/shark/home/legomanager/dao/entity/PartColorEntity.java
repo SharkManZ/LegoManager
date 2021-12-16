@@ -30,6 +30,9 @@ public class PartColorEntity extends BaseEntity {
     @Column(name = "LEGO_NUMBER", length = 10, nullable = false)
     private String number;
 
+    @Column(name = "LEGO_ALTERNATE_NUMBER")
+    private String alternateNumber;
+
     @Override
     public Long getId() {
         return id;
@@ -62,6 +65,14 @@ public class PartColorEntity extends BaseEntity {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getAlternateNumber() {
+        return alternateNumber;
+    }
+
+    public void setAlternateNumber(String alternateNumber) {
+        this.alternateNumber = alternateNumber;
     }
 
     public static String getDescription() {

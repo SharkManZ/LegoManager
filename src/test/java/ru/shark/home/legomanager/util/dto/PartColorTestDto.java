@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.util.dto;
 public class PartColorTestDto {
     private String color;
     private String number;
+    private String alternateNumber;
 
     public String getColor() {
         return color;
@@ -18,5 +19,13 @@ public class PartColorTestDto {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getAlternateNumber() {
+        return alternateNumber;
+    }
+
+    public void setAlternateNumber(String alternateNumber) {
+        this.alternateNumber = alternateNumber;
     }
 }

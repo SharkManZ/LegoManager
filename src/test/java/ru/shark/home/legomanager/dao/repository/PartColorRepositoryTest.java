@@ -56,6 +56,17 @@ public class PartColorRepositoryTest extends DaoServiceTest {
     }
 
     @Test
+    public void getPartColorByAlternateNumber() {
+        // WHEN
+        PartColorEntity byNumber = partColorRepository.getPartColorByNumber("898");
+
+        // THEN
+        Assertions.assertNotNull(byNumber);
+        Assertions.assertEquals("112231", byNumber.getNumber());
+        Assertions.assertEquals("898", byNumber.getAlternateNumber());
+    }
+
+    @Test
     public void getPartColorByNumberPartNumber() {
         // WHEN
         PartColorEntity byNumber = partColorRepository.getPartColorByNumberPartNumber("112231", "3010");
@@ -63,6 +74,17 @@ public class PartColorRepositoryTest extends DaoServiceTest {
         // THEN
         Assertions.assertNotNull(byNumber);
         Assertions.assertEquals("112231", byNumber.getNumber());
+        Assertions.assertEquals("3010", byNumber.getPart().getNumber());
+    }
+    @Test
+    public void getPartColorByAlternateNumberPartNumber() {
+        // WHEN
+        PartColorEntity byNumber = partColorRepository.getPartColorByNumberPartNumber("898", "3010");
+
+        // THEN
+        Assertions.assertNotNull(byNumber);
+        Assertions.assertEquals("112231", byNumber.getNumber());
+        Assertions.assertEquals("898", byNumber.getAlternateNumber());
         Assertions.assertEquals("3010", byNumber.getPart().getNumber());
     }
 

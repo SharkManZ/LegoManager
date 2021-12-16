@@ -197,6 +197,7 @@ public class TestDataLoader {
                             partColorEntity.setColor(entityFinder.findColor(color.getColor()));
                             partColorEntity.setPart(entity);
                             partColorEntity.setNumber(color.getNumber());
+                            partColorEntity.setAlternateNumber(color.getAlternateNumber());
                             partColorRepository.save(partColorEntity);
                         }
                     }

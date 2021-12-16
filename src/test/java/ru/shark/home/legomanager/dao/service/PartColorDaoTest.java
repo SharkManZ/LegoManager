@@ -64,6 +64,7 @@ public class PartColorDaoTest extends DaoServiceTest {
         Assertions.assertEquals(entity.getNumber(), saved.getNumber());
         Assertions.assertEquals(entity.getPart().getId(), saved.getPart().getId());
         Assertions.assertEquals(entity.getColor().getId(), saved.getColor().getId());
+        Assertions.assertEquals(entity.getAlternateNumber(), saved.getAlternateNumber());
     }
 
     @Test
@@ -96,6 +97,7 @@ public class PartColorDaoTest extends DaoServiceTest {
         Assertions.assertEquals(entity.getNumber(), saved.getNumber());
         Assertions.assertEquals(entity.getPart().getId(), saved.getPart().getId());
         Assertions.assertEquals(entity.getColor().getId(), saved.getColor().getId());
+        Assertions.assertEquals(entity.getAlternateNumber(), saved.getAlternateNumber());
     }
 
     @Test
@@ -194,6 +196,7 @@ public class PartColorDaoTest extends DaoServiceTest {
         entity.getPart().setId(entityFinder.findPartId("3001"));
         entity.setColor(new ColorEntity());
         entity.getColor().setId(entityFinder.findColorId("Red"));
+        entity.setAlternateNumber("111");
 
         return entity;
     }

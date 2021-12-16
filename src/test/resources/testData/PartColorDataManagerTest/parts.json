@@ -6,11 +6,13 @@
     "colors": [
       {
         "color": "Black",
-        "number": "112231"
+        "number": "112231",
+        "alternateNumber": "888"
       },
       {
         "color": "Red",
-        "number": "332221"
+        "number": "332221",
+        "alternateNumber": "889"
       }
     ]
   },

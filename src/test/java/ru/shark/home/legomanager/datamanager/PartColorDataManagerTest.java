@@ -37,6 +37,7 @@ public class PartColorDataManagerTest extends DaoServiceTest {
             Assertions.assertNotNull(dto.getPart().getId());
             Assertions.assertNotNull(dto.getColor());
             Assertions.assertNotNull(dto.getColor().getId());
+            Assertions.assertNotNull(dto.getAlternateNumber());
         }
     }
 

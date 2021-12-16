@@ -6,7 +6,8 @@
     "colors": [
       {
         "color": "Black",
-        "number": "112231"
+        "number": "112231",
+        "alternateNumber": "898"
       },
       {
         "color": "Red",
@@ -21,11 +22,11 @@
     "colors": [
       {
         "color": "Black",
-        "number": "112231"
+        "number": "1122311"
       },
       {
         "color": "Red",
-        "number": "332221"
+        "number": "3322211"
       }
     ]
   },

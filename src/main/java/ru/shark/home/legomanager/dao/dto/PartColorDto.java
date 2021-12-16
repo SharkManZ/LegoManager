@@ -6,6 +6,7 @@ public class PartColorDto extends BaseDto {
     private String number;
     private PartDto part;
     private ColorDto color;
+    private String alternateNumber;
 
     public String getNumber() {
         return number;
@@ -29,5 +30,13 @@ public class PartColorDto extends BaseDto {
 
     public void setColor(ColorDto color) {
         this.color = color;
+    }
+
+    public String getAlternateNumber() {
+        return alternateNumber;
+    }
+
+    public void setAlternateNumber(String alternateNumber) {
+        this.alternateNumber = alternateNumber;
     }
 }
