@@ -72,7 +72,11 @@
 
     <!-- Цвета деталей-->
     <named-query name="getPartColorsByPartId">
-        <query>select pc from PartColorEntity pc where pc.part.id = :partId</query>
+        <query>select pc from PartColorEntity pc where pc.part.id = :partId order by pc.number</query>
+    </named-query>
+    <named-query name="getPartColorCountByNumber">
+        <query>select count(pc.id) from PartColorEntity pc where lower(pc.number) = lower(:number) or
+            lower(pc.alternateNumber) like '%' || lower(:number) || '%'</query>
     </named-query>
     <named-query name="getPartColorByNumber">
         <query>select pc from PartColorEntity pc where lower(pc.number) = lower(:number) or
@@ -87,10 +91,10 @@
         <query>select pc from PartColorEntity pc where pc.part.id = :partId and pc.color.id = :colorId</query>
     </named-query>
 
-    <!-- Детали набора-->
+    <!-- Детали набора sp.partColor.color.name, sp.partColor.part.category.name, sp.partColor.part.name-->
     <named-query name="getSetPartsBySetId">
         <query>select sp from SetPartEntity sp where sp.set.id = :setId
-            order by sp.partColor.color.name, sp.partColor.part.category.name, sp.partColor.part.name
+            order by sp.id desc
         </query>
     </named-query>
     <named-query name="getSetPartBySetAndPrtColorId">

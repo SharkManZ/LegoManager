@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.legomanager.common.ErrorConstants.MORE_THAN_ONE_PART_COLOR;
 
 @Component
 public class PartColorDao extends BaseDao<PartColorEntity> {
@@ -42,7 +43,8 @@ public class PartColorDao extends BaseDao<PartColorEntity> {
         PartColorEntity byPartAndColor = partColorRepository.getPartColorByPartAndColor(entity.getPart().getId(),
                 entity.getColor().getId());
         if (byPartAndColor != null && (entity.getId() == null || !entity.getId().equals(byPartAndColor.getId()))) {
-            throw new ValidationException(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartColorEntity.getDescription(),
+            throw new ValidationException(MessageFormat.format(ENTITY_ALREADY_EXISTS,
+                    PartColorEntity.getDescription(),
                     entity.getPart().getId() + " " + entity.getColor().getId()));
         }
 
@@ -73,7 +75,15 @@ public class PartColorDao extends BaseDao<PartColorEntity> {
     public PartColorEntity search(PartColorSearchDto dto) {
         String[] searchParts = dto.getSearchValue().split(" ");
         if (searchParts.length == 1) {
-            return partColorRepository.getPartColorByNumber(searchParts[0]);
+            Long countByNumber = partColorRepository.getPartColorCountByNumber(searchParts[0]);
+            if (countByNumber == 0) {
+                return null;
+            } else if (countByNumber == 1) {
+                return partColorRepository.getPartColorByNumber(searchParts[0]);
+            } else {
+                throw new ValidationException(MessageFormat.format(MORE_THAN_ONE_PART_COLOR, countByNumber,
+                        searchParts[0]));
+            }
         } else {
             return partColorRepository.getPartColorByNumberPartNumber(searchParts[0], searchParts[1]);
         }

@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.legomanager.common.ErrorConstants.MORE_THAN_ONE_PART_COLOR;
 
 public class PartColorDaoTest extends DaoServiceTest {
     @Autowired
@@ -46,7 +47,7 @@ public class PartColorDaoTest extends DaoServiceTest {
         List<PartColorEntity> list = partColorDao.getPartColorListByPartId(partId);
 
         // THEN
-        Assertions.assertEquals(2, list.size());
+        Assertions.assertEquals(3, list.size());
         Assertions.assertTrue(ordering.isOrdered(list));
     }
 
@@ -86,7 +87,7 @@ public class PartColorDaoTest extends DaoServiceTest {
     public void saveWithUpdate() {
         // GIVEN
         PartColorEntity entity = prepareEntity();
-        entity.setId(entityFinder.findPartColorId("112231"));
+        entity.setId(entityFinder.findPartColorId("098765"));
 
         // WHEN
         PartColorEntity saved = partColorDao.save(entity);
@@ -104,7 +105,7 @@ public class PartColorDaoTest extends DaoServiceTest {
     public void saveWithUpdateExistsByPartAndColor() {
         // GIVEN
         PartColorEntity entity = prepareEntity();
-        entity.setId(entityFinder.findPartColorId("112231"));
+        entity.setId(entityFinder.findPartColorId("112231", "3010"));
         entity.getPart().setId(entityFinder.findPartId("3010"));
         entity.getColor().setId(entityFinder.findColorId("Red"));
 
@@ -164,7 +165,7 @@ public class PartColorDaoTest extends DaoServiceTest {
     public void search() {
         // GIVEN
         PartColorSearchDto dto = new PartColorSearchDto();
-        dto.setSearchValue("112231");
+        dto.setSearchValue("098765");
 
         // WHEN
         PartColorEntity entity = partColorDao.search(dto);
@@ -172,6 +173,20 @@ public class PartColorDaoTest extends DaoServiceTest {
         // THEN
         Assertions.assertNotNull(entity);
         Assertions.assertEquals(entity.getNumber(), dto.getSearchValue());
+    }
+
+    @Test
+    public void searchWithMoreThanOneResult() {
+        // GIVEN
+        PartColorSearchDto dto = new PartColorSearchDto();
+        dto.setSearchValue("112231");
+        String expected = MessageFormat.format(MORE_THAN_ONE_PART_COLOR, 2, dto.getSearchValue());
+
+        // WHEN
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> partColorDao.search(dto));
+
+        // THEN
+        Assertions.assertEquals(expected, exception.getMessage());
     }
 
     @Test

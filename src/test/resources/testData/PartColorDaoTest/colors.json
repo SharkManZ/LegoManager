@@ -6,5 +6,9 @@
   {
     "name": "Red",
     "hexColor": "ff0000"
+  },
+  {
+    "name": "White",
+    "hexColor": "FFFFFF"
   }
 ]
