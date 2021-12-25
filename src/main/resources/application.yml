@@ -3,7 +3,6 @@ server:
     context-path: /lego-manager
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/lego
     username: shark
     password: NeshWood
     driver-class-name: org.postgresql.Driver
