@@ -62,7 +62,7 @@ public class SetPartDao extends BaseDao<SetPartEntity> {
         validateFields(entity);
         SetPartEntity bySetAndPartColor = setPartRepository.getSetPartBySetAndPrtColorId(entity.getSet().getId(),
                 entity.getPartColor().getId());
-        if (bySetAndPartColor != null && (entity.getId() == null || entity.getId() != bySetAndPartColor.getId())) {
+        if (bySetAndPartColor != null && (entity.getId() == null || !entity.getId().equals(bySetAndPartColor.getId()))) {
             throw new ValidationException(MessageFormat.format(ENTITY_ALREADY_EXISTS, SetPartEntity.getDescription(),
                     entity.getSet().getId() + " " + entity.getPartColor().getId()));
         }
