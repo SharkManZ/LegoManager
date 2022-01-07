@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
+import ru.shark.home.common.dao.common.RequestSearch;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
@@ -56,7 +57,7 @@ public class PartCategoryDaoTest extends DaoServiceTest {
     public void getWithPaginationWithSearch() {
         // GIVEN
         RequestCriteria requestCriteria = new RequestCriteria(0, 10);
-        requestCriteria.setSearch("bri");
+        requestCriteria.setSearch(new RequestSearch("bri", false));
 
         // WHEN
         PageableList<PartCategoryEntity> list = partCategoryDao.getWithPagination(requestCriteria);

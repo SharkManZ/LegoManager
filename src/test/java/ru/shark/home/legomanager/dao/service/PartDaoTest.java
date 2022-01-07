@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
+import ru.shark.home.common.dao.common.RequestSearch;
 import ru.shark.home.legomanager.dao.dto.PartFullDto;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
@@ -75,7 +76,7 @@ public class PartDaoTest extends DaoServiceTest {
             }
         };
         RequestCriteria requestCriteria = new RequestCriteria(0, 10);
-        requestCriteria.setSearch("100");
+        requestCriteria.setSearch(new RequestSearch("100", false));
 
         // WHEN
         PageableList<PartFullDto> list = partDao.getWithPagination(requestCriteria);

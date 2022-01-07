@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
+import ru.shark.home.common.dao.common.RequestSearch;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
@@ -45,7 +46,7 @@ public class ColorDaoTest extends DaoServiceTest {
         PageableList<ColorEntity> list = colorDao.getWithPagination(new RequestCriteria(0, 10));
 
         // THEN
-        checkPagingList(list, 2, 2L);
+        checkPagingList(list, 3, 3L);
         assertTrue(ordering.isOrdered(list.getData()));
     }
 
@@ -53,7 +54,20 @@ public class ColorDaoTest extends DaoServiceTest {
     public void getWithPaginationWithSearch() {
         // GIVEN
         RequestCriteria requestCriteria = new RequestCriteria(0, 10);
-        requestCriteria.setSearch("bla");
+        requestCriteria.setSearch(new RequestSearch("red", false));
+
+        // WHEN
+        PageableList<ColorEntity> list = colorDao.getWithPagination(requestCriteria);
+
+        // THEN
+        checkPagingList(list, 2, 2L);
+    }
+
+    @Test
+    public void getWithPaginationWithSearchEquals() {
+        // GIVEN
+        RequestCriteria requestCriteria = new RequestCriteria(0, 10);
+        requestCriteria.setSearch(new RequestSearch("red", true));
 
         // WHEN
         PageableList<ColorEntity> list = colorDao.getWithPagination(requestCriteria);
@@ -77,7 +91,7 @@ public class ColorDaoTest extends DaoServiceTest {
         List<ColorEntity> colors = colorDao.getAllColors();
 
         // THEN
-        Assertions.assertEquals(2, colors.size());
+        Assertions.assertEquals(3, colors.size());
         Assertions.assertTrue(ordering.isOrdered(colors));
     }
 
