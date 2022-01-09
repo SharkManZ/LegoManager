@@ -31,7 +31,7 @@ public class SetPartDataManagerTest extends DaoServiceTest {
         Long setId = entityFinder.findSetId("42082");
 
         // WHEN
-        List<SetPartFullDto> list = setPartDataManager.getPartsBySetId(setId);
+        List<SetPartFullDto> list = setPartDataManager.getPartsBySetId(setId, null);
 
         // THEN
         Assertions.assertEquals(2, list.size());

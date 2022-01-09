@@ -93,7 +93,18 @@
 
     <!-- Детали набора sp.partColor.color.name, sp.partColor.part.category.name, sp.partColor.part.name-->
     <named-query name="getSetPartsBySetId">
-        <query>select sp from SetPartEntity sp where sp.set.id = :setId
+        <query>select sp from SetPartEntity sp
+            join sp.partColor pc
+            join pc.part p
+            join pc.color c
+            where sp.set.id = :setId and
+            (lower(pc.number) like '%' || lower(:search) || '%' or
+             lower(pc.alternateNumber) like '%' || lower(:search) || '%' or
+             lower(p.number) like '%' || lower(:search) || '%' or
+             lower(p.alternateNumber) like '%' || lower(:search) || '%' or
+             lower(p.name) like '%' || lower(:search) || '%' or
+             lower(c.name) like '%' || lower(:search) || '%'
+            )
             order by sp.id desc
         </query>
     </named-query>

@@ -16,7 +16,7 @@ public interface SetPartRepository extends BaseRepository<SetPartEntity> {
      * @return список деталей
      */
     @Query(name = "getSetPartsBySetId")
-    List<SetPartEntity> getSetPartsBySetId(@Param("setId") Long setId);
+    List<SetPartEntity> getSetPartsBySetId(@Param("setId") Long setId, @Param("search") String search);
 
     /**
      * Возвращает деталь набора по идентификаторам набора и цвета детали.

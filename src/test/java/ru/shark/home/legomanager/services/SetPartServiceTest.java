@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.services;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.shark.home.common.services.dto.ListRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.SetPartDto;
 import ru.shark.home.legomanager.datamanager.SetPartDataManager;
@@ -31,14 +32,14 @@ public class SetPartServiceTest extends BaseServiceTest {
     @Test
     public void getListBySetId() {
         // GIVEN
-        when(setPartDataManager.getPartsBySetId(anyLong())).thenReturn(new ArrayList<>());
+        when(setPartDataManager.getPartsBySetId(anyLong(), any(ListRequest.class))).thenReturn(new ArrayList<>());
 
         // WHEN
-        BaseResponse response = setPartService.getListBySetId(1L);
+        BaseResponse response = setPartService.getListBySetId(1L, new ListRequest());
 
         // THEN
         checkResponseWithBody(response);
-        verify(setPartDataManager, times(1)).getPartsBySetId(anyLong());
+        verify(setPartDataManager, times(1)).getPartsBySetId(anyLong(), any(ListRequest.class));
     }
 
     @Test

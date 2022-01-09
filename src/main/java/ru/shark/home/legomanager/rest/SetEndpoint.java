@@ -2,6 +2,7 @@ package ru.shark.home.legomanager.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.shark.home.common.services.dto.ListRequest;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.services.SetPartService;
@@ -39,8 +40,8 @@ public class SetEndpoint {
 
     @POST
     @Path("{id}/part/list")
-    public Response getPartsList(@PathParam("id") Long id) {
-        return Response.ok(setPartService.getListBySetId(id)).build();
+    public Response getPartsList(@PathParam("id") Long id, ListRequest request) {
+        return Response.ok(setPartService.getListBySetId(id, request)).build();
     }
 
     @Autowired

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.shark.home.common.services.dto.ListRequest;
+import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
@@ -35,10 +37,56 @@ public class SetPartDaoTest extends DaoServiceTest {
         Long setId = entityFinder.findSetId("42082");
 
         // WHEN
-        List<SetPartFullDto> list = setPartDao.getPartsBySetId(setId);
+        List<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, null);
 
         // THEN
         Assertions.assertEquals(2, list.size());
+        for (SetPartFullDto dto : list) {
+            Assertions.assertNotNull(dto.getId());
+            Assertions.assertNotNull(dto.getSetId());
+            Assertions.assertNotNull(dto.getPartColorId());
+            Assertions.assertNotNull(dto.getNumber());
+            Assertions.assertNotNull(dto.getColorNumber());
+            Assertions.assertNotNull(dto.getHexColor());
+            Assertions.assertNotNull(dto.getCount());
+            Assertions.assertNotNull(dto.getPartName());
+        }
+    }
+
+    @Test
+    public void getPartsBySetIdWithRequestEmptySearch() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+
+        // WHEN
+        List<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, new ListRequest());
+
+        // THEN
+        Assertions.assertEquals(2, list.size());
+        for (SetPartFullDto dto : list) {
+            Assertions.assertNotNull(dto.getId());
+            Assertions.assertNotNull(dto.getSetId());
+            Assertions.assertNotNull(dto.getPartColorId());
+            Assertions.assertNotNull(dto.getNumber());
+            Assertions.assertNotNull(dto.getColorNumber());
+            Assertions.assertNotNull(dto.getHexColor());
+            Assertions.assertNotNull(dto.getCount());
+            Assertions.assertNotNull(dto.getPartName());
+        }
+    }
+
+    @Test
+    public void getPartsBySetIdWithSearch() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+        ListRequest request = new ListRequest();
+        request.setSearch(new Search("555"));
+
+        // WHEN
+        List<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, request);
+
+        // THEN
+        Assertions.assertEquals(1, list.size());
         for (SetPartFullDto dto : list) {
             Assertions.assertNotNull(dto.getId());
             Assertions.assertNotNull(dto.getSetId());
