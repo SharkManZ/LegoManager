@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.common.dao.util.SpecificationUtils.andSpecifications;
 
 @Component
 public class SetDao extends BaseDao<SetEntity> {
@@ -37,9 +38,16 @@ public class SetDao extends BaseDao<SetEntity> {
     }
 
     public PageableList<SetFullDto> getWithPagination(RequestCriteria request) {
+        return getWithPagination(request, null);
+    }
+
+    public PageableList<SetFullDto> getWithPagination(RequestCriteria request, Long seriesId) {
         Specification<SetEntity> searchSpec = SpecificationUtils.searchSpecification(request.getSearch(),
                 NAME_FIELD, NUMBER_FIELD);
-        return getListWithAdditionalFields(setRepository.getWithPagination(request, searchSpec, NUMBER_FIELD));
+        return getListWithAdditionalFields(setRepository.getWithPagination(request,
+                seriesId == null ? searchSpec : andSpecifications(searchSpec,
+                        SpecificationUtils.equalAttribute("series.id", seriesId)),
+                NUMBER_FIELD));
     }
 
     private PageableList<SetFullDto> getListWithAdditionalFields(PageableList<SetEntity> list) {
@@ -47,7 +55,7 @@ public class SetDao extends BaseDao<SetEntity> {
         List<Map<String, Object>> additionalData = null;
         if (list.getData().size() > 0) {
             additionalData = setRepository.getSetsAdditionalData(list.getData().stream()
-                    .map(item -> item.getId()).collect(Collectors.toList()));
+                    .map(SetEntity::getId).collect(Collectors.toList()));
         }
         for (SetEntity entity : list.getData()) {
             SetFullDto dto = new SetFullDto();

@@ -18,6 +18,10 @@ public class SetDataManager extends BaseDataManager<SetEntity, SetDto> {
     public PageableList<SetFullDto> getWithPagination(RequestCriteria request) {
         SetDao dao = (SetDao) getDao();
         return dao.getWithPagination(request);
+    }
 
+    public PageableList<SetFullDto> getWithPagination(RequestCriteria request, Long seriesId) {
+        SetDao dao = (SetDao) getDao();
+        return dao.getWithPagination(request, seriesId);
     }
 }

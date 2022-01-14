@@ -67,7 +67,7 @@ public class ColorDaoTest extends DaoServiceTest {
     public void getWithPaginationWithSearchEquals() {
         // GIVEN
         RequestCriteria requestCriteria = new RequestCriteria(0, 10);
-        requestCriteria.setSearch(new RequestSearch("red", true));
+        requestCriteria.setSearch(new RequestSearch("Red", true));
 
         // WHEN
         PageableList<ColorEntity> list = colorDao.getWithPagination(requestCriteria);

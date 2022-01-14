@@ -48,6 +48,21 @@ public class SetServiceTest extends BaseServiceTest {
     }
 
     @Test
+    public void getListWithSeriesId() {
+        // GIVEN
+        PageRequest request = new PageRequest(0, 10);
+        PageableList<SetFullDto> list = new PageableList<>(Arrays.asList(new SetFullDto()), 10L);
+        when(setDataManager.getWithPagination(any(RequestCriteria.class), anyLong())).thenReturn(list);
+
+        // WHEN
+        BaseResponse response = service.getList(request, 1L);
+
+        // THEN
+        checkPagingResponse(response);
+        verify(setDataManager, times(1)).getWithPagination(any(RequestCriteria.class), anyLong());
+    }
+
+    @Test
     public void save() {
         // WHEN
         BaseResponse response = service.save(new SetDto());

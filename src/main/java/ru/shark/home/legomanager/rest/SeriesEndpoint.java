@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.legomanager.dao.dto.SeriesDto;
 import ru.shark.home.legomanager.services.SeriesService;
+import ru.shark.home.legomanager.services.SetService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 public class SeriesEndpoint {
 
     private SeriesService seriesService;
+    private SetService setService;
 
     @POST
     @Path("/list")
@@ -27,6 +29,12 @@ public class SeriesEndpoint {
     @Path("/list/all")
     public Response getAllList() {
         return Response.ok(seriesService.getAllList()).build();
+    }
+
+    @POST
+    @Path("/{id}/sets/list")
+    public Response getSetsList(@PathParam("id") Long id, PageRequest request) {
+        return Response.ok(setService.getList(request, id)).build();
     }
 
     @POST
@@ -44,5 +52,10 @@ public class SeriesEndpoint {
     @Autowired
     public void setSeriesService(SeriesService seriesService) {
         this.seriesService = seriesService;
+    }
+
+    @Autowired
+    public void setSetService(SetService setService) {
+        this.setService = setService;
     }
 }

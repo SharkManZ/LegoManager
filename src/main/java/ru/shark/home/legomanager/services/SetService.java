@@ -29,6 +29,21 @@ public class SetService extends BaseLogicService {
         return response;
     }
 
+    public BaseResponse getList(PageRequest request, Long seriesId) {
+        BaseResponse response;
+
+        try {
+            response = new BaseResponse();
+            response.setBody(setDataManager.getWithPagination(getCriteria(request, SetDto.class), seriesId));
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при получении списка наборов по серии: " +
+                    e.getMessage());
+        }
+
+        return response;
+    }
+
     public BaseResponse save(SetDto dto) {
         BaseResponse response;
         try {

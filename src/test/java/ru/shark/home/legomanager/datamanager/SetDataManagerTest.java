@@ -49,6 +49,26 @@ public class SetDataManagerTest extends DaoServiceTest {
     }
 
     @Test
+    public void getWithPaginationWithSeriesId() {
+        // GIVEN
+        Ordering<SetFullDto> ordering = new Ordering<SetFullDto>() {
+            @Override
+            public int compare(@Nullable SetFullDto setDto, @Nullable SetFullDto t1) {
+                return Comparator.comparing(SetFullDto::getNumber)
+                        .compare(setDto, t1);
+            }
+        };
+        Long seriesId = entityFinder.findSeriesId("Technic");
+
+        // WHEN
+        PageableList<SetFullDto> list = setDataManager.getWithPagination(new RequestCriteria(0, 10), seriesId);
+
+        // THEN
+        checkPagingDtoList(list, 2, 2L);
+        assertTrue(ordering.isOrdered(list.getData()));
+    }
+
+    @Test
     public void save() {
         // GIVEN
         SetDto dto = new SetDto();
