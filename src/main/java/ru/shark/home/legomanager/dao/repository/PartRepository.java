@@ -40,4 +40,10 @@ public interface PartRepository extends BaseRepository<PartEntity> {
      */
     @Query(name = "getPartAdditionalDataByIds")
     List<Map<String, Object>> getPartAdditionalDataByIds(@Param("ids") List<Long> ids);
+
+    /**
+     * Возвращает все детали по идентификатору категории.
+     */
+    @Query(value = "select p from PartEntity p where p.category.id = :categoryId order by p.number")
+    List<PartEntity> findByCategoryId(@Param("categoryId") Long categoryId);
 }

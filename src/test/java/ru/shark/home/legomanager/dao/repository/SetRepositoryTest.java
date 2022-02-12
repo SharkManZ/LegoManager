@@ -65,7 +65,20 @@ public class SetRepositoryTest extends DaoServiceTest {
         List<Map<String, Object>> list = setRepository.getSetsAdditionalData(ids);
 
         // THEN
-        Assertions.assertEquals(list.size(), 2);
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.get("id").equals(setWithParts) && (Long)item.get("partsCount") == 13L));
+        Assertions.assertEquals(2, list.size());
+        Assertions.assertTrue(list.stream().anyMatch(item -> item.get("id").equals(setWithParts) && (Long) item.get("partsCount") == 13L));
+    }
+
+    @Test
+    public void findBySeriesId() {
+        // GIVEN
+        Long seriesId = entityFinder.findSeriesId("Technic");
+
+        // WHEN
+        List<SetEntity> list = setRepository.findBySeriesId(seriesId);
+
+        // THEN
+        Assertions.assertEquals(2, list.size());
+        Assertions.assertTrue(list.stream().allMatch(item -> item.getSeries().getId().equals(seriesId)));
     }
 }

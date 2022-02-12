@@ -15,5 +15,6 @@ public class RestConfig extends ResourceConfig {
         register(PartEndpoint.class);
         register(PartColorEndpoint.class);
         register(SetPartEndpoint.class);
+        register(ExportEndpoint.class);
     }
 }

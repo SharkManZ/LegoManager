@@ -72,4 +72,17 @@ public class PartRepositoryTest extends DaoServiceTest {
             Assertions.assertEquals(counts.get(count.get("id")).getRight(), count.get("minColorNumber"));
         });
     }
+
+    @Test
+    public void findByCategoryId() {
+        // GIVEN
+        Long categoryId = entityFinder.findPartCategoryId("Brick");
+
+        // WHEN
+        List<PartEntity> list = partRepository.findByCategoryId(categoryId);
+
+        // THEN
+        Assertions.assertFalse(list.isEmpty());
+        Assertions.assertTrue(list.stream().allMatch(item -> item.getCategory().getId().equals(categoryId)));
+    }
 }

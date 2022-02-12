@@ -1,0 +1,148 @@
+package ru.shark.home.legomanager.dao.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.shark.home.legomanager.dao.dto.export.*;
+import ru.shark.home.legomanager.dao.entity.*;
+import ru.shark.home.legomanager.dao.repository.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+public class ExportDao {
+    private ColorRepository colorRepository;
+    private PartCategoryRepository partCategoryRepository;
+    private PartRepository partRepository;
+    private PartColorRepository partColorRepository;
+    private SeriesRepository seriesRepository;
+    private SetRepository setRepository;
+    private SetPartRepository setPartRepository;
+
+    /**
+     * Экспорт цветов.
+     *
+     * @return список цветов
+     */
+    public List<ColorDictionaryDto> exportColors() {
+        List<ColorEntity> allColors = colorRepository.getAllColors();
+        return allColors.stream().map(this::colorEntityToDictionary).collect(Collectors.toList());
+    }
+
+    /**
+     * Экспорт категорий, их деталей и цветов деталей.
+     *
+     * @return дерево категории - детали - цвета
+     */
+    public List<PartCategoryDictionaryDto> exportPartCategories() {
+        List<PartCategoryEntity> allCategories = partCategoryRepository.getAllCategories();
+        return allCategories.stream().map(this::categoryEntityToDictionary).collect(Collectors.toList());
+    }
+
+    /**
+     * Экспорт серий, их наборов и деталей наборов.
+     *
+     * @return дерево серий - наборов - деталей
+     */
+    public List<SeriesDictionaryDto> exportSeries() {
+        List<SeriesEntity> list = seriesRepository.getAllSeries();
+        return list.stream().map(this::seriesEntityToDictionary).collect(Collectors.toList());
+    }
+
+    private SeriesDictionaryDto seriesEntityToDictionary(SeriesEntity entity) {
+        SeriesDictionaryDto dto = new SeriesDictionaryDto();
+        dto.setName(entity.getName());
+        dto.setSets(setRepository.findBySeriesId(entity.getId())
+                .stream()
+                .map(this::setEntityToDictionary)
+                .collect(Collectors.toList()));
+
+        return dto;
+    }
+
+    private SetDictionaryDto setEntityToDictionary(SetEntity entity) {
+        SetDictionaryDto dto = new SetDictionaryDto();
+        dto.setNumber(entity.getNumber());
+        dto.setName(entity.getName());
+        dto.setYear(entity.getYear());
+        dto.setParts(setPartRepository.findBySetId(entity.getId())
+                .stream()
+                .map(this::setPartEntityToDictionary)
+                .collect(Collectors.toList()));
+
+        return dto;
+    }
+
+    private SetPartDictionaryDto setPartEntityToDictionary(SetPartEntity entity) {
+        SetPartDictionaryDto dto = new SetPartDictionaryDto();
+        dto.setPartColorNumber(entity.getPartColor().getNumber());
+        dto.setCount(entity.getCount());
+
+        return dto;
+    }
+
+    private PartCategoryDictionaryDto categoryEntityToDictionary(PartCategoryEntity entity) {
+        PartCategoryDictionaryDto dto = new PartCategoryDictionaryDto();
+        dto.setName(entity.getName());
+        List<PartEntity> partList = partRepository.findByCategoryId(entity.getId());
+        dto.setParts(partList.stream().map(this::partEntityToDictionary).collect(Collectors.toList()));
+
+        return dto;
+    }
+
+    private PartDictionaryDto partEntityToDictionary(PartEntity entity) {
+        PartDictionaryDto dto = new PartDictionaryDto();
+        dto.setNumber(entity.getNumber());
+        dto.setName(entity.getName());
+        dto.setAlternateNumber(entity.getAlternateNumber());
+        dto.setColors(partColorRepository.getPartColorsByPartId(entity.getId())
+                .stream()
+                .map(item -> item.getColor().getName())
+                .collect(Collectors.toList()));
+
+        return dto;
+    }
+
+    private ColorDictionaryDto colorEntityToDictionary(ColorEntity entity) {
+        ColorDictionaryDto dto = new ColorDictionaryDto();
+        dto.setName(entity.getName());
+        dto.setHexColor(entity.getHexColor());
+
+        return dto;
+    }
+
+    @Autowired
+    public void setColorRepository(ColorRepository colorRepository) {
+        this.colorRepository = colorRepository;
+    }
+
+    @Autowired
+    public void setPartCategoryRepository(PartCategoryRepository partCategoryRepository) {
+        this.partCategoryRepository = partCategoryRepository;
+    }
+
+    @Autowired
+    public void setPartRepository(PartRepository partRepository) {
+        this.partRepository = partRepository;
+    }
+
+    @Autowired
+    public void setPartColorRepository(PartColorRepository partColorRepository) {
+        this.partColorRepository = partColorRepository;
+    }
+
+    @Autowired
+    public void setSeriesRepository(SeriesRepository seriesRepository) {
+        this.seriesRepository = seriesRepository;
+    }
+
+    @Autowired
+    public void setSetRepository(SetRepository setRepository) {
+        this.setRepository = setRepository;
+    }
+
+    @Autowired
+    public void setSetPartRepository(SetPartRepository setPartRepository) {
+        this.setPartRepository = setPartRepository;
+    }
+}

@@ -35,4 +35,13 @@ public interface SetPartRepository extends BaseRepository<SetPartEntity> {
      */
     @Query(name = "getSetPartsCount")
     Long getSetPartsCount();
+
+    /**
+     * Возвращает детали набора с сортировкой по номеру цвета детали.
+     *
+     * @param setId идентификатор набора
+     * @return коллекция деталей наборов
+     */
+    @Query(value = "select sp from SetPartEntity sp where sp.set.id = :setId order by sp.partColor.number")
+    List<SetPartEntity> findBySetId(@Param("setId") Long setId);
 }

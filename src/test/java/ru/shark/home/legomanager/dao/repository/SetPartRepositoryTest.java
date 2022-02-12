@@ -99,4 +99,17 @@ public class SetPartRepositoryTest extends DaoServiceTest {
         // THEN
         Assertions.assertEquals(expected, count);
     }
+
+    @Test
+    public void findBySetId() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+
+        // WHEN
+        List<SetPartEntity> list = setPartRepository.findBySetId(setId);
+
+        // THEN
+        Assertions.assertEquals(2, list.size());
+        Assertions.assertTrue(list.stream().allMatch(item -> item.getSet().getId().equals(setId)));
+    }
 }
