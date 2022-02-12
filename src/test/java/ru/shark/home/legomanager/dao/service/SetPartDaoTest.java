@@ -182,8 +182,8 @@ public class SetPartDaoTest extends DaoServiceTest {
         noPartColorId.getPartColor().setId(null);
         SetPartEntity partColorNotFound = prepareEntity();
         partColorNotFound.getPartColor().setId(999L);
-
-
+        SetPartEntity invalidCount = prepareEntity();
+        invalidCount.setCount(0);
 
         // WHEN
         ValidationException noCountException = Assertions.assertThrows(ValidationException.class, () -> setPartDao.save(noCount));
@@ -193,6 +193,7 @@ public class SetPartDaoTest extends DaoServiceTest {
         ValidationException noPartColorException = Assertions.assertThrows(ValidationException.class, () -> setPartDao.save(noPartColor));
         ValidationException noPartColorIdException = Assertions.assertThrows(ValidationException.class, () -> setPartDao.save(noPartColorId));
         ValidationException partColorNotFoundException = Assertions.assertThrows(ValidationException.class, () -> setPartDao.save(partColorNotFound));
+        ValidationException invalidCountException = Assertions.assertThrows(ValidationException.class, () -> setPartDao.save(invalidCount));
 
         // THEN
         Assertions.assertEquals(MessageFormat.format(ENTITY_EMPTY_FIELD, "count",
@@ -209,6 +210,8 @@ public class SetPartDaoTest extends DaoServiceTest {
                 SetPartEntity.getDescription()), noPartColorIdException.getMessage());
         Assertions.assertEquals(MessageFormat.format(ENTITY_NOT_FOUND_BY_ID, PartColorEntity.getDescription(),
                 setNotFound.getSet().getId()), partColorNotFoundException.getMessage());
+        Assertions.assertEquals(MessageFormat.format(ENTITY_FIELD_VALUE_LOWER, "count", 0),
+                invalidCountException.getMessage());
     }
 
     @Test

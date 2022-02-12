@@ -76,6 +76,9 @@ public class SetPartDao extends BaseDao<SetPartEntity> {
             throw new ValidationException(MessageFormat.format(ENTITY_EMPTY_FIELD, "count",
                     SetPartEntity.getDescription()));
         }
+        if (entity.getCount() <= 0) {
+            throw new ValidationException(MessageFormat.format(ENTITY_FIELD_VALUE_LOWER, "count", 0));
+        }
         if (entity.getSet() == null || entity.getSet().getId() == null) {
             throw new ValidationException(MessageFormat.format(ENTITY_EMPTY_FIELD, "set",
                     SetPartEntity.getDescription()));
