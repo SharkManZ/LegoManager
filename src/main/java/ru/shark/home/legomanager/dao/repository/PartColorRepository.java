@@ -19,6 +19,28 @@ public interface PartColorRepository extends BaseRepository<PartColorEntity> {
     List<PartColorEntity> getPartColorsByPartId(@Param("partId") Long partId);
 
     /**
+     * Возвращает список цветов детали по идентификатору детали и поиском по названию цвета по строгому соответствию.
+     *
+     * @param partId идентификатор детали
+     * @param search строка поиска
+     * @return список цветов деталей
+     */
+    @Query(name = "getPartColorsByPartIdAndEqualsSearch")
+    List<PartColorEntity> getPartColorsByPartIdAndEqualsSearch(@Param("partId") Long partId,
+                                                               @Param("search") String search);
+
+    /**
+     * Возвращает список цветов детали по идентификатору детали и поиском по названию цвета по не строгому соответствию.
+     *
+     * @param partId идентификатор детали
+     * @param search строка поиска
+     * @return список цветов деталей
+     */
+    @Query(name = "getPartColorsByPartIdAndNotEqualsSearch")
+    List<PartColorEntity> getPartColorsByPartIdAndNotEqualsSearch(@Param("partId") Long partId,
+                                                                  @Param("search") String search);
+
+    /**
      * Возвращает количество цветов детали по номеру.
      *
      * @param number номер цвета детали

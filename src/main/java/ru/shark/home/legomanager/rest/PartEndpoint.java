@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.services.dto.PageRequest;
+import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.dto.PartDto;
 import ru.shark.home.legomanager.services.PartColorService;
 import ru.shark.home.legomanager.services.PartService;
@@ -39,8 +40,8 @@ public class PartEndpoint {
 
     @POST
     @Path("/{id}/color/list")
-    public Response getColorList(@PathParam("id") Long id) {
-        return Response.ok(partColorService.getListByPart(id)).build();
+    public Response getColorList(@PathParam("id") Long id, Search search) {
+        return Response.ok(partColorService.getListByPart(id, search)).build();
     }
 
     @Autowired

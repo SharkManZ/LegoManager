@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.shark.home.common.services.dto.PageRequest;
+import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.dto.PartDto;
 import ru.shark.home.legomanager.services.PartColorService;
 import ru.shark.home.legomanager.services.PartService;
@@ -69,10 +70,10 @@ public class PartEndpointTest extends BaseEndpointTest {
     @Test
     public void getColorList() {
         // WHEN
-        Response response = partEndpoint.getColorList(1L);
+        Response response = partEndpoint.getColorList(1L, new Search());
 
         // THEN
         checkResponse(response);
-        verify(partColorService, times(1)).getListByPart(anyLong());
+        verify(partColorService, times(1)).getListByPart(anyLong(), any(Search.class));
     }
 }

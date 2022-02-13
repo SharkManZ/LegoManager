@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.dao.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.dao.service.BaseDao;
+import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
@@ -30,8 +31,15 @@ public class PartColorDao extends BaseDao<PartColorEntity> {
         super(PartColorEntity.class);
     }
 
-    public List<PartColorEntity> getPartColorListByPartId(Long partId) {
-        return partColorRepository.getPartColorsByPartId(partId);
+    public List<PartColorEntity> getPartColorListByPartId(Long partId, Search search) {
+        if (search == null || isBlank(search.getValue())) {
+            return partColorRepository.getPartColorsByPartId(partId);
+        }
+        if (search.isEquals()) {
+            return partColorRepository.getPartColorsByPartIdAndEqualsSearch(partId, search.getValue());
+        } else {
+            return partColorRepository.getPartColorsByPartIdAndNotEqualsSearch(partId, search.getValue());
+        }
     }
 
     public PartColorEntity save(PartColorEntity entity) {

@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.services;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
@@ -32,14 +33,14 @@ public class PartColorServiceTest extends BaseServiceTest {
     @Test
     public void getListByPart() {
         // GIVEN
-        when(partColorDataManager.getPartColorListByPartId(anyLong())).thenReturn(new ArrayList<>());
+        when(partColorDataManager.getPartColorListByPartId(anyLong(), any(Search.class))).thenReturn(new ArrayList<>());
 
         // WHEN
-        BaseResponse response = partColorService.getListByPart(1L);
+        BaseResponse response = partColorService.getListByPart(1L, new Search());
 
         // THEN
         checkResponseWithBody(response);
-        verify(partColorDataManager, times(1)).getPartColorListByPartId(anyLong());
+        verify(partColorDataManager, times(1)).getPartColorListByPartId(anyLong(), any(Search.class));
     }
 
     @Test

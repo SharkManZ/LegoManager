@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.services.BaseLogicService;
+import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
@@ -15,11 +16,11 @@ public class PartColorService extends BaseLogicService {
 
     private PartColorDataManager partColorDataManager;
 
-    public BaseResponse getListByPart(Long partId) {
+    public BaseResponse getListByPart(Long partId, Search search) {
         BaseResponse baseResponse;
         try {
             baseResponse = new BaseResponse();
-            baseResponse.setBody(partColorDataManager.getPartColorListByPartId(partId));
+            baseResponse.setBody(partColorDataManager.getPartColorListByPartId(partId, search));
             baseResponse.setSuccess(true);
         } catch (Exception ex) {
             baseResponse = BaseResponse.buildError(ERR_500, "Ошибка при получении цветов деталей: " + ex.getMessage());

@@ -44,7 +44,7 @@ public class PartColorDaoTest extends DaoServiceTest {
         };
 
         // WHEN
-        List<PartColorEntity> list = partColorDao.getPartColorListByPartId(partId);
+        List<PartColorEntity> list = partColorDao.getPartColorListByPartId(partId, null);
 
         // THEN
         Assertions.assertEquals(3, list.size());

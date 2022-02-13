@@ -2,6 +2,7 @@ package ru.shark.home.legomanager.datamanager;
 
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.datamanager.BaseDataManager;
+import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.service.PartColorDao;
@@ -15,9 +16,9 @@ public class PartColorDataManager extends BaseDataManager<PartColorEntity, PartC
         super(dao, PartColorDto.class);
     }
 
-    public List<PartColorDto> getPartColorListByPartId(Long partId) {
+    public List<PartColorDto> getPartColorListByPartId(Long partId, Search search) {
         PartColorDao dao = (PartColorDao) getDao();
-        return getConverterUtil().entityListToDtoList(dao.getPartColorListByPartId(partId), PartColorDto.class);
+        return getConverterUtil().entityListToDtoList(dao.getPartColorListByPartId(partId, search), PartColorDto.class);
     }
 
     public PartColorDto search(PartColorSearchDto dto) {

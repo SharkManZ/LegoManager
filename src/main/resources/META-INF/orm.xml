@@ -74,6 +74,16 @@
     <named-query name="getPartColorsByPartId">
         <query>select pc from PartColorEntity pc where pc.part.id = :partId order by pc.number</query>
     </named-query>
+    <named-query name="getPartColorsByPartIdAndEqualsSearch">
+        <query>select pc from PartColorEntity pc where pc.part.id = :partId
+            and lower(pc.color.name) = lower(:search)
+            order by pc.number</query>
+    </named-query>
+    <named-query name="getPartColorsByPartIdAndNotEqualsSearch">
+        <query>select pc from PartColorEntity pc where pc.part.id = :partId
+            and lower(pc.color.name) like '%' || lower(:search) || '%'
+            order by pc.number</query>
+    </named-query>
     <named-query name="getPartColorCountByNumber">
         <query>select count(pc.id) from PartColorEntity pc where lower(pc.number) = lower(:number) or
             lower(pc.alternateNumber) like '%' || lower(:number) || '%'</query>
