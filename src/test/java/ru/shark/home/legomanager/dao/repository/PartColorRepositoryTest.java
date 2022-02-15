@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -46,6 +46,32 @@ public class PartColorRepositoryTest extends DaoServiceTest {
     }
 
     @Test
+    public void getPartColorsByPartIds() {
+        // GIVEN
+        List<Long> ids = Arrays.asList(entityFinder.findPartId("3010"), entityFinder.findPartId("3011"));
+
+        // GIVEN
+        Ordering<PartColorEntity> ordering = new Ordering<PartColorEntity>() {
+            @Override
+            public int compare(@Nullable PartColorEntity partColorEntity, @Nullable PartColorEntity t1) {
+                int result = partColorEntity.getPart().getId().compareTo(t1.getPart().getId());
+                if (result != 0) {
+                    return result;
+                }
+                return Comparator.comparing(PartColorEntity::getNumber)
+                        .compare(partColorEntity, t1);
+            }
+        };
+
+        // WHEN
+        List<PartColorEntity> list = partColorRepository.getPartColorsByPartIds(ids);
+
+        // THEN
+        Assertions.assertEquals(4, list.size());
+        Assertions.assertTrue(ordering.isOrdered(list));
+    }
+
+    @Test
     public void getPartColorByNumber() {
         // WHEN
         PartColorEntity byNumber = partColorRepository.getPartColorByNumber("112231");
@@ -76,6 +102,7 @@ public class PartColorRepositoryTest extends DaoServiceTest {
         Assertions.assertEquals("112231", byNumber.getNumber());
         Assertions.assertEquals("3010", byNumber.getPart().getNumber());
     }
+
     @Test
     public void getPartColorByAlternateNumberPartNumber() {
         // WHEN

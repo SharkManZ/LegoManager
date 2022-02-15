@@ -7,16 +7,20 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.common.dao.util.SpecificationUtils;
+import ru.shark.home.legomanager.dao.dto.ColorDto;
 import ru.shark.home.legomanager.dao.dto.PartCategoryDto;
 import ru.shark.home.legomanager.dao.dto.PartFullDto;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
+import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
 import ru.shark.home.legomanager.dao.repository.PartCategoryRepository;
+import ru.shark.home.legomanager.dao.repository.PartColorRepository;
 import ru.shark.home.legomanager.dao.repository.PartRepository;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,6 +37,7 @@ public class PartDao extends BaseDao<PartEntity> {
 
     private PartRepository partRepository;
     private PartCategoryRepository partCategoryRepository;
+    private PartColorRepository partColorRepository;
 
     public PartDao() {
         super(PartEntity.class);
@@ -47,8 +52,11 @@ public class PartDao extends BaseDao<PartEntity> {
     private PageableList<PartFullDto> getListWithAdditionalFields(PageableList<PartEntity> list) {
         List<PartFullDto> dtoList = new ArrayList<>();
         List<Map<String, Object>> partColorsCountByIds = new ArrayList<>();
+        List<PartColorEntity> colors = new ArrayList<>();
         if (!isEmpty(list.getData())) {
-            partColorsCountByIds = partRepository.getPartAdditionalDataByIds(list.getData().stream().map(entity -> entity.getId()).collect(Collectors.toList()));
+            List<Long> ids = list.getData().stream().map(entity -> entity.getId()).collect(Collectors.toList());
+            partColorsCountByIds = partRepository.getPartAdditionalDataByIds(ids);
+            colors = partColorRepository.getPartColorsByPartIds(ids);
         }
         for (PartEntity entity : list.getData()) {
             PartFullDto dto = new PartFullDto();
@@ -67,10 +75,22 @@ public class PartDao extends BaseDao<PartEntity> {
             dto.setCategory(new PartCategoryDto());
             dto.getCategory().setId(entity.getCategory().getId());
             dto.getCategory().setName(entity.getCategory().getName());
+            dto.setColors(getPartColorNumbers(entity.getId(), colors));
 
             dtoList.add(dto);
         }
         return new PageableList<>(dtoList, list.getTotalCount());
+    }
+
+    private List<ColorDto> getPartColorNumbers(Long partId, List<PartColorEntity> colors) {
+        if (isEmpty(colors)) {
+            return Collections.emptyList();
+        }
+
+        return colors.stream()
+                .filter(item -> item.getPart().getId().equals(partId))
+                .map(item -> new ColorDto(item.getColor().getName(), item.getColor().getHexColor()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -121,5 +141,10 @@ public class PartDao extends BaseDao<PartEntity> {
     @Autowired
     public void setPartCategoryRepository(PartCategoryRepository partCategoryRepository) {
         this.partCategoryRepository = partCategoryRepository;
+    }
+
+    @Autowired
+    public void setPartColorRepository(PartColorRepository partColorRepository) {
+        this.partColorRepository = partColorRepository;
     }
 }

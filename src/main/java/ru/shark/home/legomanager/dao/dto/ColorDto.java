@@ -6,6 +6,15 @@ public class ColorDto extends BaseDto {
     private String name;
     private String hexColor;
 
+    public ColorDto(){
+        // empty constructor
+    }
+
+    public ColorDto(String name, String hexColor) {
+        this.name = name;
+        this.hexColor = hexColor;
+    }
+
     public String getName() {
         return name;
     }

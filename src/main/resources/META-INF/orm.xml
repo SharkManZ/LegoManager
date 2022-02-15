@@ -74,6 +74,9 @@
     <named-query name="getPartColorsByPartId">
         <query>select pc from PartColorEntity pc where pc.part.id = :partId order by pc.number</query>
     </named-query>
+    <named-query name="getPartColorsByPartIds">
+        <query>select pc from PartColorEntity pc where pc.part.id in (:partIds) order by pc.part.id, pc.number</query>
+    </named-query>
     <named-query name="getPartColorsByPartIdAndEqualsSearch">
         <query>select pc from PartColorEntity pc where pc.part.id = :partId
             and lower(pc.color.name) = lower(:search)

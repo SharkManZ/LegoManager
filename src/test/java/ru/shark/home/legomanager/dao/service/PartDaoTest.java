@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.shark.home.common.common.ErrorConstants.*;
@@ -63,6 +64,12 @@ public class PartDaoTest extends DaoServiceTest {
             Assertions.assertEquals(counts.get(item.getId()).getLeft(), item.getColorsCount());
             Assertions.assertEquals(counts.get(item.getId()).getRight(), item.getMinColorNumber());
         });
+        Assertions.assertTrue(list.getData().stream().anyMatch(item -> item.getColors().size() > 0));
+        Assertions.assertEquals(list.getData()
+                .stream()
+                .flatMap(item -> item.getColors().stream())
+                .filter(item -> !isBlank(item.getName()) && !isBlank(item.getHexColor()))
+                .count(), 2);
     }
 
     @Test
