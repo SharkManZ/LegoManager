@@ -2,11 +2,13 @@
   {
     "name": "Brick 1x4",
     "number": "3010",
+    "alternateNumber": "1001",
     "category": "Brick",
     "colors": [
       {
         "color": "Black",
-        "number": "112231"
+        "number": "112231",
+        "alternateNumber": "1122319"
       },
       {
         "color": "Red",

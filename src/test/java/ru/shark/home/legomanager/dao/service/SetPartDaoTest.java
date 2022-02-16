@@ -1,5 +1,6 @@
 package ru.shark.home.legomanager.dao.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static ru.shark.home.common.common.ErrorConstants.*;
 
 public class SetPartDaoTest extends DaoServiceTest {
@@ -51,6 +53,8 @@ public class SetPartDaoTest extends DaoServiceTest {
             Assertions.assertNotNull(dto.getCount());
             Assertions.assertNotNull(dto.getPartName());
         }
+        Assertions.assertTrue(list.stream().anyMatch(item -> !isBlank(item.getAlternateNumber())));
+        Assertions.assertTrue(list.stream().anyMatch(item -> !isBlank(item.getAlternateColorNumber())));
     }
 
     @Test

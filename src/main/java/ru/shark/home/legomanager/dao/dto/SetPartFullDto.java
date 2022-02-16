@@ -7,7 +7,9 @@ public class SetPartFullDto extends BaseDto {
     private Long partColorId;
     private Integer count;
     private String colorNumber;
+    private String alternateColorNumber;
     private String number;
+    private String alternateNumber;
     private String partName;
     private String hexColor;
 
@@ -65,5 +67,21 @@ public class SetPartFullDto extends BaseDto {
 
     public void setPartName(String partName) {
         this.partName = partName;
+    }
+
+    public String getAlternateColorNumber() {
+        return alternateColorNumber;
+    }
+
+    public void setAlternateColorNumber(String alternateColorNumber) {
+        this.alternateColorNumber = alternateColorNumber;
+    }
+
+    public String getAlternateNumber() {
+        return alternateNumber;
+    }
+
+    public void setAlternateNumber(String alternateNumber) {
+        this.alternateNumber = alternateNumber;
     }
 }

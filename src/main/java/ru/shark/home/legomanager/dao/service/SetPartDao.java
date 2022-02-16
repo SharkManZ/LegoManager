@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static ru.shark.home.common.common.ErrorConstants.*;
 
 @Component
@@ -47,7 +48,13 @@ public class SetPartDao extends BaseDao<SetPartEntity> {
             dto.setSetId(entity.getSet().getId());
             dto.setPartColorId(entity.getPartColor().getId());
             dto.setNumber(entity.getPartColor().getPart().getNumber());
+            if (!isBlank(entity.getPartColor().getPart().getAlternateNumber())) {
+                dto.setAlternateNumber(entity.getPartColor().getPart().getAlternateNumber());
+            }
             dto.setColorNumber(entity.getPartColor().getNumber());
+            if (!isBlank(entity.getPartColor().getAlternateNumber())) {
+                dto.setAlternateColorNumber(entity.getPartColor().getAlternateNumber());
+            }
             dto.setHexColor(entity.getPartColor().getColor().getHexColor());
             dto.setPartName(entity.getPartColor().getPart().getName());
 
