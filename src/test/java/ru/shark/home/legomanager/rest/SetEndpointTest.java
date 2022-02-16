@@ -80,4 +80,17 @@ public class SetEndpointTest extends BaseEndpointTest {
         checkResponse(response);
         verify(setPartService, times(1)).getListBySetId(anyLong(), any(ListRequest.class));
     }
+
+    @Test
+    public void getSummary() {
+        // GIVEN
+        when(service.getSummary(anyLong())).thenReturn(new BaseResponse());
+
+        // WHEN
+        Response response = setEndpoint.getSummary(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(service, times(1)).getSummary(eq(1L));
+    }
 }

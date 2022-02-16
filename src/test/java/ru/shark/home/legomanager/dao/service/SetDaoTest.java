@@ -10,6 +10,7 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.common.RequestSearch;
 import ru.shark.home.legomanager.dao.dto.SetFullDto;
+import ru.shark.home.legomanager.dao.dto.SetSummaryDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
@@ -212,6 +213,26 @@ public class SetDaoTest extends DaoServiceTest {
 
         // THEN
         isDeleted(setId, SetEntity.class);
+    }
+
+    @Test
+    public void getSummary() {
+        // GIVEN
+        SetEntity set = entityFinder.findSet("42082");
+        Integer expectedPartsCount = 13;
+        Integer expectedUniquePartsCount = 2;
+
+        // WHEN
+        SetSummaryDto summary = setDao.getSummary(set.getId());
+
+        // THEN
+        Assertions.assertNotNull(summary);
+        Assertions.assertEquals(summary.getNumber(), set.getNumber());
+        Assertions.assertEquals(summary.getName(), set.getName());
+        Assertions.assertEquals(summary.getYear(), set.getYear());
+        Assertions.assertEquals(summary.getPartsCount(), expectedPartsCount);
+        Assertions.assertEquals(summary.getUniquePartsCount(), expectedUniquePartsCount);
+        Assertions.assertEquals(summary.getColors().size(), 1);
     }
 
     private SetEntity prepareEntity() {

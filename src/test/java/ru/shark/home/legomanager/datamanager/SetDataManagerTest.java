@@ -11,6 +11,7 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.dto.SeriesDto;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.dao.dto.SetFullDto;
+import ru.shark.home.legomanager.dao.dto.SetSummaryDto;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
@@ -25,6 +26,9 @@ public class SetDataManagerTest extends DaoServiceTest {
 
     @BeforeAll
     public void init() {
+        loadColors("SetDataManagerTest/colors.json");
+        loadPartCategories("SetDataManagerTest/partCats.json");
+        loadParts("SetDataManagerTest/parts.json");
         loadSeries("SetDataManagerTest/series.json");
         loadSets("SetDataManagerTest/sets.json");
     }
@@ -93,12 +97,32 @@ public class SetDataManagerTest extends DaoServiceTest {
     @Test
     public void deleteById() {
         // GIVEN
-        Long setId = entityFinder.findSetId("42082");
+        Long setId = entityFinder.findSetId("60296");
 
         // WHEN
         setDataManager.deleteById(setId);
 
         // THEN
         isDeleted(setId, SetEntity.class);
+    }
+
+    @Test
+    public void getSummary() {
+        // GIVEN
+        SetEntity set = entityFinder.findSet("42082");
+        Integer expectedPartsCount = 15;
+        Integer expectedUniquePartsCount = 2;
+
+        // WHEN
+        SetSummaryDto summary = setDataManager.getSummary(set.getId());
+
+        // THEN
+        Assertions.assertNotNull(summary);
+        Assertions.assertEquals(summary.getNumber(), set.getNumber());
+        Assertions.assertEquals(summary.getName(), set.getName());
+        Assertions.assertEquals(summary.getYear(), set.getYear());
+        Assertions.assertEquals(summary.getPartsCount(), expectedPartsCount);
+        Assertions.assertEquals(summary.getUniquePartsCount(), expectedUniquePartsCount);
+        Assertions.assertEquals(summary.getColors().size(), 2);
     }
 }

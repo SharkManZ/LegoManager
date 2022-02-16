@@ -19,6 +19,10 @@ public class ColorRepositoryTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadColors("ColorRepositoryTest/colors.json");
+        loadPartCategories("ColorRepositoryTest/partCats.json");
+        loadParts("ColorRepositoryTest/parts.json");
+        loadSeries("ColorRepositoryTest/series.json");
+        loadSets("ColorRepositoryTest/sets.json");
     }
 
     @Test
@@ -51,5 +55,17 @@ public class ColorRepositoryTest extends DaoServiceTest {
         // THEN
         Assertions.assertEquals(2, colors.size());
         Assertions.assertTrue(ordering.isOrdered(colors));
+    }
+
+    @Test
+    public void getColorsBySetId() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+
+        // WHEN
+        List<ColorEntity> colors = colorRepository.getColorsBySetId(setId);
+
+        // THEN
+        Assertions.assertEquals(2, colors.size());
     }
 }

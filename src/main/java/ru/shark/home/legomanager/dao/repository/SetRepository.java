@@ -50,4 +50,13 @@ public interface SetRepository extends BaseRepository<SetEntity> {
      */
     @Query(value = "select s from SetEntity s where s.series.id = :seriesId order by s.number")
     List<SetEntity> findBySeriesId(@Param("seriesId") Long seriesId);
+
+    /**
+     * Возращает сводную информацию по набору.
+     *
+     * @param id идентификатор набора
+     * @return данные набора
+     */
+    @Query(name = "getSetSummary")
+    Map<String, Object> getSetSummary(@Param("id") Long id);
 }

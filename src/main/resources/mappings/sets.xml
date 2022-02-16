@@ -20,4 +20,11 @@
             from SetEntity s where s.id in (:ids)
         </query>
     </named-query>
+    <named-query name="getSetSummary">
+        <query>select new Map(s.number as number, s.name as name, s.year as year,
+            (select sum(sp.count) from SetPartEntity sp where sp.set.id = s.id) as partsCount,
+            (select count(distinct pc.part.id) from SetPartEntity sp join sp.partColor pc where sp.set.id = s.id) as uniquePartsCount)
+        from SetEntity s
+        where s.id = :id</query>
+    </named-query>
 </entity-mappings>

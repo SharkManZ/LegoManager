@@ -24,4 +24,13 @@ public interface ColorRepository extends BaseRepository<ColorEntity> {
      */
     @Query(name = "getAllColors")
     List<ColorEntity> getAllColors();
+
+    /**
+     * Возвращает набор уникальных цветов из деталей набора.
+     *
+     * @param setId идентификатор набора
+     * @return список цветов
+     */
+    @Query(name = "getColorsBySetId")
+    List<ColorEntity> getColorsBySetId(@Param("setId") Long setId);
 }

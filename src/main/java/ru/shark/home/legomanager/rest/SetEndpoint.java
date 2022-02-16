@@ -44,6 +44,12 @@ public class SetEndpoint {
         return Response.ok(setPartService.getListBySetId(id, request)).build();
     }
 
+    @GET
+    @Path("{id}/summary")
+    public Response getSummary(@PathParam("id") Long id) {
+        return Response.ok(service.getSummary(id)).build();
+    }
+
     @Autowired
     public void setService(SetService service) {
         this.service = service;

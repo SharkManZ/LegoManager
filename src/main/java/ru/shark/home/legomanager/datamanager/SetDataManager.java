@@ -6,6 +6,7 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.datamanager.BaseDataManager;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.dao.dto.SetFullDto;
+import ru.shark.home.legomanager.dao.dto.SetSummaryDto;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.dao.service.SetDao;
 
@@ -23,5 +24,10 @@ public class SetDataManager extends BaseDataManager<SetEntity, SetDto> {
     public PageableList<SetFullDto> getWithPagination(RequestCriteria request, Long seriesId) {
         SetDao dao = (SetDao) getDao();
         return dao.getWithPagination(request, seriesId);
+    }
+
+    public SetSummaryDto getSummary(Long id) {
+        SetDao dao = (SetDao) getDao();
+        return dao.getSummary(id);
     }
 }

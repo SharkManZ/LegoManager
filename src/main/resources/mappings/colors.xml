@@ -10,4 +10,12 @@
     <named-query name="getAllColors">
         <query>select c from ColorEntity c order by c.name</query>
     </named-query>
+    <named-query name="getColorsBySetId">
+        <query>select distinct c
+        from SetPartEntity sp
+            join sp.partColor pc
+            join pc.color c
+        where sp.set.id = :setId
+        order by c.name</query>
+    </named-query>
 </entity-mappings>

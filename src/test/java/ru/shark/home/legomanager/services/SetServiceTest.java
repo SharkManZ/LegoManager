@@ -81,4 +81,14 @@ public class SetServiceTest extends BaseServiceTest {
         checkResponse(response);
         verify(setDataManager, times(1)).deleteById(eq(1L));
     }
+
+    @Test
+    public void getSummary() {
+        // WHEN
+        BaseResponse response = service.getSummary(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(setDataManager, times(1)).getSummary(eq(1L));
+    }
 }

@@ -3,14 +3,19 @@ package ru.shark.home.legomanager.dao.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.common.dao.util.SpecificationUtils;
+import ru.shark.home.legomanager.dao.dto.ColorDto;
 import ru.shark.home.legomanager.dao.dto.SeriesDto;
 import ru.shark.home.legomanager.dao.dto.SetFullDto;
+import ru.shark.home.legomanager.dao.dto.SetSummaryDto;
+import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
+import ru.shark.home.legomanager.dao.repository.ColorRepository;
 import ru.shark.home.legomanager.dao.repository.SeriesRepository;
 import ru.shark.home.legomanager.dao.repository.SetRepository;
 
@@ -22,6 +27,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.springframework.util.ObjectUtils.isEmpty;
 import static ru.shark.home.common.common.ErrorConstants.*;
 import static ru.shark.home.common.dao.util.SpecificationUtils.andSpecifications;
 
@@ -32,6 +39,7 @@ public class SetDao extends BaseDao<SetEntity> {
 
     private SetRepository setRepository;
     private SeriesRepository seriesRepository;
+    private ColorRepository colorRepository;
 
     public SetDao() {
         super(SetEntity.class);
@@ -98,6 +106,27 @@ public class SetDao extends BaseDao<SetEntity> {
         super.deleteById(id);
     }
 
+    public SetSummaryDto getSummary(Long id) {
+        setRepository.findById(id).orElseThrow(() -> new ValidationException(MessageFormat.format(
+                ENTITY_NOT_FOUND_BY_ID, SetEntity.getDescription(), id)));
+        Map<String, Object> summary = setRepository.getSetSummary(id);
+        List<ColorEntity> colors = colorRepository.getColorsBySetId(id);
+
+        SetSummaryDto dto = new SetSummaryDto();
+        dto.setNumber((String) summary.get("number"));
+        dto.setName((String) summary.get("name"));
+        dto.setYear((Integer) summary.get("year"));
+        Long partsCount = (Long) summary.get("partsCount");
+        dto.setPartsCount(partsCount != null ? partsCount.intValue() : 0);
+        Long uniquePartsCount = (Long) summary.get("uniquePartsCount");
+        dto.setUniquePartsCount(uniquePartsCount != null ? uniquePartsCount.intValue() : 0);
+        if (!isEmpty(colors)) {
+            dto.setColors(colors.stream().map(item -> new ColorDto(item.getName(), item.getHexColor()))
+                    .collect(Collectors.toList()));
+        }
+        return dto;
+    }
+
     private void validateFields(SetEntity setEntity) {
         if (isBlank(setEntity.getNumber())) {
             throw new ValidationException(MessageFormat.format(ENTITY_EMPTY_FIELD, "number",
@@ -128,5 +157,10 @@ public class SetDao extends BaseDao<SetEntity> {
     @Autowired
     public void setSeriesRepository(SeriesRepository seriesRepository) {
         this.seriesRepository = seriesRepository;
+    }
+
+    @Autowired
+    public void setColorRepository(ColorRepository colorRepository) {
+        this.colorRepository = colorRepository;
     }
 }

@@ -71,6 +71,20 @@ public class SetService extends BaseLogicService {
         return response;
     }
 
+    public BaseResponse getSummary(Long id) {
+        BaseResponse response;
+        try {
+            response = new BaseResponse();
+            response.setBody(setDataManager.getSummary(id));
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при получении сводных данных набора: " +
+                    e.getMessage());
+        }
+
+        return response;
+    }
+
     @Autowired
     public void setSetDataManager(SetDataManager setDataManager) {
         this.setDataManager = setDataManager;
