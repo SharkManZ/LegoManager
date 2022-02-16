@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+        http://java.sun.com/xml/ns/persistence/orm_2_0.xsd ">
+    <!-- Цвета деталей-->
+    <named-query name="getPartColorsByPartId">
+        <query>select pc from PartColorEntity pc where pc.part.id = :partId order by pc.number</query>
+    </named-query>
+    <named-query name="getPartColorsByPartIds">
+        <query>select pc from PartColorEntity pc where pc.part.id in (:partIds) order by pc.part.id, pc.number</query>
+    </named-query>
+    <named-query name="getPartColorsByPartIdAndEqualsSearch">
+        <query>select pc from PartColorEntity pc where pc.part.id = :partId
+            and lower(pc.color.name) = lower(:search)
+            order by pc.number
+        </query>
+    </named-query>
+    <named-query name="getPartColorsByPartIdAndNotEqualsSearch">
+        <query>select pc from PartColorEntity pc where pc.part.id = :partId
+            and lower(pc.color.name) like '%' || lower(:search) || '%'
+            order by pc.number
+        </query>
+    </named-query>
+    <named-query name="getPartColorCountByNumber">
+        <query>select count(pc.id) from PartColorEntity pc where lower(pc.number) = lower(:number) or
+            lower(pc.alternateNumber) like '%' || lower(:number) || '%'
+        </query>
+    </named-query>
+    <named-query name="getPartColorByNumber">
+        <query>select pc from PartColorEntity pc where lower(pc.number) = lower(:number) or
+            lower(pc.alternateNumber) like '%' || lower(:number) || '%'
+        </query>
+    </named-query>
+    <named-query name="getPartColorByNumberPartNumber">
+        <query>select pc from PartColorEntity pc join pc.part p
+            where (lower(pc.number) = lower(:number) or
+            lower(pc.alternateNumber) like '%' || lower(:number) || '%')and lower(p.number) = lower(:partNumber)
+        </query>
+    </named-query>
+    <named-query name="getPartColorByPartAndColor">
+        <query>select pc from PartColorEntity pc where pc.part.id = :partId and pc.color.id = :colorId</query>
+    </named-query>
+</entity-mappings>

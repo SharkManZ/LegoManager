@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+        http://java.sun.com/xml/ns/persistence/orm_2_0.xsd ">
+    <!-- Детали-->
+    <named-query name="findPartByNumber">
+        <query>select p from PartEntity p where lower(p.number) = lower(:number)</query>
+    </named-query>
+    <named-query name="getPartCountByCategory">
+        <query>select count(1) from PartEntity p where p.category.id = :categoryId</query>
+    </named-query>
+    <named-query name="getPartsCount">
+        <query>select count(p.id) from PartEntity p</query>
+    </named-query>
+    <named-query name="getPartAdditionalDataByIds">
+        <query>select new Map(p.id as id,
+            (select count(1) from PartColorEntity pc where pc.part.id = p.id) as cnt,
+            (select min(pc.number) from PartColorEntity pc where pc.part.id = p.id) as minColorNumber
+            )
+            from PartEntity p where p.id in (:ids)
+        </query>
+    </named-query>
+</entity-mappings>

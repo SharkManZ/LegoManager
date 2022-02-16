@@ -8,3 +8,12 @@ spring:
     driver-class-name: org.postgresql.Driver
   jackson:
     default-property-inclusion: non_null
+  jpa:
+    mapping-resources:
+      - mappings/categories.xml
+      - mappings/colors.xml
+      - mappings/partColors.xml
+      - mappings/parts.xml
+      - mappings/series.xml
+      - mappings/setParts.xml
+      - mappings/sets.xml

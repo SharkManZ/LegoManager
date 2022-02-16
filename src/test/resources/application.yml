@@ -6,6 +6,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    mapping-resources:
+      - mappings/categories.xml
+      - mappings/colors.xml
+      - mappings/partColors.xml
+      - mappings/parts.xml
+      - mappings/series.xml
+      - mappings/setParts.xml
+      - mappings/sets.xml
   datasource:
     url: jdbc:h2:mem:l2info;MODE=PostgreSQL
     driver-class-name: org.h2.Driver
