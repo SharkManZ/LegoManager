@@ -33,20 +33,12 @@ public class SetPartRepositoryTest extends DaoServiceTest {
         Ordering<SetPartEntity> ordering = new Ordering<SetPartEntity>() {
             @Override
             public int compare(@Nullable SetPartEntity setPartEntity, @Nullable SetPartEntity t1) {
-//                int catCompare = setPartEntity.getPartColor().getPart().getCategory().getName()
-//                        .compareTo(t1.getPartColor().getPart().getCategory().getName());
-//                if (catCompare != 0) {
-//                    return catCompare;
-//                }
-
-//                return setPartEntity.getPartColor().getPart().getName()
-//                        .compareTo(t1.getPartColor().getPart().getName());
                 return setPartEntity.getId().compareTo(t1.getId());
             }
         };
 
         // WHEN
-        List<SetPartEntity> list = setPartRepository.getSetPartsBySetId(setId, "");
+        List<SetPartEntity> list = setPartRepository.getSetPartsBySetId(setId, "", null, null);
 
         // THEN
         Assertions.assertEquals(2, list.size());
@@ -66,7 +58,7 @@ public class SetPartRepositoryTest extends DaoServiceTest {
         };
 
         // WHEN
-        List<SetPartEntity> list = setPartRepository.getSetPartsBySetId(setId, "555");
+        List<SetPartEntity> list = setPartRepository.getSetPartsBySetId(setId, "555", null, null);
 
         // THEN
         Assertions.assertEquals(1, list.size());

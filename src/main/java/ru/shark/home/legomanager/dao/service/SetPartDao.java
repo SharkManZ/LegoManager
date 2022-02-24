@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import ru.shark.home.common.dao.service.BaseDao;
+import ru.shark.home.common.services.dto.Filter;
 import ru.shark.home.common.services.dto.ListRequest;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
@@ -35,7 +36,11 @@ public class SetPartDao extends BaseDao<SetPartEntity> {
 
     public List<SetPartFullDto> getPartsBySetId(Long setId, ListRequest request) {
         String search = request != null && request.getSearch() != null ? request.getSearch().getValue() : "";
-        List<SetPartEntity> entityList = setPartRepository.getSetPartsBySetId(setId, search);
+        Filter colorFilter = request != null ? getFilterValueByField(request.getFilters(), "color") : null;
+        Long colorId = colorFilter != null ? Long.parseLong(colorFilter.getValue()) : null;
+        Filter categoryFilter = request != null ? getFilterValueByField(request.getFilters(), "partCategory") : null;
+        Long categoryId = categoryFilter != null ? Long.parseLong(categoryFilter.getValue()) : null;
+        List<SetPartEntity> entityList = setPartRepository.getSetPartsBySetId(setId, search, colorId, categoryId);
         if (ObjectUtils.isEmpty(entityList)) {
             return Collections.emptyList();
         }

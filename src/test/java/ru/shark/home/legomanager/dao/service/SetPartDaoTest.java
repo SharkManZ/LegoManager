@@ -1,13 +1,14 @@
 package ru.shark.home.legomanager.dao.service;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.shark.home.common.services.dto.Filter;
 import ru.shark.home.common.services.dto.ListRequest;
 import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
+import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.dao.entity.SetPartEntity;
@@ -15,6 +16,7 @@ import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -55,6 +57,59 @@ public class SetPartDaoTest extends DaoServiceTest {
         }
         Assertions.assertTrue(list.stream().anyMatch(item -> !isBlank(item.getAlternateNumber())));
         Assertions.assertTrue(list.stream().anyMatch(item -> !isBlank(item.getAlternateColorNumber())));
+    }
+
+    @Test
+    public void getPartsBySetIdWithColorFilter() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+        ColorEntity color = entityFinder.findColor("Black");
+        ListRequest request = new ListRequest();
+        request.setFilters(Arrays.asList(new Filter("color", "=", color.getId().toString())));
+
+        // WHEN
+        List<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, request);
+
+        // THEN
+        Assertions.assertEquals(1, list.size());
+        for (SetPartFullDto dto : list) {
+            Assertions.assertNotNull(dto.getId());
+            Assertions.assertNotNull(dto.getSetId());
+            Assertions.assertNotNull(dto.getPartColorId());
+            Assertions.assertNotNull(dto.getNumber());
+            Assertions.assertNotNull(dto.getColorNumber());
+            Assertions.assertNotNull(dto.getHexColor());
+            Assertions.assertEquals(color.getHexColor(), dto.getHexColor());
+            Assertions.assertNotNull(dto.getCount());
+            Assertions.assertNotNull(dto.getPartName());
+        }
+    }
+
+    @Test
+    public void getPartsBySetIdWithCategoryFilter() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+        Long catId = entityFinder.findPartCategoryId("Tile");
+        Long partColorId = entityFinder.findPartColorId("55521");
+        ListRequest request = new ListRequest();
+        request.setFilters(Arrays.asList(new Filter("partCategory", "=", catId.toString())));
+
+        // WHEN
+        List<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, request);
+
+        // THEN
+        Assertions.assertEquals(1, list.size());
+        for (SetPartFullDto dto : list) {
+            Assertions.assertNotNull(dto.getId());
+            Assertions.assertNotNull(dto.getSetId());
+            Assertions.assertNotNull(dto.getPartColorId());
+            Assertions.assertEquals(partColorId, dto.getPartColorId());
+            Assertions.assertNotNull(dto.getNumber());
+            Assertions.assertNotNull(dto.getColorNumber());
+            Assertions.assertNotNull(dto.getHexColor());
+            Assertions.assertNotNull(dto.getCount());
+            Assertions.assertNotNull(dto.getPartName());
+        }
     }
 
     @Test
@@ -158,7 +213,7 @@ public class SetPartDaoTest extends DaoServiceTest {
         // GIVEN
         SetPartEntity entity = prepareEntity();
         entity.getSet().setId(entityFinder.findSetId("42082"));
-        entity.getPartColor().setId(entityFinder.findPartColorId("55531"));
+        entity.getPartColor().setId(entityFinder.findPartColorId("55521"));
         entity.setId(entityFinder.findSetPartId(entity.getSet().getId(), entityFinder.findPartColorId("112231")));
 
         // WHEN

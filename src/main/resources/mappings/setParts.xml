@@ -8,6 +8,7 @@
         <query>select sp from SetPartEntity sp
             join sp.partColor pc
             join pc.part p
+            join p.category ca
             join pc.color c
             where sp.set.id = :setId and
             (lower(pc.number) like '%' || lower(:search) || '%' or
@@ -17,6 +18,8 @@
             lower(p.name) like '%' || lower(:search) || '%' or
             lower(c.name) like '%' || lower(:search) || '%'
             )
+            and (:colorId is null or c.id = :colorId)
+            and (:categoryId is null or ca.id = :categoryId)
             order by sp.id desc
         </query>
     </named-query>

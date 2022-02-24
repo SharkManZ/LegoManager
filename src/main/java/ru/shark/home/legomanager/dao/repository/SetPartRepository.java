@@ -12,11 +12,15 @@ public interface SetPartRepository extends BaseRepository<SetPartEntity> {
     /**
      * Возвращает все детали набора с сортировкой по категории детали и ее названию.
      *
-     * @param setId идентификатор набора
+     * @param setId      идентификатор набора
+     * @param search     строка поиска
+     * @param colorId    фильтр по цвету детали
+     * @param categoryId фильтр по категории детали
      * @return список деталей
      */
     @Query(name = "getSetPartsBySetId")
-    List<SetPartEntity> getSetPartsBySetId(@Param("setId") Long setId, @Param("search") String search);
+    List<SetPartEntity> getSetPartsBySetId(@Param("setId") Long setId, @Param("search") String search,
+                                           @Param("colorId") Long colorId, @Param("categoryId") Long categoryId);
 
     /**
      * Возвращает деталь набора по идентификаторам набора и цвета детали.
