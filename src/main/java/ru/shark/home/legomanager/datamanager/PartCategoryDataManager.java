@@ -25,4 +25,9 @@ public class PartCategoryDataManager extends BaseDataManager<PartCategoryEntity,
         PartCategoryDao dao = (PartCategoryDao) getDao();
         return getConverterUtil().entityListToDtoList(dao.getAllCategories(), PartCategoryDto.class);
     }
+
+    public List<PartCategoryDto> getListBySetId(Long setId) {
+        PartCategoryDao dao = (PartCategoryDao) getDao();
+        return getConverterUtil().entityListToDtoList(dao.getListBySetId(setId), PartCategoryDto.class);
+    }
 }

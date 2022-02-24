@@ -13,6 +13,7 @@ import ru.shark.home.legomanager.dao.repository.PartRepository;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
@@ -68,6 +69,14 @@ public class PartCategoryDao extends BaseDao<PartCategoryEntity> {
         }
 
         super.deleteById(id);
+    }
+
+    public List<PartCategoryEntity> getListBySetId(Long setId) {
+        if (setId == null) {
+            return Collections.emptyList();
+        }
+
+        return partCategoryRepository.getCategoriesBySetId(setId);
     }
 
     @Autowired

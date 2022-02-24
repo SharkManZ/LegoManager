@@ -19,7 +19,11 @@ public class PartCategoryRepositoryTest extends DaoServiceTest {
 
     @BeforeAll
     public void init() {
+        loadColors("PartCategoryRepositoryTest/colors.json");
         loadPartCategories("PartCategoryRepositoryTest/partCats.json");
+        loadParts("PartCategoryRepositoryTest/parts.json");
+        loadSeries("PartCategoryRepositoryTest/series.json");
+        loadSets("PartCategoryRepositoryTest/sets.json");
     }
 
     @Test
@@ -52,5 +56,25 @@ public class PartCategoryRepositoryTest extends DaoServiceTest {
         // THEN
         Assertions.assertEquals(2L, allSeries.size());
         Assertions.assertTrue(ordering.isOrdered(allSeries));
+    }
+
+    @Test
+    public void getCategoriesBySetId() {
+        // GIVEN
+        Ordering<PartCategoryEntity> ordering = new Ordering<PartCategoryEntity>() {
+            @Override
+            public int compare(@Nullable PartCategoryEntity partCategoryEntity, @Nullable PartCategoryEntity t1) {
+                return Comparator.comparing(PartCategoryEntity::getName)
+                        .compare(partCategoryEntity, t1);
+            }
+        };
+        Long setId = entityFinder.findSetId("42082");
+
+        // WHEN
+        List<PartCategoryEntity> list = partCategoryRepository.getCategoriesBySetId(setId);
+
+        // THEN
+        Assertions.assertEquals(2L, list.size());
+        Assertions.assertTrue(ordering.isOrdered(list));
     }
 }

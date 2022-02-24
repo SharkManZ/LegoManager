@@ -30,8 +30,11 @@ public class PartCategoryDaoTest extends DaoServiceTest {
 
     @BeforeAll
     public void init() {
+        loadColors("PartCategoryDaoTest/colors.json");
         loadPartCategories("PartCategoryDaoTest/partCats.json");
         loadParts("PartCategoryDaoTest/parts.json");
+        loadSeries("PartCategoryDaoTest/series.json");
+        loadSets("PartCategoryDaoTest/sets.json");
     }
 
     @Test
@@ -49,7 +52,7 @@ public class PartCategoryDaoTest extends DaoServiceTest {
         PageableList<PartCategoryEntity> list = partCategoryDao.getWithPagination(new RequestCriteria(0, 10));
 
         // THEN
-        checkPagingList(list, 2, 2L);
+        checkPagingList(list, 3, 3L);
         assertTrue(ordering.isOrdered(list.getData()));
     }
 
@@ -129,7 +132,7 @@ public class PartCategoryDaoTest extends DaoServiceTest {
     @Test
     public void deleteById() {
         // GIVEN
-        Long id = entityFinder.findPartCategoryId("Tile");
+        Long id = entityFinder.findPartCategoryId("Wheel");
 
         // WHEN
         partCategoryDao.deleteById(id);
@@ -179,8 +182,20 @@ public class PartCategoryDaoTest extends DaoServiceTest {
         List<PartCategoryEntity> allSeries = partCategoryDao.getAllCategories();
 
         // THEN
-        Assertions.assertEquals(2L, allSeries.size());
+        Assertions.assertEquals(3L, allSeries.size());
         Assertions.assertTrue(ordering.isOrdered(allSeries));
+    }
+
+    @Test
+    public void getListBySetId() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+
+        // WHEN
+        List<PartCategoryEntity> list = partCategoryDao.getListBySetId(setId);
+
+        // THEN
+        Assertions.assertEquals(2L, list.size());
     }
 
     private PartCategoryEntity prepareEntity() {

@@ -10,4 +10,12 @@
     <named-query name="getAllCategories">
         <query>select p from PartCategoryEntity p order by p.name</query>
     </named-query>
+    <named-query name="getCategoriesBySetId">
+        <query>select distinct ct from SetPartEntity sp
+            join sp.partColor pc
+            join pc.part p
+            join p.category ct
+            where sp.set.id = :setId
+            order by ct.name</query>
+    </named-query>
 </entity-mappings>

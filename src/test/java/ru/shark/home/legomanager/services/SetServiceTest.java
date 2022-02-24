@@ -10,6 +10,7 @@ import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.dao.dto.SetFullDto;
 import ru.shark.home.legomanager.datamanager.ColorDataManager;
+import ru.shark.home.legomanager.datamanager.PartCategoryDataManager;
 import ru.shark.home.legomanager.datamanager.SetDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
@@ -21,14 +22,17 @@ public class SetServiceTest extends BaseServiceTest {
     private SetService service;
     private SetDataManager setDataManager;
     private ColorDataManager colorDataManager;
+    private PartCategoryDataManager partCategoryDataManager;
 
     @BeforeAll
     public void init() {
         setDataManager = mock(SetDataManager.class);
         colorDataManager = mock(ColorDataManager.class);
+        partCategoryDataManager = mock(PartCategoryDataManager.class);
         service = new SetService();
         service.setSetDataManager(setDataManager);
         service.setColorDataManager(colorDataManager);
+        service.setPartCategoryDataManager(partCategoryDataManager);
     }
 
     @BeforeEach
@@ -104,5 +108,15 @@ public class SetServiceTest extends BaseServiceTest {
         // THEN
         checkResponse(response);
         verify(colorDataManager, times(1)).getListBySetId(eq(1L));
+    }
+
+    @Test
+    public void getSetPartCategories() {
+        // WHEN
+        BaseResponse response = service.getSetPartCategories(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(partCategoryDataManager, times(1)).getListBySetId(eq(1L));
     }
 }

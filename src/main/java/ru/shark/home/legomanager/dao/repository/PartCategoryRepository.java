@@ -22,4 +22,13 @@ public interface PartCategoryRepository extends BaseRepository<PartCategoryEntit
      */
     @Query(name = "getAllCategories")
     List<PartCategoryEntity> getAllCategories();
+
+    /**
+     * Возвращает категории деталей входящих в набор
+     *
+     * @param setId идентификатор набора
+     * @return коллекция категорий
+     */
+    @Query(name = "getCategoriesBySetId")
+    List<PartCategoryEntity> getCategoriesBySetId(@Param("setId") Long setId);
 }

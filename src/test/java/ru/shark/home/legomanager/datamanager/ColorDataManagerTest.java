@@ -24,10 +24,10 @@ public class ColorDataManagerTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadColors("ColorDataManagerTest/colors.json");
-        loadPartCategories("ColorRepositoryTest/partCats.json");
-        loadParts("ColorRepositoryTest/parts.json");
-        loadSeries("ColorRepositoryTest/series.json");
-        loadSets("ColorRepositoryTest/sets.json");
+        loadPartCategories("ColorDataManagerTest/partCats.json");
+        loadParts("ColorDataManagerTest/parts.json");
+        loadSeries("ColorDataManagerTest/series.json");
+        loadSets("ColorDataManagerTest/sets.json");
     }
 
     @Test

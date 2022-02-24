@@ -7,6 +7,7 @@ import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.datamanager.ColorDataManager;
+import ru.shark.home.legomanager.datamanager.PartCategoryDataManager;
 import ru.shark.home.legomanager.datamanager.SetDataManager;
 
 import static ru.shark.home.common.common.ErrorConstants.ERR_500;
@@ -15,6 +16,7 @@ import static ru.shark.home.common.common.ErrorConstants.ERR_500;
 public class SetService extends BaseLogicService {
     private SetDataManager setDataManager;
     private ColorDataManager colorDataManager;
+    private PartCategoryDataManager partCategoryDataManager;
 
     public BaseResponse getList(PageRequest request) {
         BaseResponse response;
@@ -100,6 +102,19 @@ public class SetService extends BaseLogicService {
         return response;
     }
 
+    public BaseResponse getSetPartCategories(Long id) {
+        BaseResponse response;
+        try {
+            response = new BaseResponse();
+            response.setBody(partCategoryDataManager.getListBySetId(id));
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при получении видов деталей набора: " + e.getMessage());
+        }
+
+        return response;
+    }
+
     @Autowired
     public void setSetDataManager(SetDataManager setDataManager) {
         this.setDataManager = setDataManager;
@@ -108,5 +123,10 @@ public class SetService extends BaseLogicService {
     @Autowired
     public void setColorDataManager(ColorDataManager colorDataManager) {
         this.colorDataManager = colorDataManager;
+    }
+
+    @Autowired
+    public void setPartCategoryDataManager(PartCategoryDataManager partCategoryDataManager) {
+        this.partCategoryDataManager = partCategoryDataManager;
     }
 }

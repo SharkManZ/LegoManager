@@ -56,6 +56,12 @@ public class SetEndpoint {
         return Response.ok(service.getSetColors(id)).build();
     }
 
+    @GET
+    @Path("{id}/partCategories/list")
+    public Response getPartCategories(@PathParam("id") Long id) {
+        return Response.ok(service.getSetPartCategories(id)).build();
+    }
+
     @Autowired
     public void setService(SetService service) {
         this.service = service;
