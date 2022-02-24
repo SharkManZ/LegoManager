@@ -11,6 +11,7 @@ import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.repository.ColorRepository;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
@@ -59,6 +60,13 @@ public class ColorDao extends BaseDao<ColorEntity> {
         }
 
         super.deleteById(id);
+    }
+
+    public List<ColorEntity> getListBySetId(Long setId) {
+        if (setId == null) {
+            return Collections.emptyList();
+        }
+        return colorRepository.getColorsBySetId(setId);
     }
 
     @Autowired

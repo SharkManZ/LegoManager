@@ -29,6 +29,10 @@ public class ColorDaoTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadColors("ColorDaoTest/colors.json");
+        loadPartCategories("ColorDaoTest/partCats.json");
+        loadParts("ColorDaoTest/parts.json");
+        loadSeries("ColorDaoTest/series.json");
+        loadSets("ColorDaoTest/sets.json");
     }
 
     @Test
@@ -160,7 +164,7 @@ public class ColorDaoTest extends DaoServiceTest {
     @Test
     public void deleteById() {
         // GIVEN
-        Long id = entityFinder.findColorId("black");
+        Long id = entityFinder.findColorId("Reddish Brown");
 
         // WHEN
         colorDao.deleteById(id);
@@ -181,6 +185,18 @@ public class ColorDaoTest extends DaoServiceTest {
         Assertions.assertNotNull(illegalArgumentException);
         Assertions.assertEquals(MessageFormat.format(ENTITY_NOT_FOUND_BY_ID,
                 ColorEntity.getDescription(), id), illegalArgumentException.getMessage());
+    }
+
+    @Test
+    public void getColorsBySetId() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+
+        // WHEN
+        List<ColorEntity> colors = colorDao.getListBySetId(setId);
+
+        // THEN
+        Assertions.assertEquals(2, colors.size());
     }
 
     private ColorEntity prepareEntity() {

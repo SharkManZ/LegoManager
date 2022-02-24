@@ -9,6 +9,7 @@ import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.dao.dto.SetFullDto;
+import ru.shark.home.legomanager.datamanager.ColorDataManager;
 import ru.shark.home.legomanager.datamanager.SetDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
@@ -19,12 +20,15 @@ import static org.mockito.Mockito.*;
 public class SetServiceTest extends BaseServiceTest {
     private SetService service;
     private SetDataManager setDataManager;
+    private ColorDataManager colorDataManager;
 
     @BeforeAll
     public void init() {
         setDataManager = mock(SetDataManager.class);
+        colorDataManager = mock(ColorDataManager.class);
         service = new SetService();
         service.setSetDataManager(setDataManager);
+        service.setColorDataManager(colorDataManager);
     }
 
     @BeforeEach
@@ -90,5 +94,15 @@ public class SetServiceTest extends BaseServiceTest {
         // THEN
         checkResponse(response);
         verify(setDataManager, times(1)).getSummary(eq(1L));
+    }
+
+    @Test
+    public void getSetColors() {
+        // WHEN
+        BaseResponse response = service.getSetColors(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(colorDataManager, times(1)).getListBySetId(eq(1L));
     }
 }

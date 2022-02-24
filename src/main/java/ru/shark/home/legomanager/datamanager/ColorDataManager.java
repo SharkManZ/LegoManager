@@ -25,4 +25,9 @@ public class ColorDataManager extends BaseDataManager<ColorEntity, ColorDto> {
         ColorDao dao = (ColorDao) getDao();
         return getConverterUtil().entityListToDtoList(dao.getAllColors(), ColorDto.class);
     }
+
+    public List<ColorDto> getListBySetId(Long setId) {
+        ColorDao dao = (ColorDao) getDao();
+        return getConverterUtil().entityListToDtoList(dao.getListBySetId(setId), ColorDto.class);
+    }
 }

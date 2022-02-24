@@ -35,7 +35,8 @@ public class SetPartDao extends BaseDao<SetPartEntity> {
     }
 
     public List<SetPartFullDto> getPartsBySetId(Long setId, ListRequest request) {
-        String search = request != null && request.getSearch() != null ? request.getSearch().getValue() : "";
+        String search = request != null && request.getSearch() != null &&
+                !isBlank(request.getSearch().getValue()) ? request.getSearch().getValue() : "";
         Filter colorFilter = request != null ? getFilterValueByField(request.getFilters(), "color") : null;
         Long colorId = colorFilter != null ? Long.parseLong(colorFilter.getValue()) : null;
         Filter categoryFilter = request != null ? getFilterValueByField(request.getFilters(), "partCategory") : null;

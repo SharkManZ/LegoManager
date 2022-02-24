@@ -93,4 +93,17 @@ public class SetEndpointTest extends BaseEndpointTest {
         checkResponse(response);
         verify(service, times(1)).getSummary(eq(1L));
     }
+
+    @Test
+    public void getColors() {
+        // GIVEN
+        when(service.getSetColors(anyLong())).thenReturn(new BaseResponse());
+
+        // WHEN
+        Response response = setEndpoint.getColors(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(service, times(1)).getSetColors(eq(1L));
+    }
 }

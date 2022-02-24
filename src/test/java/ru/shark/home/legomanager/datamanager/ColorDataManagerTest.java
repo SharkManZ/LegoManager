@@ -24,6 +24,10 @@ public class ColorDataManagerTest extends DaoServiceTest {
     @BeforeAll
     public void init() {
         loadColors("ColorDataManagerTest/colors.json");
+        loadPartCategories("ColorRepositoryTest/partCats.json");
+        loadParts("ColorRepositoryTest/parts.json");
+        loadSeries("ColorRepositoryTest/series.json");
+        loadSets("ColorRepositoryTest/sets.json");
     }
 
     @Test
@@ -41,7 +45,7 @@ public class ColorDataManagerTest extends DaoServiceTest {
         PageableList<ColorDto> list = colorDataManager.getWithPagination(new RequestCriteria(0, 10));
 
         // THEN
-        checkPagingDtoList(list, 2, 2L);
+        checkPagingDtoList(list, 3, 3L);
         assertTrue(ordering.isOrdered(list.getData()));
     }
 
@@ -60,7 +64,7 @@ public class ColorDataManagerTest extends DaoServiceTest {
         List<ColorDto> colors = colorDataManager.getAllColors();
 
         // THEN
-        Assertions.assertEquals(2, colors.size());
+        Assertions.assertEquals(3, colors.size());
         Assertions.assertTrue(ordering.isOrdered(colors));
     }
 
@@ -82,13 +86,25 @@ public class ColorDataManagerTest extends DaoServiceTest {
     @Test
     public void deleteById() {
         // GIVEN
-        Long id = entityFinder.findColorId("black");
+        Long id = entityFinder.findColorId("Reddish Brown");
 
         // WHEN
         colorDataManager.deleteById(id);
 
         // THEN
         Assertions.assertTrue(isDeleted(id, ColorEntity.class));
+    }
+
+    @Test
+    public void getColorsBySetId() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+
+        // WHEN
+        List<ColorDto> colors = colorDataManager.getListBySetId(setId);
+
+        // THEN
+        Assertions.assertEquals(2, colors.size());
     }
 
     private ColorDto prepareDto() {
