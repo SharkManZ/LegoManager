@@ -21,6 +21,7 @@ public class ExportDaoTest extends DaoServiceTest {
         loadParts("ExportDaoTest/parts.json");
         loadSeries("ExportDaoTest/series.json");
         loadSets("ExportDaoTest/sets.json");
+        loadUsers("ExportDaoTest/users.json");
     }
 
     @Autowired
@@ -97,5 +98,19 @@ public class ExportDaoTest extends DaoServiceTest {
         }
         Assertions.assertTrue(setsChecked);
         Assertions.assertTrue(partsChecked);
+    }
+
+    @Test
+    public void exportUsers() {
+        // WHEN
+        List<UserDictionaryDto> list = exportDao.exportUsers();
+
+        // THEN
+        Assertions.assertEquals(2, list.size());
+
+        for (UserDictionaryDto dto : list) {
+            Assertions.assertNotNull(dto.getName());
+        }
+
     }
 }

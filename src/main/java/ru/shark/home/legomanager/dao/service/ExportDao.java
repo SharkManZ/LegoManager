@@ -18,6 +18,7 @@ public class ExportDao {
     private SeriesRepository seriesRepository;
     private SetRepository setRepository;
     private SetPartRepository setPartRepository;
+    private UsersRepository usersRepository;
 
     /**
      * Экспорт цветов.
@@ -47,6 +48,23 @@ public class ExportDao {
     public List<SeriesDictionaryDto> exportSeries() {
         List<SeriesEntity> list = seriesRepository.getAllSeries();
         return list.stream().map(this::seriesEntityToDictionary).collect(Collectors.toList());
+    }
+
+    /**
+     * Экспорт владельцев.
+     *
+     * @return дерево владельцев
+     */
+    public List<UserDictionaryDto> exportUsers() {
+        List<UserEntity> list = usersRepository.getAllUsers();
+        return list.stream().map(this::userEntityToDictionary).collect(Collectors.toList());
+    }
+
+    private UserDictionaryDto userEntityToDictionary(UserEntity entity) {
+        UserDictionaryDto dto = new UserDictionaryDto();
+        dto.setName(entity.getName());
+
+        return dto;
     }
 
     private SeriesDictionaryDto seriesEntityToDictionary(SeriesEntity entity) {
@@ -144,5 +162,10 @@ public class ExportDao {
     @Autowired
     public void setSetPartRepository(SetPartRepository setPartRepository) {
         this.setPartRepository = setPartRepository;
+    }
+
+    @Autowired
+    public void setUsersRepository(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
     }
 }
