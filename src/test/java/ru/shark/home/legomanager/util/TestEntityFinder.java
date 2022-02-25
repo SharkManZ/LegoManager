@@ -47,6 +47,18 @@ public class TestEntityFinder {
                 .getSingleResult();
     }
 
+    public UserEntity findUser(String name) {
+        return (UserEntity) em.createQuery("select u from UserEntity u where lower(u.name) = :name")
+                .setParameter("name", name.toLowerCase())
+                .getSingleResult();
+    }
+
+    public Long findUserId(String name) {
+        return (Long) em.createQuery("select u.id from UserEntity u where lower(u.name) = :name")
+                .setParameter("name", name.toLowerCase())
+                .getSingleResult();
+    }
+
     public PartCategoryEntity findPartCategory(String name) {
         return (PartCategoryEntity) em.createQuery("select p from PartCategoryEntity p where lower(p.name) = :name")
                 .setParameter("name", name.toLowerCase())

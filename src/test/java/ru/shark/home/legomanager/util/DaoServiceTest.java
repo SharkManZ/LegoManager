@@ -63,6 +63,10 @@ public class DaoServiceTest {
         testDataLoader.loadParts(files);
     }
 
+    protected void loadUsers(String... files) {
+        testDataLoader.loadUsers(files);
+    }
+
     protected <E extends BaseEntity> boolean isDeleted(E entity) {
         Long count = (Long) em.createQuery("select count(e.id) from " + entity.getClass().getSimpleName() + " e " +
                         "where e.id = " +

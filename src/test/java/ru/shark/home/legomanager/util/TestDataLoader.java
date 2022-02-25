@@ -28,6 +28,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class TestDataLoader {
     private static final ObjectMapper mapper = new JsonMapper();
     private static final List<String> cleanUpLst = Arrays.asList(
+            "LEGO_USERS",
             "LEGO_SET_PART",
             "LEGO_PART_COLOR",
             "LEGO_PART",
@@ -60,6 +61,9 @@ public class TestDataLoader {
 
     @Autowired
     private SetPartRepository setPartRepository;
+
+    @Autowired
+    private UsersRepository usersRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -226,6 +230,29 @@ public class TestDataLoader {
         entity.setNumber(dto.getNumber());
         entity.setAlternateNumber(dto.getAlternateNumber());
         return entity;
+    }
+
+    /**
+     * Загружает файлы с данными для тестов.
+     *
+     * @param files массив
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void loadUsers(String... files) {
+        for (String file : files) {
+            try {
+                File fl = new File(this.getClass().getResource("/testData/" + file).toURI());
+                List<UserEntity> list = mapper.readValue(fl, new TypeReference<List<UserEntity>>() {
+                });
+                list.forEach(entity -> {
+                    usersRepository.save(entity);
+                });
+            } catch (URISyntaxException e) {
+                System.out.println("missing file: " + "/json/" + file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
