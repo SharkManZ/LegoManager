@@ -27,6 +27,7 @@ public class ExportService {
         String fileName = "lego_data_export_" + dateStr + ".zip";
         return Response.ok(bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE)
                 .header("content-disposition", "attachment; filename=\"" + fileName + "\"")
+                .header("x-file-name", fileName)
                 .type("application/zip")
                 .build();
     }
