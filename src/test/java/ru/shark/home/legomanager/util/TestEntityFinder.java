@@ -59,6 +59,24 @@ public class TestEntityFinder {
                 .getSingleResult();
     }
 
+    public UserSetEntity findUserSet(String userName, String setNumber) {
+        return (UserSetEntity) em.createQuery("select us from UserSetEntity us " +
+                                "join us.user u join us.set s " +
+                        "where lower(u.name) = :userName and lower(s.number) = :setNumber")
+                .setParameter("userName", userName.toLowerCase())
+                .setParameter("setNumber", setNumber.toLowerCase())
+                .getSingleResult();
+    }
+
+    public Long findUserSetId(String userName, String setNumber) {
+        return (Long) em.createQuery("select us.id from UserSetEntity us " +
+                        "join us.user u join us.set s " +
+                        "where lower(u.name) = :userName and lower(s.number) = :setNumber")
+                .setParameter("userName", userName.toLowerCase())
+                .setParameter("setNumber", setNumber.toLowerCase())
+                .getSingleResult();
+    }
+
     public PartCategoryEntity findPartCategory(String name) {
         return (PartCategoryEntity) em.createQuery("select p from PartCategoryEntity p where lower(p.name) = :name")
                 .setParameter("name", name.toLowerCase())

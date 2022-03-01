@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.shark.home.legomanager.dao.entity.*;
 import ru.shark.home.legomanager.dao.repository.*;
-import ru.shark.home.legomanager.util.dto.PartColorTestDto;
-import ru.shark.home.legomanager.util.dto.PartTestDto;
-import ru.shark.home.legomanager.util.dto.SetPartTestDto;
-import ru.shark.home.legomanager.util.dto.SetTestDto;
+import ru.shark.home.legomanager.util.dto.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,6 +25,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class TestDataLoader {
     private static final ObjectMapper mapper = new JsonMapper();
     private static final List<String> cleanUpLst = Arrays.asList(
+            "LEGO_USER_SETS",
             "LEGO_USERS",
             "LEGO_SET_PART",
             "LEGO_PART_COLOR",
@@ -64,6 +62,9 @@ public class TestDataLoader {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private UserSetsRepository userSetsRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -242,17 +243,38 @@ public class TestDataLoader {
         for (String file : files) {
             try {
                 File fl = new File(this.getClass().getResource("/testData/" + file).toURI());
-                List<UserEntity> list = mapper.readValue(fl, new TypeReference<List<UserEntity>>() {
+                List<UserTestDto> list = mapper.readValue(fl, new TypeReference<List<UserTestDto>>() {
                 });
-                list.forEach(entity -> {
-                    usersRepository.save(entity);
-                });
+                for (UserTestDto userDto : list) {
+                    UserEntity userEntity = mapTestUserToEntity(userDto);
+                    userEntity = usersRepository.save(userEntity);
+                    if (isEmpty(userDto.getSets())) {
+                        continue;
+                    }
+
+                    for (UserSetTestDto setTestDto : userDto.getSets()) {
+                        SetEntity setEntity = setRepository.findSetByNumber(setTestDto.getNumber());
+                        UserSetEntity userSetEntity = new UserSetEntity();
+                        userSetEntity.setUser(userEntity);
+                        userSetEntity.setSet(setEntity);
+                        userSetEntity.setCount(setTestDto.getCount());
+                        userSetsRepository.save(userSetEntity);
+                    }
+
+                }
             } catch (URISyntaxException e) {
                 System.out.println("missing file: " + "/json/" + file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private UserEntity mapTestUserToEntity(UserTestDto dto) {
+        UserEntity entity = new UserEntity();
+        entity.setName(dto.getName());
+
+        return entity;
     }
 
     /**

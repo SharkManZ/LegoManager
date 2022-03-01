@@ -18,6 +18,9 @@ public class UserEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UsersGenerator")
     private Long id;
 
+    /**
+     * Имя владельца.
+     */
     @Column(name = "LEGO_NAME", nullable = false)
     private String name;
 
