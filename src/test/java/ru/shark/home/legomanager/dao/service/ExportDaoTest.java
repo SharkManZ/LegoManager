@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import ru.shark.home.legomanager.dao.dto.export.*;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 public class ExportDaoTest extends DaoServiceTest {
 
@@ -108,9 +110,19 @@ public class ExportDaoTest extends DaoServiceTest {
         // THEN
         Assertions.assertEquals(2, list.size());
 
+        boolean setsChecked = false;
         for (UserDictionaryDto dto : list) {
             Assertions.assertNotNull(dto.getName());
-        }
+            if (isEmpty(dto.getSets())) {
+                continue;
+            }
+            setsChecked = true;
+            for (UserSetDictionaryDto setDto : dto.getSets()) {
+                Assertions.assertNotNull(setDto.getNumber());
+                Assertions.assertNotNull(setDto.getCount());
+            }
 
+        }
+        Assertions.assertTrue(setsChecked);
     }
 }

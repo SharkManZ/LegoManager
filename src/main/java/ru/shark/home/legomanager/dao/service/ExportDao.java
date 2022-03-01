@@ -9,6 +9,8 @@ import ru.shark.home.legomanager.dao.repository.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Component
 public class ExportDao {
     private ColorRepository colorRepository;
@@ -19,6 +21,7 @@ public class ExportDao {
     private SetRepository setRepository;
     private SetPartRepository setPartRepository;
     private UsersRepository usersRepository;
+    private UserSetsRepository userSetsRepository;
 
     /**
      * Экспорт цветов.
@@ -63,6 +66,18 @@ public class ExportDao {
     private UserDictionaryDto userEntityToDictionary(UserEntity entity) {
         UserDictionaryDto dto = new UserDictionaryDto();
         dto.setName(entity.getName());
+
+        List<UserSetEntity> sets = userSetsRepository.getAllByUser(entity.getId());
+        if (!isEmpty(sets)) {
+            dto.setSets(sets.stream().map(this::userSetEntityToDictionary).collect(Collectors.toList()));
+        }
+        return dto;
+    }
+
+    private UserSetDictionaryDto userSetEntityToDictionary(UserSetEntity entity) {
+        UserSetDictionaryDto dto = new UserSetDictionaryDto();
+        dto.setNumber(entity.getSet().getNumber());
+        dto.setCount(entity.getCount());
 
         return dto;
     }
@@ -167,5 +182,10 @@ public class ExportDao {
     @Autowired
     public void setUsersRepository(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
+    }
+
+    @Autowired
+    public void setUserSetsRepository(UserSetsRepository userSetsRepository) {
+        this.userSetsRepository = userSetsRepository;
     }
 }
