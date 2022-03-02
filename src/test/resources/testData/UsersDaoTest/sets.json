@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Rough Terrain Crane",
+    "number": 42082,
+    "year": 2018,
+    "series": "technic",
+    "parts": [
+      {
+        "number": "112231",
+        "count": 10
+      },
+      {
+        "number": "55521",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "name": "Leibherr R 9800",
+    "number": 42100,
+    "year": 2020,
+    "series": "technic"
+  },
+  {
+    "name": "Wheelie Stunt Bike",
+    "number": 60296,
+    "year": 2021,
+    "series": "city"
+  }
+]

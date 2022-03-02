@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.dao.entity;
 import ru.shark.home.common.dao.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "LEGO_SET")
@@ -30,6 +31,9 @@ public class SetEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "LEGO_SERIES_ID", nullable = false)
     private SeriesEntity series;
+
+    @OneToMany(mappedBy = "set")
+    private Set<SetPartEntity> parts;
 
     public String getName() {
         return name;
@@ -71,6 +75,14 @@ public class SetEntity extends BaseEntity {
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<SetPartEntity> getParts() {
+        return parts;
+    }
+
+    public void setParts(Set<SetPartEntity> parts) {
+        this.parts = parts;
     }
 
     public static String getDescription() {

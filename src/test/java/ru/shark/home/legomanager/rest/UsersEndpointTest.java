@@ -72,4 +72,14 @@ public class UsersEndpointTest extends BaseEndpointTest {
         checkResponse(response);
         verify(usersService, times(1)).delete(anyLong());
     }
+
+    @Test
+    public void getSetsSummary() {
+        // WHEN
+        Response response = usersEndpoint.getSetsSummary(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(usersService, times(1)).getUserSetsSummary(anyLong());
+    }
 }

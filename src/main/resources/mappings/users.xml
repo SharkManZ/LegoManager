@@ -10,4 +10,16 @@
     <named-query name="getAllUsers">
         <query>select u from UserEntity u order by u.name</query>
     </named-query>
+    <named-query name="getUserSetsSummary">
+        <query>select new ru.shark.home.legomanager.dao.dto.UserSetsSummaryDto(
+            (select sum(sp.count) from UserSetEntity us join us.set s join s.parts sp where us.user.id = u.id),
+            (select count(distinct pc.part.id) from UserSetEntity us join us.set s join s.parts sp join sp.partColor pc
+                where us.user.id = u.id),
+            (select count(distinct pc.color.id) from UserSetEntity us join us.set s join s.parts sp join sp.partColor pc
+                where us.user.id = u.id)
+            )
+            from UserEntity u
+            where u.id = :userId
+        </query>
+    </named-query>
 </entity-mappings>

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.shark.home.legomanager.dao.dto.UserSetsSummaryDto;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
@@ -15,6 +16,11 @@ public class UsersRepositoryTest extends DaoServiceTest {
 
     @BeforeAll
     public void init() {
+        loadSeries("UsersRepositoryTest/series.json");
+        loadColors("UsersRepositoryTest/colors.json");
+        loadPartCategories("UsersRepositoryTest/partCats.json");
+        loadParts("UsersRepositoryTest/parts.json");
+        loadSets("UsersRepositoryTest/sets.json");
         loadUsers("UsersRepositoryTest/users.json");
     }
 
@@ -35,5 +41,20 @@ public class UsersRepositoryTest extends DaoServiceTest {
         // THEN
         Assertions.assertNotNull(byName);
         Assertions.assertEquals("Максим", byName.getName());
+    }
+
+    @Test
+    public void getUserSetsSummary() {
+        // GIVEN
+        Long userId = entityFinder.findUserId("Максим");
+
+        // WHEN
+        UserSetsSummaryDto summary = usersRepository.getUserSetsSummary(userId);
+
+        // THEN
+        Assertions.assertNotNull(summary);
+        Assertions.assertEquals(13L, summary.getPartsCount());
+        Assertions.assertEquals(2L, summary.getColorsCount());
+        Assertions.assertEquals(2L, summary.getUniquePartsCount());
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.dto.UserDto;
+import ru.shark.home.legomanager.dao.dto.UserSetsSummaryDto;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
@@ -23,6 +24,11 @@ public class UsersDataManagerTest extends DaoServiceTest {
 
     @BeforeAll
     public void init() {
+        loadSeries("UsersDataManagerTest/series.json");
+        loadColors("UsersDataManagerTest/colors.json");
+        loadPartCategories("UsersDataManagerTest/partCats.json");
+        loadParts("UsersDataManagerTest/parts.json");
+        loadSets("UsersDataManagerTest/sets.json");
         loadUsers("UsersDataManagerTest/users.json");
     }
 
@@ -88,6 +94,21 @@ public class UsersDataManagerTest extends DaoServiceTest {
 
         // THEN
         Assertions.assertTrue(isDeleted(id, UserEntity.class));
+    }
+
+    @Test
+    public void getUserSetsSummary() {
+        // GIVEN
+        Long userId = entityFinder.findUserId("Максим");
+
+        // WHEN
+        UserSetsSummaryDto summary = usersDataManager.getUserSetsSummary(userId);
+
+        // THEN
+        Assertions.assertNotNull(summary);
+        Assertions.assertEquals(13L, summary.getPartsCount());
+        Assertions.assertEquals(2L, summary.getColorsCount());
+        Assertions.assertEquals(2L, summary.getUniquePartsCount());
     }
 
     private UserDto prepareDto() {

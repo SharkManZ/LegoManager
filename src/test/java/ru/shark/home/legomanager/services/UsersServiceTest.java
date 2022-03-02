@@ -8,6 +8,7 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.UserDto;
+import ru.shark.home.legomanager.dao.dto.UserSetsSummaryDto;
 import ru.shark.home.legomanager.datamanager.UsersDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
@@ -82,5 +83,18 @@ public class UsersServiceTest extends BaseServiceTest {
         // THEN
         checkResponse(response);
         verify(usersDataManager, times(1)).deleteById(anyLong());
+    }
+
+    @Test
+    public void getUserSetsSummary() {
+        // GIVEN
+        when(usersDataManager.getUserSetsSummary(anyLong())).thenReturn(new UserSetsSummaryDto());
+
+        // WHEN
+        BaseResponse response = usersService.getUserSetsSummary(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(usersDataManager, times(1)).getUserSetsSummary(anyLong());
     }
 }

@@ -41,6 +41,12 @@ public class UsersEndpoint {
         return Response.ok(usersService.delete(id)).build();
     }
 
+    @GET
+    @Path("/{id}/setsSummary")
+    public Response getSetsSummary(@PathParam("id") Long id) {
+        return Response.ok(usersService.getUserSetsSummary(id)).build();
+    }
+
     @Autowired
     public void setUsersService(UsersService usersService) {
         this.usersService = usersService;

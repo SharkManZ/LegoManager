@@ -5,6 +5,7 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.datamanager.BaseDataManager;
 import ru.shark.home.legomanager.dao.dto.UserDto;
+import ru.shark.home.legomanager.dao.dto.UserSetsSummaryDto;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.dao.service.UsersDao;
 
@@ -24,5 +25,10 @@ public class UsersDataManager extends BaseDataManager<UserEntity, UserDto> {
     public List<UserDto> getAllUsers() {
         UsersDao dao = (UsersDao) getDao();
         return getConverterUtil().entityListToDtoList(dao.getAllUsers(), UserDto.class);
+    }
+
+    public UserSetsSummaryDto getUserSetsSummary(Long id) {
+        UsersDao dao = (UsersDao) getDao();
+        return dao.getUserSetsSummary(id);
     }
 }

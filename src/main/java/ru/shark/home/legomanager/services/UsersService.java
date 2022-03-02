@@ -69,6 +69,20 @@ public class UsersService extends BaseLogicService {
         return response;
     }
 
+    public BaseResponse getUserSetsSummary(Long id) {
+        BaseResponse response;
+
+        try {
+            response = new BaseResponse();
+            response.setBody(usersDataManager.getUserSetsSummary(id));
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при сборе сводной информации по наборам владельца: " + e.getMessage());
+        }
+
+        return response;
+    }
+
     @Autowired
     public void setUsersDataManager(UsersDataManager usersDataManager) {
         this.usersDataManager = usersDataManager;
