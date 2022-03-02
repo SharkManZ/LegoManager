@@ -13,6 +13,7 @@ import ru.shark.home.legomanager.dao.dto.SetFullDto;
 import ru.shark.home.legomanager.dao.dto.SetSummaryDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import javax.validation.ValidationException;
@@ -233,6 +234,20 @@ public class SetDaoTest extends DaoServiceTest {
         Assertions.assertEquals(summary.getPartsCount(), expectedPartsCount);
         Assertions.assertEquals(summary.getUniquePartsCount(), expectedUniquePartsCount);
         Assertions.assertEquals(summary.getColors().size(), 1);
+    }
+
+    @Test
+    public void search() {
+        // GIVEN
+        SearchDto dto = new SearchDto();
+        dto.setSearchValue("42082");
+
+        // WHEN
+        SetEntity search = setDao.search(dto);
+
+        // THEN
+        Assertions.assertNotNull(search);
+        Assertions.assertEquals(dto.getSearchValue(), search.getNumber());
     }
 
     private SetEntity prepareEntity() {

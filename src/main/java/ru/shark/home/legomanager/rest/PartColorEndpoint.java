@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.services.PartColorService;
-import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -30,7 +30,7 @@ public class PartColorEndpoint {
 
     @POST
     @Path("/search")
-    public Response search(PartColorSearchDto dto) {
+    public Response search(SearchDto dto) {
         return Response.ok(partColorService.search(dto)).build();
     }
 

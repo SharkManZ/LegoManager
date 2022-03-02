@@ -9,6 +9,7 @@ import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.services.SetPartService;
 import ru.shark.home.legomanager.services.SetService;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 import ru.shark.home.legomanager.util.BaseEndpointTest;
 
 import javax.ws.rs.core.Response;
@@ -118,5 +119,18 @@ public class SetEndpointTest extends BaseEndpointTest {
         // THEN
         checkResponse(response);
         verify(service, times(1)).getSetPartCategories(eq(1L));
+    }
+
+    @Test
+    public void search() {
+        // GIVEN
+        when(service.search(any(SearchDto.class))).thenReturn(new BaseResponse());
+
+        // WHEN
+        Response response = setEndpoint.search(new SearchDto());
+
+        // THEN
+        checkResponse(response);
+        verify(service, times(1)).search(any(SearchDto.class));
     }
 }

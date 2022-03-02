@@ -9,6 +9,7 @@ import ru.shark.home.legomanager.dao.dto.SetFullDto;
 import ru.shark.home.legomanager.dao.dto.SetSummaryDto;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.dao.service.SetDao;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 
 @Component
 public class SetDataManager extends BaseDataManager<SetEntity, SetDto> {
@@ -29,5 +30,10 @@ public class SetDataManager extends BaseDataManager<SetEntity, SetDto> {
     public SetSummaryDto getSummary(Long id) {
         SetDao dao = (SetDao) getDao();
         return dao.getSummary(id);
+    }
+
+    public SetDto search(SearchDto dto) {
+        SetDao dao = (SetDao) getDao();
+        return getConverterUtil().entityToDto(dao.search(dto), SetDto.class);
     }
 }

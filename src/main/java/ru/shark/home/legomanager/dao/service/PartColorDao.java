@@ -10,7 +10,7 @@ import ru.shark.home.legomanager.dao.entity.PartEntity;
 import ru.shark.home.legomanager.dao.repository.ColorRepository;
 import ru.shark.home.legomanager.dao.repository.PartColorRepository;
 import ru.shark.home.legomanager.dao.repository.PartRepository;
-import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
@@ -80,7 +80,7 @@ public class PartColorDao extends BaseDao<PartColorEntity> {
                         partColorEntity.getColor().getId())));
     }
 
-    public PartColorEntity search(PartColorSearchDto dto) {
+    public PartColorEntity search(SearchDto dto) {
         String[] searchParts = dto.getSearchValue().split(" ");
         if (searchParts.length == 1) {
             Long countByNumber = partColorRepository.getPartColorCountByNumber(searchParts[0]);

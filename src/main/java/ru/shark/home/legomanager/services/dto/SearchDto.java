@@ -1,6 +1,6 @@
 package ru.shark.home.legomanager.services.dto;
 
-public class PartColorSearchDto {
+public class SearchDto {
     private String searchValue;
 
     public String getSearchValue() {

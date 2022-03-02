@@ -9,6 +9,7 @@ import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.datamanager.ColorDataManager;
 import ru.shark.home.legomanager.datamanager.PartCategoryDataManager;
 import ru.shark.home.legomanager.datamanager.SetDataManager;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 
 import static ru.shark.home.common.common.ErrorConstants.ERR_500;
 
@@ -113,6 +114,18 @@ public class SetService extends BaseLogicService {
         }
 
         return response;
+    }
+
+    public BaseResponse search(SearchDto dto) {
+        BaseResponse baseResponse;
+        try {
+            baseResponse = new BaseResponse();
+            baseResponse.setBody(setDataManager.search(dto));
+            baseResponse.setSuccess(true);
+        } catch (Exception e) {
+            baseResponse = BaseResponse.buildError(ERR_500, "Ошибка при поиске набора: " + e.getMessage());
+        }
+        return baseResponse;
     }
 
     @Autowired

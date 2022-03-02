@@ -7,7 +7,7 @@ import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
-import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 
 import static ru.shark.home.common.common.ErrorConstants.ERR_500;
 
@@ -55,7 +55,7 @@ public class PartColorService extends BaseLogicService {
         return baseResponse;
     }
 
-    public BaseResponse search(PartColorSearchDto dto) {
+    public BaseResponse search(SearchDto dto) {
         BaseResponse baseResponse;
         try {
             baseResponse = new BaseResponse();

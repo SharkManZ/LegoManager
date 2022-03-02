@@ -6,7 +6,7 @@ import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.service.PartColorDao;
-import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class PartColorDataManager extends BaseDataManager<PartColorEntity, PartC
         return getConverterUtil().entityListToDtoList(dao.getPartColorListByPartId(partId, search), PartColorDto.class);
     }
 
-    public PartColorDto search(PartColorSearchDto dto) {
+    public PartColorDto search(SearchDto dto) {
         PartColorDao dao = (PartColorDao) getDao();
         return getConverterUtil().entityToDto(dao.search(dto), PartColorDto.class);
     }

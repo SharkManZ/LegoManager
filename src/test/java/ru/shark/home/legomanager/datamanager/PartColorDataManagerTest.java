@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
-import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.util.List;
@@ -90,7 +90,7 @@ public class PartColorDataManagerTest extends DaoServiceTest {
     @Test
     public void search() {
         // GIVEN
-        PartColorSearchDto dto = new PartColorSearchDto();
+        SearchDto dto = new SearchDto();
         dto.setSearchValue("112231");
 
         // WHEN

@@ -7,6 +7,7 @@ import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.services.SetPartService;
 import ru.shark.home.legomanager.services.SetService;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -60,6 +61,12 @@ public class SetEndpoint {
     @Path("{id}/partCategories/list")
     public Response getPartCategories(@PathParam("id") Long id) {
         return Response.ok(service.getSetPartCategories(id)).build();
+    }
+
+    @POST
+    @Path("/search")
+    public Response search(SearchDto dto) {
+        return Response.ok(service.search(dto)).build();
     }
 
     @Autowired

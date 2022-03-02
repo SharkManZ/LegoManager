@@ -12,6 +12,7 @@ import ru.shark.home.legomanager.dao.dto.SetFullDto;
 import ru.shark.home.legomanager.datamanager.ColorDataManager;
 import ru.shark.home.legomanager.datamanager.PartCategoryDataManager;
 import ru.shark.home.legomanager.datamanager.SetDataManager;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
 import java.util.Arrays;
@@ -118,5 +119,18 @@ public class SetServiceTest extends BaseServiceTest {
         // THEN
         checkResponse(response);
         verify(partCategoryDataManager, times(1)).getListBySetId(eq(1L));
+    }
+
+    @Test
+    public void search() {
+        // GIVEN
+        when(setDataManager.search(any(SearchDto.class))).thenReturn(new SetDto());
+
+        // WHEN
+        BaseResponse response = service.search(new SearchDto());
+
+        // THEN
+        checkResponse(response);
+        verify(setDataManager, times(1)).search(any(SearchDto.class));
     }
 }

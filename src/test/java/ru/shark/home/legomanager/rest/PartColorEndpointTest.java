@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.services.PartColorService;
-import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 import ru.shark.home.legomanager.util.BaseEndpointTest;
 
 import javax.ws.rs.core.Response;
@@ -58,13 +58,13 @@ public class PartColorEndpointTest extends BaseEndpointTest {
     @Test
     public void search() {
         // GIVEN
-        when(partColorService.search(any(PartColorSearchDto.class))).thenReturn(new BaseResponse());
+        when(partColorService.search(any(SearchDto.class))).thenReturn(new BaseResponse());
 
         // WHEN
-        Response response = partColorEndpoint.search(new PartColorSearchDto());
+        Response response = partColorEndpoint.search(new SearchDto());
 
         // THEN
         checkResponse(response);
-        verify(partColorService, times(1)).search(any(PartColorSearchDto.class));
+        verify(partColorService, times(1)).search(any(SearchDto.class));
     }
 }

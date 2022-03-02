@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
-import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import javax.validation.ValidationException;
@@ -164,7 +164,7 @@ public class PartColorDaoTest extends DaoServiceTest {
     @Test
     public void search() {
         // GIVEN
-        PartColorSearchDto dto = new PartColorSearchDto();
+        SearchDto dto = new SearchDto();
         dto.setSearchValue("098765");
 
         // WHEN
@@ -178,7 +178,7 @@ public class PartColorDaoTest extends DaoServiceTest {
     @Test
     public void searchWithMoreThanOneResult() {
         // GIVEN
-        PartColorSearchDto dto = new PartColorSearchDto();
+        SearchDto dto = new SearchDto();
         dto.setSearchValue("112231");
         String expected = MessageFormat.format(MORE_THAN_ONE_PART_COLOR, 2, dto.getSearchValue());
 
@@ -192,7 +192,7 @@ public class PartColorDaoTest extends DaoServiceTest {
     @Test
     public void searchByColorAndPartNumbers() {
         // GIVEN
-        PartColorSearchDto dto = new PartColorSearchDto();
+        SearchDto dto = new SearchDto();
         dto.setSearchValue("112231 3010");
 
         // WHEN

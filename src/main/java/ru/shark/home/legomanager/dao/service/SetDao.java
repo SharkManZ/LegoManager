@@ -3,7 +3,6 @@ package ru.shark.home.legomanager.dao.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.service.BaseDao;
@@ -18,6 +17,7 @@ import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.dao.repository.ColorRepository;
 import ru.shark.home.legomanager.dao.repository.SeriesRepository;
 import ru.shark.home.legomanager.dao.repository.SetRepository;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.springframework.util.ObjectUtils.isEmpty;
 import static ru.shark.home.common.common.ErrorConstants.*;
 import static ru.shark.home.common.dao.util.SpecificationUtils.andSpecifications;
@@ -125,6 +124,10 @@ public class SetDao extends BaseDao<SetEntity> {
                     .collect(Collectors.toList()));
         }
         return dto;
+    }
+
+    public SetEntity search(SearchDto dto) {
+        return setRepository.findSetByNumber(dto.getSearchValue());
     }
 
     private void validateFields(SetEntity setEntity) {

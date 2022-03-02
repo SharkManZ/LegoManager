@@ -7,7 +7,7 @@ import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
-import ru.shark.home.legomanager.services.dto.PartColorSearchDto;
+import ru.shark.home.legomanager.services.dto.SearchDto;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
 import java.util.ArrayList;
@@ -69,13 +69,13 @@ public class PartColorServiceTest extends BaseServiceTest {
     @Test
     public void search() {
         // GIVEN
-        when(partColorDataManager.search(any(PartColorSearchDto.class))).thenReturn(new PartColorDto());
+        when(partColorDataManager.search(any(SearchDto.class))).thenReturn(new PartColorDto());
 
         // WHEN
-        BaseResponse response = partColorService.search(new PartColorSearchDto());
+        BaseResponse response = partColorService.search(new SearchDto());
 
         // THEN
         checkResponseWithBody(response);
-        verify(partColorDataManager, times(1)).search(any(PartColorSearchDto.class));
+        verify(partColorDataManager, times(1)).search(any(SearchDto.class));
     }
 }
