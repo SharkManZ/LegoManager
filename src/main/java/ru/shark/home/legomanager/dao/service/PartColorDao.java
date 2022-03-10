@@ -2,6 +2,7 @@ package ru.shark.home.legomanager.dao.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
@@ -14,6 +15,7 @@ import ru.shark.home.legomanager.services.dto.SearchDto;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -93,8 +95,26 @@ public class PartColorDao extends BaseDao<PartColorEntity> {
                         searchParts[0]));
             }
         } else {
-            return partColorRepository.getPartColorByNumberPartNumber(searchParts[0], searchParts[1]);
+            List<PartColorEntity> list = partColorRepository.getPartColorByNumberPartNumber(searchParts[0],
+                    searchParts[1]);
+            if (ObjectUtils.isEmpty(list)) {
+                return null;
+            }
+            return list.stream().filter(item -> isEqualByAlternate(item, searchParts[0])).findFirst().orElse(null);
         }
+    }
+
+    private boolean isEqualByAlternate(PartColorEntity entity, String number) {
+        if (entity.getNumber().equalsIgnoreCase(number)) {
+            return true;
+        }
+        if (isBlank(entity.getAlternateNumber())) {
+            return false;
+        }
+        long count = Arrays.stream(entity.getAlternateNumber().split(","))
+                .filter(item -> item.trim().equalsIgnoreCase(number))
+                .count();
+        return count == 1;
     }
 
     @Autowired

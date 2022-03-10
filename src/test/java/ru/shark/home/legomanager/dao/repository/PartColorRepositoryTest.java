@@ -95,24 +95,26 @@ public class PartColorRepositoryTest extends DaoServiceTest {
     @Test
     public void getPartColorByNumberPartNumber() {
         // WHEN
-        PartColorEntity byNumber = partColorRepository.getPartColorByNumberPartNumber("112231", "3010");
+        List<PartColorEntity> byNumber = partColorRepository.getPartColorByNumberPartNumber("112231", "3010");
 
         // THEN
         Assertions.assertNotNull(byNumber);
-        Assertions.assertEquals("112231", byNumber.getNumber());
-        Assertions.assertEquals("3010", byNumber.getPart().getNumber());
+        Assertions.assertEquals(1, byNumber.size());
+        Assertions.assertEquals("112231", byNumber.get(0).getNumber());
+        Assertions.assertEquals("3010", byNumber.get(0).getPart().getNumber());
     }
 
     @Test
     public void getPartColorByAlternateNumberPartNumber() {
         // WHEN
-        PartColorEntity byNumber = partColorRepository.getPartColorByNumberPartNumber("898", "3010");
+        List<PartColorEntity> byNumber = partColorRepository.getPartColorByNumberPartNumber("898", "3010");
 
         // THEN
         Assertions.assertNotNull(byNumber);
-        Assertions.assertEquals("112231", byNumber.getNumber());
-        Assertions.assertEquals("898", byNumber.getAlternateNumber());
-        Assertions.assertEquals("3010", byNumber.getPart().getNumber());
+        Assertions.assertEquals(1, byNumber.size());
+        Assertions.assertEquals("112231", byNumber.get(0).getNumber());
+        Assertions.assertEquals("898", byNumber.get(0).getAlternateNumber());
+        Assertions.assertEquals("3010", byNumber.get(0).getPart().getNumber());
     }
 
     @Test

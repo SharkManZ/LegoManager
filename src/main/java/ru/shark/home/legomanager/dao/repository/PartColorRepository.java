@@ -75,7 +75,7 @@ public interface PartColorRepository extends BaseRepository<PartColorEntity> {
      * @return цвет детали
      */
     @Query(name = "getPartColorByNumberPartNumber")
-    PartColorEntity getPartColorByNumberPartNumber(@Param("number") String number, @Param("partNumber") String partNumber);
+    List<PartColorEntity> getPartColorByNumberPartNumber(@Param("number") String number, @Param("partNumber") String partNumber);
 
     /**
      * Возвращает цвет детали по детали и цвету
