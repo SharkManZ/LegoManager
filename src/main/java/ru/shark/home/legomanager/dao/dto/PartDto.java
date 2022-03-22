@@ -6,7 +6,6 @@ public class PartDto extends BaseDto {
     private String name;
     private String number;
     private String alternateNumber;
-
     private PartCategoryDto category;
 
     public String getName() {

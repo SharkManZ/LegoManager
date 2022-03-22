@@ -2,10 +2,9 @@ package ru.shark.home.legomanager.dao.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
+import ru.shark.home.common.dao.common.PageableList;
+import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.service.BaseDao;
-import ru.shark.home.common.services.dto.Filter;
-import ru.shark.home.common.services.dto.ListRequest;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
@@ -16,9 +15,7 @@ import ru.shark.home.legomanager.dao.repository.SetRepository;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static ru.shark.home.common.common.ErrorConstants.*;
@@ -34,20 +31,14 @@ public class SetPartDao extends BaseDao<SetPartEntity> {
         super(SetPartEntity.class);
     }
 
-    public List<SetPartFullDto> getPartsBySetId(Long setId, ListRequest request) {
-        String search = request != null && request.getSearch() != null &&
-                !isBlank(request.getSearch().getValue()) ? request.getSearch().getValue() : "";
-        Filter colorFilter = request != null ? getFilterValueByField(request.getFilters(), "color") : null;
-        Long colorId = colorFilter != null ? Long.parseLong(colorFilter.getValue()) : null;
-        Filter categoryFilter = request != null ? getFilterValueByField(request.getFilters(), "partCategory") : null;
-        Long categoryId = categoryFilter != null ? Long.parseLong(categoryFilter.getValue()) : null;
-        List<SetPartEntity> entityList = setPartRepository.getSetPartsBySetId(setId, search, colorId, categoryId);
-        if (ObjectUtils.isEmpty(entityList)) {
-            return Collections.emptyList();
-        }
-
+    public PageableList<SetPartFullDto> getPartsBySetId(Long setId, RequestCriteria requestCriteria) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("setId", setId);
+        PageableList<SetPartEntity> pageLIst = setPartRepository.getWithPagination("getSetPartsBySetId", requestCriteria, params,
+                Arrays.asList("partColor.number", "partColor.alternateNumber", "partColor.part.number",
+                        "partColor.part.alternateNumber", "partColor.part.name", "partColor.color.name"));
         List<SetPartFullDto> list = new ArrayList<>();
-        for (SetPartEntity entity : entityList) {
+        for (SetPartEntity entity : pageLIst.getData()) {
             SetPartFullDto dto = new SetPartFullDto();
             dto.setId(entity.getId());
             dto.setCount(entity.getCount());
@@ -66,7 +57,7 @@ public class SetPartDao extends BaseDao<SetPartEntity> {
 
             list.add(dto);
         }
-        return list;
+        return new PageableList<>(list, pageLIst.getTotalCount());
     }
 
     @Override

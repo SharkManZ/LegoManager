@@ -3,13 +3,15 @@ package ru.shark.home.legomanager.services;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.shark.home.common.services.dto.ListRequest;
+import ru.shark.home.common.dao.common.PageableList;
+import ru.shark.home.common.dao.common.RequestCriteria;
+import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.SetPartDto;
 import ru.shark.home.legomanager.datamanager.SetPartDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.mockito.Mockito.*;
 
@@ -32,14 +34,15 @@ public class SetPartServiceTest extends BaseServiceTest {
     @Test
     public void getListBySetId() {
         // GIVEN
-        when(setPartDataManager.getPartsBySetId(anyLong(), any(ListRequest.class))).thenReturn(new ArrayList<>());
+        when(setPartDataManager.getPartsBySetId(anyLong(), any(RequestCriteria.class)))
+                .thenReturn(new PageableList<>(Collections.emptyList(), 1L));
 
         // WHEN
-        BaseResponse response = setPartService.getListBySetId(1L, new ListRequest());
+        BaseResponse response = setPartService.getListBySetId(1L, new PageRequest());
 
         // THEN
         checkResponseWithBody(response);
-        verify(setPartDataManager, times(1)).getPartsBySetId(anyLong(), any(ListRequest.class));
+        verify(setPartDataManager, times(1)).getPartsBySetId(anyLong(), any(RequestCriteria.class));
     }
 
     @Test

@@ -38,30 +38,10 @@ public class SetPartRepositoryTest extends DaoServiceTest {
         };
 
         // WHEN
-        List<SetPartEntity> list = setPartRepository.getSetPartsBySetId(setId, "", null, null);
+        List<SetPartEntity> list = setPartRepository.getSetPartsBySetId(setId);
 
         // THEN
         Assertions.assertEquals(2, list.size());
-        Assertions.assertTrue(ordering.reverse().isOrdered(list));
-    }
-
-    @Test
-    public void getSetPartsBySetIdWithSearch() {
-        // GIVEN
-        Long setId = entityFinder.findSetId("42082");
-        // GIVEN
-        Ordering<SetPartEntity> ordering = new Ordering<SetPartEntity>() {
-            @Override
-            public int compare(@Nullable SetPartEntity setPartEntity, @Nullable SetPartEntity t1) {
-                return setPartEntity.getId().compareTo(t1.getId());
-            }
-        };
-
-        // WHEN
-        List<SetPartEntity> list = setPartRepository.getSetPartsBySetId(setId, "555", null, null);
-
-        // THEN
-        Assertions.assertEquals(1, list.size());
         Assertions.assertTrue(ordering.reverse().isOrdered(list));
     }
 

@@ -1,14 +1,13 @@
 package ru.shark.home.legomanager.datamanager;
 
 import org.springframework.stereotype.Component;
+import ru.shark.home.common.dao.common.PageableList;
+import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.datamanager.BaseDataManager;
-import ru.shark.home.common.services.dto.ListRequest;
 import ru.shark.home.legomanager.dao.dto.SetPartDto;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
 import ru.shark.home.legomanager.dao.entity.SetPartEntity;
 import ru.shark.home.legomanager.dao.service.SetPartDao;
-
-import java.util.List;
 
 @Component
 public class SetPartDataManager extends BaseDataManager<SetPartEntity, SetPartDto> {
@@ -16,7 +15,7 @@ public class SetPartDataManager extends BaseDataManager<SetPartEntity, SetPartDt
         super(dao, SetPartDto.class);
     }
 
-    public List<SetPartFullDto> getPartsBySetId(Long setId, ListRequest request) {
+    public PageableList<SetPartFullDto> getPartsBySetId(Long setId, RequestCriteria request) {
         SetPartDao dao = (SetPartDao) getDao();
         return dao.getPartsBySetId(setId, request);
     }

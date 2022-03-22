@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.shark.home.common.dao.common.PageableList;
+import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.dao.dto.SetPartDto;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
 import ru.shark.home.legomanager.util.DaoServiceTest;
-
-import java.util.List;
 
 public class SetPartDataManagerTest extends DaoServiceTest {
     @Autowired
@@ -31,11 +31,11 @@ public class SetPartDataManagerTest extends DaoServiceTest {
         Long setId = entityFinder.findSetId("42082");
 
         // WHEN
-        List<SetPartFullDto> list = setPartDataManager.getPartsBySetId(setId, null);
+        PageableList<SetPartFullDto> list = setPartDataManager.getPartsBySetId(setId, new RequestCriteria(0, 10));
 
         // THEN
-        Assertions.assertEquals(2, list.size());
-        for (SetPartFullDto dto : list) {
+        Assertions.assertEquals(2, list.getData().size());
+        for (SetPartFullDto dto : list.getData()) {
             Assertions.assertNotNull(dto.getId());
             Assertions.assertNotNull(dto.getSetId());
             Assertions.assertNotNull(dto.getPartColorId());
