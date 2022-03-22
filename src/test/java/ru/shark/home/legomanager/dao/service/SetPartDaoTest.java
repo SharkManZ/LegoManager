@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.shark.home.common.dao.common.PageableList;
-import ru.shark.home.common.dao.common.RequestCriteria;
-import ru.shark.home.common.dao.common.RequestFilter;
-import ru.shark.home.common.dao.common.RequestSearch;
+import ru.shark.home.common.dao.common.*;
 import ru.shark.home.common.enums.FieldType;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
@@ -95,6 +92,30 @@ public class SetPartDaoTest extends DaoServiceTest {
 
         // WHEN
         PageableList<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, new RequestCriteria(0, 10));
+
+        // THEN
+        checkPagingDtoList(list, 2, 2L);
+        for (SetPartFullDto dto : list.getData()) {
+            Assertions.assertNotNull(dto.getId());
+            Assertions.assertNotNull(dto.getSetId());
+            Assertions.assertNotNull(dto.getPartColorId());
+            Assertions.assertNotNull(dto.getNumber());
+            Assertions.assertNotNull(dto.getColorNumber());
+            Assertions.assertNotNull(dto.getHexColor());
+            Assertions.assertNotNull(dto.getCount());
+            Assertions.assertNotNull(dto.getPartName());
+        }
+    }
+
+    @Test
+    public void getPartsBySetIdWithSort() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+        RequestCriteria requestCriteria = new RequestCriteria(0, 10);
+        requestCriteria.setSorts(Arrays.asList(new RequestSort("partColor.number", "desc")));
+
+        // WHEN
+        PageableList<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, requestCriteria);
 
         // THEN
         checkPagingDtoList(list, 2, 2L);
