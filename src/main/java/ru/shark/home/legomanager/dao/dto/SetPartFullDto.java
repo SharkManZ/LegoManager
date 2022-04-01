@@ -1,9 +1,11 @@
 package ru.shark.home.legomanager.dao.dto;
 
+import ru.shark.home.common.dao.common.EntityClass;
 import ru.shark.home.common.dao.dto.BaseDto;
+import ru.shark.home.legomanager.dao.entity.SetPartEntity;
 
+@EntityClass(clazz = SetPartEntity.class)
 public class SetPartFullDto extends BaseDto {
-    private PartColorDto partColor;
     private Long setId;
     private Long partColorId;
     private Integer count;
@@ -84,13 +86,5 @@ public class SetPartFullDto extends BaseDto {
 
     public void setAlternateNumber(String alternateNumber) {
         this.alternateNumber = alternateNumber;
-    }
-
-    public PartColorDto getPartColor() {
-        return partColor;
-    }
-
-    public void setPartColor(PartColorDto partColor) {
-        this.partColor = partColor;
     }
 }
