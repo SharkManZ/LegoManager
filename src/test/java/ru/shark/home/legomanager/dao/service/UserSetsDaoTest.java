@@ -8,12 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
+import ru.shark.home.common.dao.common.RequestFilter;
+import ru.shark.home.common.enums.FieldType;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.dao.entity.UserSetEntity;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
@@ -40,9 +43,11 @@ public class UserSetsDaoTest extends DaoServiceTest {
             }
         };
         Long userId = entityFinder.findUserId("Максим");
+        RequestCriteria requestCriteria = new RequestCriteria(0, 10);
+        //requestCriteria.setFilters(Arrays.asList(new RequestFilter("set.series.name", FieldType.STRING, "=", "Technic")));
 
         // WHEN
-        PageableList<UserSetEntity> list = userSetsDao.getWithPagination(userId, new RequestCriteria(0, 10));
+        PageableList<UserSetEntity> list = userSetsDao.getWithPagination(userId, requestCriteria);
 
         // THEN
         Assertions.assertNotNull(list);

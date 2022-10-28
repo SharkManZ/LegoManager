@@ -25,6 +25,6 @@ public interface UserSetsRepository extends BaseRepository<UserSetEntity> {
      * @param userId идентификатор владельца
      * @return список
      */
-    @Query(name = "getAllByUser")
-    List<UserSetEntity> getAllByUser(@Param("userId") Long userId);
+    @Query(name = "getUserSetsByUser")
+    List<UserSetEntity> getUserSetsByUser(@Param("userId") Long userId);
 }

@@ -37,12 +37,12 @@ public class UserSetsRepositoryTest extends DaoServiceTest {
     }
 
     @Test
-    public void getAllByUser() {
+    public void getUserSetsByUser() {
         // GIVEN
         Long userId = entityFinder.findUserId("Максим");
 
         // WHEN
-        List<UserSetEntity> list = userSetsRepository.getAllByUser(userId);
+        List<UserSetEntity> list = userSetsRepository.getUserSetsByUser(userId);
 
         // THEN
         Assertions.assertEquals(2, list.size());

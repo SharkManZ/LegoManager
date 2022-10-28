@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+    <named-query name="findUserPartByUserAndPartColor">
+        <query>select up from UserPartEntity up
+            where up.partColor.id = :partColorId
+            and up.user.id = :userId
+        </query>
+    </named-query>
+    <named-query name="getPartCountInUserSets">
+        <query>
+            select sum(sp.count)
+            from UserSetEntity us
+            join us.set s
+            join s.parts sp
+            where us.user.id = :userId and sp.partColor.id = :partColorId
+        </query>
+    </named-query>
+    <named-native-query name="getUserPartsByUser" result-set-mapping="getUserPartsByUserMapping">
+        <query>select max(id) as id, partColorId, userId, colorNumber, alternateColorNumber, number, alternateNumber,
+            sum(coalesce(setsCount, 0)) + sum(coalesce(userCount, 0)) as userCount, max(coalesce(setsCount, 0)) as setsCount
+            from (
+                select null as id, lpc.lego_id as partColorId, lus.lego_user_id as userId, lpc.lego_number as colorNumber,
+                    lpc.lego_alternate_number as alternateColorNumber, lp.lego_number as number,
+                    lp.lego_alternate_number as alternateNumber, null as userCount, sum(lsp.lego_count) as setsCount
+                from lego_user_sets lus
+                    join lego_set_part lsp on lsp.lego_set_id = lus.lego_set_id
+                    join lego_part_color lpc on lpc.lego_id = lsp.lego_part_color_id
+                    join lego_part lp on lp.lego_id = lpc.lego_part_id
+                    join lego_part_category lpcc on lpcc.lego_id = lp.lego_part_category_id
+                    join lego_color lc on lc.lego_id = lpc.lego_color_id
+                where lus.lego_user_id = :userId
+                group by lus.lego_user_id, lpc.lego_id, lpc.lego_number, lpc.lego_alternate_number, lp.lego_number , lp.lego_alternate_number
+                union all
+                select lup.lego_id as id, lup.lego_part_color_id as partColorId, lup.lego_user_id as userId, lpc.lego_number as colorNumber,
+                    lpc.lego_alternate_number as alternateColorNumber, lp.lego_number as number,
+                    lp.lego_alternate_number as alternateNumber, lup.lego_count as userCount, null as setsCount
+                from lego_user_parts lup
+                    join lego_part_color lpc on lpc.lego_id = lup.lego_part_color_id
+                    join lego_part lp on lp.lego_id = lpc.lego_part_id
+                where lup.lego_user_id = :userId
+            ) up
+            group by partColorId, userId, colorNumber, alternateColorNumber, number, alternateNumber
+            order by colorNumber, number
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="getUserPartsByUserMapping">
+        <constructor-result target-class="ru.shark.home.legomanager.dao.dto.UserPartListDto">
+            <column name="id" class="java.lang.Long"/>
+            <column name="partColorId" class="java.lang.Long"/>
+            <column name="userId" class="java.lang.Long"/>
+            <column name="number" class="java.lang.String"/>
+            <column name="alternateNumber" class="java.lang.String"/>
+            <column name="colorNumber" class="java.lang.String"/>
+            <column name="alternateColorNumber" class="java.lang.String"/>
+            <column name="userCount" class="java.lang.Integer"/>
+            <column name="setsCount" class="java.lang.Integer"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+</entity-mappings>

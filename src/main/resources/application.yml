@@ -19,3 +19,4 @@ spring:
       - mappings/sets.xml
       - mappings/users.xml
       - mappings/userSets.xml
+      - mappings/userParts.xml

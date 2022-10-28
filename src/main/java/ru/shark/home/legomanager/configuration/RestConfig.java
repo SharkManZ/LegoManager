@@ -18,5 +18,6 @@ public class RestConfig extends ResourceConfig {
         register(ExportEndpoint.class);
         register(UsersEndpoint.class);
         register(UserSetsEndpoint.class);
+        register(UserPartsEndpoint.class);
     }
 }

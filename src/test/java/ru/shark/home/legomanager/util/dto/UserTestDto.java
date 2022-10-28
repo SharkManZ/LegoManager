@@ -5,6 +5,7 @@ import java.util.List;
 public class UserTestDto {
     private String name;
     private List<UserSetTestDto> sets;
+    private List<UserPartTestDto> parts;
 
     public String getName() {
         return name;
@@ -20,5 +21,13 @@ public class UserTestDto {
 
     public void setSets(List<UserSetTestDto> sets) {
         this.sets = sets;
+    }
+
+    public List<UserPartTestDto> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<UserPartTestDto> parts) {
+        this.parts = parts;
     }
 }

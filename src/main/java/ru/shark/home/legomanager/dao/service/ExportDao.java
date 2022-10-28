@@ -67,7 +67,7 @@ public class ExportDao {
         UserDictionaryDto dto = new UserDictionaryDto();
         dto.setName(entity.getName());
 
-        List<UserSetEntity> sets = userSetsRepository.getAllByUser(entity.getId());
+        List<UserSetEntity> sets = userSetsRepository.getUserSetsByUser(entity.getId());
         if (!isEmpty(sets)) {
             dto.setSets(sets.stream().map(this::userSetEntityToDictionary).collect(Collectors.toList()));
         }

@@ -3,14 +3,13 @@
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
         http://java.sun.com/xml/ns/persistence/orm_2_0.xsd ">
-    <!-- Наборы владельцев-->
     <named-query name="findUserSetByUserAndSet">
         <query>select us from UserSetEntity us
             where us.set.id = :setId
             and us.user.id = :userId
         </query>
     </named-query>
-    <named-query name="getAllByUser">
+    <named-query name="getUserSetsByUser">
         <query>select us from UserSetEntity us
             join us.set s
             where us.user.id = :userId

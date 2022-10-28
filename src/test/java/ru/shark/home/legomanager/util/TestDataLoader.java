@@ -25,6 +25,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class TestDataLoader {
     private static final ObjectMapper mapper = new JsonMapper();
     private static final List<String> cleanUpLst = Arrays.asList(
+            "LEGO_USER_PARTS",
             "LEGO_USER_SETS",
             "LEGO_USERS",
             "LEGO_SET_PART",
@@ -65,6 +66,9 @@ public class TestDataLoader {
 
     @Autowired
     private UserSetsRepository userSetsRepository;
+
+    @Autowired
+    private UserPartsRepository userPartsRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -259,6 +263,16 @@ public class TestDataLoader {
                         userSetEntity.setSet(setEntity);
                         userSetEntity.setCount(setTestDto.getCount());
                         userSetsRepository.save(userSetEntity);
+                    }
+
+                    if (!isEmpty(userDto.getParts())) {
+                        for (UserPartTestDto part : userDto.getParts()) {
+                            UserPartEntity partEntity = new UserPartEntity();
+                            partEntity.setUser(userEntity);
+                            partEntity.setPartColor(entityFinder.findPartColor(part.getNumber()));
+                            partEntity.setCount(part.getCount());
+                            userPartsRepository.save(partEntity);
+                        }
                     }
 
                 }

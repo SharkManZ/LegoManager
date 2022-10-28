@@ -77,6 +77,15 @@ public class TestEntityFinder {
                 .getSingleResult();
     }
 
+    public Long findUserPartId(String userName, String partColorNumber) {
+        return (Long) em.createQuery("select up.id from UserPartEntity up " +
+                        "join up.user u join up.partColor pc " +
+                        "where lower(u.name) = :userName and lower(pc.number) = :partColorNumber")
+                .setParameter("userName", userName.toLowerCase())
+                .setParameter("partColorNumber", partColorNumber.toLowerCase())
+                .getSingleResult();
+    }
+
     public PartCategoryEntity findPartCategory(String name) {
         return (PartCategoryEntity) em.createQuery("select p from PartCategoryEntity p where lower(p.name) = :name")
                 .setParameter("name", name.toLowerCase())
