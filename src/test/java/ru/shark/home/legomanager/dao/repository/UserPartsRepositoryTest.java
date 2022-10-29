@@ -10,6 +10,8 @@ import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 public class UserPartsRepositoryTest extends DaoServiceTest {
 
     @Autowired
@@ -35,6 +37,7 @@ public class UserPartsRepositoryTest extends DaoServiceTest {
 
         // THEN
         Assertions.assertEquals(4, list.size());
+        Assertions.assertTrue(list.stream().allMatch(this::checkListDto));
         Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("112231") &&
                 item.getUserCount() == 25 && item.getSetsCount() == 10));
@@ -73,5 +76,10 @@ public class UserPartsRepositoryTest extends DaoServiceTest {
 
         // THEN
         Assertions.assertEquals(expected, count);
+    }
+
+    private boolean checkListDto(UserPartListDto dto) {
+        return !isBlank(dto.getPartName()) && !isBlank(dto.getCategoryName()) && !isBlank(dto.getColorNumber()) &&
+                !isBlank(dto.getNumber()) && dto.getUserCount() != null && dto.getSetsCount() != null;
     }
 }

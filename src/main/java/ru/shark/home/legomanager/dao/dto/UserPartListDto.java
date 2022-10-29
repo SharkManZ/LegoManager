@@ -9,6 +9,8 @@ public class UserPartListDto extends BaseDto {
     private String alternateNumber;
     private String colorNumber;
     private String alternateColorNumber;
+    private String categoryName;
+    private String partName;
     private Integer userCount;
     private Integer setsCount;
 
@@ -17,7 +19,7 @@ public class UserPartListDto extends BaseDto {
     }
 
     public UserPartListDto(Long id, Long partColorId, Long userId, String number, String alternateNumber, String colorNumber,
-                           String alternateColorNumber, Integer userCount, Integer setsCount) {
+                           String alternateColorNumber, String categoryName, String partName, Integer userCount, Integer setsCount) {
         super();
         setId(id);
         this.userId = userId;
@@ -26,6 +28,8 @@ public class UserPartListDto extends BaseDto {
         this.alternateNumber = alternateNumber;
         this.colorNumber = colorNumber;
         this.alternateColorNumber = alternateColorNumber;
+        this.categoryName = categoryName;
+        this.partName = partName;
         this.userCount = userCount;
         this.setsCount = setsCount;
     }
@@ -92,5 +96,21 @@ public class UserPartListDto extends BaseDto {
 
     public void setSetsCount(Integer setsCount) {
         this.setsCount = setsCount;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
     }
 }
