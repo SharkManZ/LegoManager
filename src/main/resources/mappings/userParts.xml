@@ -17,6 +17,12 @@
             where us.user.id = :userId and sp.partColor.id = :partColorId
         </query>
     </named-query>
+    <named-query name="getAllUserPartsByUser">
+        <query>
+            select up from UserPartEntity up
+            where up.user.id = :userId
+        </query>
+    </named-query>
     <named-native-query name="getUserPartsByUser" result-set-mapping="getUserPartsByUserMapping">
         <query>select max(id) as id, partColorId, userId, colorNumber, alternateColorNumber, number, alternateNumber,
             categoryName, partName,

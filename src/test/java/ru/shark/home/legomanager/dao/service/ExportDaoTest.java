@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import ru.shark.home.legomanager.dao.dto.export.*;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
@@ -111,18 +110,26 @@ public class ExportDaoTest extends DaoServiceTest {
         Assertions.assertEquals(2, list.size());
 
         boolean setsChecked = false;
+        boolean partsChecked = false;
         for (UserDictionaryDto dto : list) {
             Assertions.assertNotNull(dto.getName());
-            if (isEmpty(dto.getSets())) {
-                continue;
+            if (!isEmpty(dto.getSets())) {
+                setsChecked = true;
+                for (UserSetDictionaryDto setDto : dto.getSets()) {
+                    Assertions.assertNotNull(setDto.getNumber());
+                    Assertions.assertNotNull(setDto.getCount());
+                }
             }
-            setsChecked = true;
-            for (UserSetDictionaryDto setDto : dto.getSets()) {
-                Assertions.assertNotNull(setDto.getNumber());
-                Assertions.assertNotNull(setDto.getCount());
+            if (!isEmpty(dto.getParts())) {
+                partsChecked = true;
+                Assertions.assertTrue(dto.getParts().stream()
+                        .allMatch(item -> !isBlank(item.getPartNumber()) &&
+                                !isBlank(item.getPartColorNUmber()) &&
+                                item.getCount() != 0));
             }
 
         }
         Assertions.assertTrue(setsChecked);
+        Assertions.assertTrue(partsChecked);
     }
 }

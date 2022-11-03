@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.shark.home.common.dao.common.PageableList;
+import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
@@ -29,17 +31,18 @@ public class UserPartsDataManagerTest extends DaoServiceTest {
         Long userId = entityFinder.findUserId("Максим");
 
         // WHEN
-        List<UserPartListDto> list = userPartsDataManager.getList(userId);
+        PageableList<UserPartListDto> list = userPartsDataManager.getList(userId, new RequestCriteria(0, 10));
 
         // THEN
-        Assertions.assertEquals(3, list.size());
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+        checkPagingDtoList(list, 3, 3L);
+        List<UserPartListDto> data = list.getData();
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("112231") &&
                 item.getUserCount() == 25 && item.getSetsCount() == 10));
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("55531") &&
                 item.getUserCount() == 3 && item.getSetsCount() == 3));
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("55521") &&
                 item.getUserCount() == 5 && item.getSetsCount() == 0));
     }

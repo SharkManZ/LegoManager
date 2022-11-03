@@ -22,6 +22,7 @@ public class ExportDao {
     private SetPartRepository setPartRepository;
     private UsersRepository usersRepository;
     private UserSetsRepository userSetsRepository;
+    private UserPartsRepository userPartsRepository;
 
     /**
      * Экспорт цветов.
@@ -71,12 +72,26 @@ public class ExportDao {
         if (!isEmpty(sets)) {
             dto.setSets(sets.stream().map(this::userSetEntityToDictionary).collect(Collectors.toList()));
         }
+
+        List<UserPartEntity> parts = userPartsRepository.getAllUserPartsByUser(entity.getId());
+        if (!isEmpty(parts)) {
+            dto.setParts(parts.stream().map(this::userPartEntityToDictionary).collect(Collectors.toList()));
+        }
         return dto;
     }
 
     private UserSetDictionaryDto userSetEntityToDictionary(UserSetEntity entity) {
         UserSetDictionaryDto dto = new UserSetDictionaryDto();
         dto.setNumber(entity.getSet().getNumber());
+        dto.setCount(entity.getCount());
+
+        return dto;
+    }
+
+    private UserPartDictionaryDto userPartEntityToDictionary(UserPartEntity entity) {
+        UserPartDictionaryDto dto = new UserPartDictionaryDto();
+        dto.setPartNumber(entity.getPartColor().getPart().getNumber());
+        dto.setPartColorNUmber(entity.getPartColor().getNumber());
         dto.setCount(entity.getCount());
 
         return dto;
@@ -187,5 +202,10 @@ public class ExportDao {
     @Autowired
     public void setUserSetsRepository(UserSetsRepository userSetsRepository) {
         this.userSetsRepository = userSetsRepository;
+    }
+
+    @Autowired
+    public void setUserPartsRepository(UserPartsRepository userPartsRepository) {
+        this.userPartsRepository = userPartsRepository;
     }
 }

@@ -2,6 +2,7 @@ package ru.shark.home.legomanager.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.legomanager.dao.dto.UserPartDto;
 import ru.shark.home.legomanager.services.UserPartsService;
 
@@ -18,8 +19,8 @@ public class UserPartsEndpoint {
 
     @POST
     @Path("/{userId}/list")
-    public Response getList(@PathParam("userId") Long userId) {
-        return Response.ok(userPartsService.getList(userId)).build();
+    public Response getList(@PathParam("userId") Long userId, PageRequest request) {
+        return Response.ok(userPartsService.getList(userId, request)).build();
     }
 
     @POST

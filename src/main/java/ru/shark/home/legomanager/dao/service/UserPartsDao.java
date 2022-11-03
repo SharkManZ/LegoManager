@@ -2,6 +2,8 @@ package ru.shark.home.legomanager.dao.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.shark.home.common.dao.common.PageableList;
+import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
@@ -12,7 +14,10 @@ import ru.shark.home.legomanager.dao.repository.UserPartsRepository;
 import ru.shark.home.legomanager.dao.repository.UsersRepository;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
 
@@ -27,8 +32,13 @@ public class UserPartsDao extends BaseDao<UserPartEntity> {
         super(UserPartEntity.class);
     }
 
-    public List<UserPartListDto> getList(Long userId) {
-        return userPartsRepository.getUserPartsByUser(userId);
+    public PageableList<UserPartListDto> getList(Long userId, RequestCriteria request) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        List<String> searchFields = Arrays.asList("colorNumber", "alternateColorNumber", "number", "alternateNumber",
+                "categoryName", "partName");
+        return userPartsRepository.getNativeWithPagination("getUserPartsByUser", request, params, searchFields,
+                "getUserPartsByUserMapping");
     }
 
     @Override

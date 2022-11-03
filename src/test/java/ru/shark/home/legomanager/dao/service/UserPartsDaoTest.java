@@ -1,9 +1,13 @@
 package ru.shark.home.legomanager.dao.service;
 
+import org.hibernate.Session;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.shark.home.common.dao.common.PageableList;
+import ru.shark.home.common.dao.common.RequestCriteria;
+import ru.shark.home.common.dao.common.RequestSearch;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
@@ -36,21 +40,41 @@ public class UserPartsDaoTest extends DaoServiceTest {
     public void getList() {
         // GIVEN
         Long userId = entityFinder.findUserId(USER);
+        RequestCriteria requestCriteria = new RequestCriteria(0, 3);
 
         // WHEN
-        List<UserPartListDto> list = userPartsDao.getList(userId);
+        PageableList<UserPartListDto> list = userPartsDao.getList(userId, requestCriteria);
 
         // THEN
-        Assertions.assertEquals(3, list.size());
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+        checkPagingDtoList(list, 3, 3L);
+        List<UserPartListDto> data = list.getData();
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("112231") &&
                 item.getUserCount() == 25 && item.getSetsCount() == 10));
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("55531") &&
                 item.getUserCount() == 3 && item.getSetsCount() == 3));
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("55521") &&
                 item.getUserCount() == 5 && item.getSetsCount() == 0));
+    }
+
+    @Test
+    public void getListWithSearch() {
+        // GIVEN
+        Long userId = entityFinder.findUserId(USER);
+        RequestCriteria requestCriteria = new RequestCriteria(0, 3);
+        requestCriteria.setSearch(new RequestSearch("112231", false));
+
+        // WHEN
+        PageableList<UserPartListDto> list = userPartsDao.getList(userId, requestCriteria);
+
+        // THEN
+        checkPagingDtoList(list, 1, 1L);
+        List<UserPartListDto> data = list.getData();
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+                item.getColorNumber().equalsIgnoreCase("112231") &&
+                item.getUserCount() == 25 && item.getSetsCount() == 10));
     }
 
     @Test

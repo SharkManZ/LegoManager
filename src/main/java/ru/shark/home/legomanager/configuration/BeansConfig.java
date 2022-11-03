@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.shark.home.common.dao.service.HqlQueryService;
 import ru.shark.home.common.dao.service.QueryService;
+import ru.shark.home.common.dao.service.SqlQueryService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,8 +15,15 @@ public class BeansConfig {
     private EntityManager entityManager;
 
     @Bean
-    public QueryService queryService() {
+    public HqlQueryService hqlQueryService() {
         HqlQueryService queryService = new HqlQueryService();
+        queryService.setEntityManager(entityManager);
+        return queryService;
+    }
+
+    @Bean
+    public SqlQueryService sqlQueryService() {
+        SqlQueryService queryService = new SqlQueryService();
         queryService.setEntityManager(entityManager);
         return queryService;
     }

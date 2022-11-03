@@ -28,25 +28,16 @@ public class UserPartsRepositoryTest extends DaoServiceTest {
     }
 
     @Test
-    public void getUserPartsByUser() {
+    public void getAllUserPartsByUser() {
         // GIVEN
         Long userId = entityFinder.findUserId("Максим");
+        Integer expected = 3;
 
         // WHEN
-        List<UserPartListDto> list = userPartsRepository.getUserPartsByUser(userId);
+        List<UserPartEntity> list = userPartsRepository.getAllUserPartsByUser(userId);
 
         // THEN
-        Assertions.assertEquals(4, list.size());
-        Assertions.assertTrue(list.stream().allMatch(this::checkListDto));
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
-                item.getColorNumber().equalsIgnoreCase("112231") &&
-                item.getUserCount() == 25 && item.getSetsCount() == 10));
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
-                item.getColorNumber().equalsIgnoreCase("55531") &&
-                item.getUserCount() == 3 && item.getSetsCount() == 3));
-        Assertions.assertTrue(list.stream().anyMatch(item -> item.getUserId().equals(userId) &&
-                item.getColorNumber().equalsIgnoreCase("55521") &&
-                item.getUserCount() == 5 && item.getSetsCount() == 0));
+        Assertions.assertEquals(expected, list.size());
     }
 
     @Test
