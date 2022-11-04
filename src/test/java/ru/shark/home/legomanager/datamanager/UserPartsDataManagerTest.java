@@ -31,7 +31,7 @@ public class UserPartsDataManagerTest extends DaoServiceTest {
         Long userId = entityFinder.findUserId("Максим");
 
         // WHEN
-        PageableList<UserPartListDto> list = userPartsDataManager.getList(userId, new RequestCriteria(0, 10));
+        PageableList<UserPartListDto> list = userPartsDataManager.getList(userId, false, new RequestCriteria(0, 10));
 
         // THEN
         checkPagingDtoList(list, 3, 3L);

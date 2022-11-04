@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.legomanager.dao.dto.UserPartDto;
+import ru.shark.home.legomanager.dao.dto.request.UserPartRequestDto;
 import ru.shark.home.legomanager.services.UserPartsService;
 import ru.shark.home.legomanager.util.BaseEndpointTest;
 
@@ -31,11 +32,11 @@ public class UserPartsEndpointTest extends BaseEndpointTest {
     @Test
     public void getList() {
         // WHEN
-        Response response = userPartsEndpoint.getList(1L, new PageRequest());
+        Response response = userPartsEndpoint.getList(1L, new UserPartRequestDto());
 
         // THEN
         checkResponse(response);
-        verify(userPartsService, times(1)).getList(anyLong(), any(PageRequest.class));
+        verify(userPartsService, times(1)).getList(anyLong(), any(UserPartRequestDto.class));
     }
 
     @Test

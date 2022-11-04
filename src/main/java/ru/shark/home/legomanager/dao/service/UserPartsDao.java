@@ -32,9 +32,10 @@ public class UserPartsDao extends BaseDao<UserPartEntity> {
         super(UserPartEntity.class);
     }
 
-    public PageableList<UserPartListDto> getList(Long userId, RequestCriteria request) {
+    public PageableList<UserPartListDto> getList(Long userId, boolean onlyIntroduced, RequestCriteria request) {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
+        params.put("introduced", onlyIntroduced ? 1 : 0);
         List<String> searchFields = Arrays.asList("colorNumber", "alternateColorNumber", "number", "alternateNumber",
                 "categoryName", "partName");
         return userPartsRepository.getNativeWithPagination("getUserPartsByUser", request, params, searchFields,
@@ -61,13 +62,6 @@ public class UserPartsDao extends BaseDao<UserPartEntity> {
 
         Long countInSets = userPartsRepository.getPartCountInUserSets(entity.getUser().getId(), entity.getPartColor().getId());
         if (countInSets != null) {
-            if (countInSets.compareTo(entity.getCount().longValue()) == 0) {
-                if (isNew) {
-                    return null;
-                }
-                deleteById(entity.getId());
-                return null;
-            }
             entity.setCount(entity.getCount() - countInSets.intValue());
         }
         return super.save(entity);

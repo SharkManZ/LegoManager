@@ -9,6 +9,7 @@ import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.UserPartDto;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
+import ru.shark.home.legomanager.dao.dto.request.UserPartRequestDto;
 import ru.shark.home.legomanager.datamanager.UserPartsDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
@@ -36,15 +37,15 @@ public class UserPartsServiceTest extends BaseServiceTest {
     @Test
     public void getList() {
         // GIVEN
-        when(userPartsDataManager.getList(anyLong(), any(RequestCriteria.class)))
+        when(userPartsDataManager.getList(anyLong(), anyBoolean(), any(RequestCriteria.class)))
                 .thenReturn(new PageableList<>(Arrays.asList(new UserPartListDto()), 1L));
 
         // WHEN
-        BaseResponse list = userPartsService.getList(1L, new PageRequest());
+        BaseResponse list = userPartsService.getList(1L, new UserPartRequestDto());
 
         // THEN
         checkResponse(list);
-        verify(userPartsDataManager, times(1)).getList(anyLong(), any(RequestCriteria.class));
+        verify(userPartsDataManager, times(1)).getList(anyLong(), anyBoolean(), any(RequestCriteria.class));
     }
 
     @Test

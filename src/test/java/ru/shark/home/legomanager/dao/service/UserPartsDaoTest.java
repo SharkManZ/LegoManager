@@ -1,6 +1,5 @@
 package ru.shark.home.legomanager.dao.service;
 
-import org.hibernate.Session;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,7 @@ public class UserPartsDaoTest extends DaoServiceTest {
         RequestCriteria requestCriteria = new RequestCriteria(0, 3);
 
         // WHEN
-        PageableList<UserPartListDto> list = userPartsDao.getList(userId, requestCriteria);
+        PageableList<UserPartListDto> list = userPartsDao.getList(userId, false, requestCriteria);
 
         // THEN
         checkPagingDtoList(list, 3, 3L);
@@ -60,6 +59,26 @@ public class UserPartsDaoTest extends DaoServiceTest {
     }
 
     @Test
+    public void getListWithOnlyIntroduced() {
+        // GIVEN
+        Long userId = entityFinder.findUserId(USER);
+        RequestCriteria requestCriteria = new RequestCriteria(0, 3);
+
+        // WHEN
+        PageableList<UserPartListDto> list = userPartsDao.getList(userId, true, requestCriteria);
+
+        // THEN
+        checkPagingDtoList(list, 2, 2L);
+        List<UserPartListDto> data = list.getData();
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+                item.getColorNumber().equalsIgnoreCase("112231") &&
+                item.getUserCount() == 25 && item.getSetsCount() == 10));
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+                item.getColorNumber().equalsIgnoreCase("55521") &&
+                item.getUserCount() == 5 && item.getSetsCount() == 0));
+    }
+
+    @Test
     public void getListWithSearch() {
         // GIVEN
         Long userId = entityFinder.findUserId(USER);
@@ -67,7 +86,7 @@ public class UserPartsDaoTest extends DaoServiceTest {
         requestCriteria.setSearch(new RequestSearch("112231", false));
 
         // WHEN
-        PageableList<UserPartListDto> list = userPartsDao.getList(userId, requestCriteria);
+        PageableList<UserPartListDto> list = userPartsDao.getList(userId, false, requestCriteria);
 
         // THEN
         checkPagingDtoList(list, 1, 1L);
@@ -121,12 +140,14 @@ public class UserPartsDaoTest extends DaoServiceTest {
         Long partColorId = entityFinder.findPartColorId("55531");
         UserPartEntity entity = prepareEntity(userId, partColorId);
         entity.setCount(3);
+        Integer expectedCount = 0;
 
         // WHEN
         UserPartEntity saved = userPartsDao.save(entity);
 
         // THEN
-        Assertions.assertNull(saved);
+        Assertions.assertNotNull(saved);
+        Assertions.assertEquals(expectedCount, saved.getCount());
     }
 
     @Test()
@@ -173,13 +194,14 @@ public class UserPartsDaoTest extends DaoServiceTest {
         UserPartEntity entity = prepareEntity(userId, partColorId);
         entity.setCount(10);
         entity.setId(userPartId);
+        Integer expectedCount = 0;
 
         // WHEN
         UserPartEntity saved = userPartsDao.save(entity);
 
         // THEN
-        Assertions.assertNull(saved);
-        isDeleted(entity.getId(), UserPartEntity.class);
+        Assertions.assertNotNull(saved);
+        Assertions.assertEquals(expectedCount, saved.getCount());
     }
 
     @Test

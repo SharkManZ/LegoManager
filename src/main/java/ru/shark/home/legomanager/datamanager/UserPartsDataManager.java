@@ -15,8 +15,8 @@ public class UserPartsDataManager extends BaseDataManager<UserPartEntity, UserPa
         super(dao, UserPartDto.class);
     }
 
-    public PageableList<UserPartListDto> getList(Long userId, RequestCriteria request) {
+    public PageableList<UserPartListDto> getList(Long userId, boolean onlyIntroduced, RequestCriteria request) {
         UserPartsDao dao = (UserPartsDao) getDao();
-        return dao.getList(userId, request);
+        return dao.getList(userId, onlyIntroduced, request);
     }
 }
