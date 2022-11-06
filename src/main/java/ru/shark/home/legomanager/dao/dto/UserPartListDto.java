@@ -9,6 +9,8 @@ public class UserPartListDto extends BaseDto {
     private String alternateNumber;
     private String colorNumber;
     private String alternateColorNumber;
+    private Long colorId;
+    private Long categoryId;
     private String categoryName;
     private String partName;
     private Integer userCount;
@@ -18,8 +20,9 @@ public class UserPartListDto extends BaseDto {
         // empty constructor
     }
 
-    public UserPartListDto(Long id, Long partColorId, Long userId, String number, String alternateNumber, String colorNumber,
-                           String alternateColorNumber, String categoryName, String partName, Integer userCount, Integer setsCount) {
+    public UserPartListDto(Long id, Long partColorId, Long userId, String number, String alternateNumber,
+                           String colorNumber, String alternateColorNumber, Long colorId, Long categoryId,
+                           String categoryName, String partName, Integer userCount, Integer setsCount) {
         super();
         setId(id);
         this.userId = userId;
@@ -28,6 +31,8 @@ public class UserPartListDto extends BaseDto {
         this.alternateNumber = alternateNumber;
         this.colorNumber = colorNumber;
         this.alternateColorNumber = alternateColorNumber;
+        this.colorId = colorId;
+        this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.partName = partName;
         this.userCount = userCount;
@@ -98,6 +103,14 @@ public class UserPartListDto extends BaseDto {
         this.setsCount = setsCount;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public String getCategoryName() {
         return categoryName;
     }
@@ -112,5 +125,13 @@ public class UserPartListDto extends BaseDto {
 
     public void setPartName(String partName) {
         this.partName = partName;
+    }
+
+    public Long getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(Long colorId) {
+        this.colorId = colorId;
     }
 }
