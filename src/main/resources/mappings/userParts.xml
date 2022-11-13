@@ -25,7 +25,7 @@
     </named-query>
     <named-native-query name="getUserPartsByUser" result-set-mapping="getUserPartsByUserMapping">
         <query>select max(id) as id, partColorId, userId, colorNumber, alternateColorNumber, number, alternateNumber,
-            categoryId, categoryName, partName, colorId,
+            categoryId, categoryName, partName, colorId, colorName,
             sum(coalesce(setsCount, 0)) + sum(coalesce(userCount, 0)) as userCount, max(coalesce(setsCount, 0)) as setsCount
             from (
                 select null as id, lpc.lego_id as partColorId, lus.lego_user_id as userId, lpc.lego_number as colorNumber,
@@ -73,6 +73,7 @@
             <column name="colorNumber" class="java.lang.String"/>
             <column name="alternateColorNumber" class="java.lang.String"/>
             <column name="colorId" class="java.lang.Long"/>
+            <column name="colorName" class="java.lang.String"/>
             <column name="categoryId" class="java.lang.Long"/>
             <column name="categoryName" class="java.lang.String"/>
             <column name="partName" class="java.lang.String"/>

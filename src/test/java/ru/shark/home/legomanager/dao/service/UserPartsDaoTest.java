@@ -50,6 +50,20 @@ public class UserPartsDaoTest extends DaoServiceTest {
         // THEN
         checkPagingDtoList(list, 3, 3L);
         List<UserPartListDto> data = list.getData();
+        for (UserPartListDto dto : data) {
+            Assertions.assertNotNull(dto.getColorName());
+            Assertions.assertNotNull(dto.getUserCount());
+            Assertions.assertNotNull(dto.getUserId());
+            Assertions.assertNotNull(dto.getColorNumber());
+            Assertions.assertNotNull(dto.getSetsCount());
+            Assertions.assertNotNull(dto.getCategoryName());
+            Assertions.assertNotNull(dto.getNumber());
+            Assertions.assertNotNull(dto.getPartName());
+            Assertions.assertNotNull(dto.getCategoryId());
+            Assertions.assertNotNull(dto.getColorId());
+            Assertions.assertNotNull(dto.getPartColorId());
+        }
+
         Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("112231") &&
                 item.getUserCount() == 25 && item.getSetsCount() == 10));
