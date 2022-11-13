@@ -1,6 +1,6 @@
 package ru.shark.home.legomanager.dao.dto.load;
 
-public class MissingSetPartsResponseDto {
+public class RemoteSetPartsDto {
     private Integer count;
     private String number;
     private String colorNumber;

@@ -8,9 +8,11 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.common.RequestSearch;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
+import ru.shark.home.legomanager.dao.dto.request.UserPartListRequest;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.dao.entity.UserPartEntity;
+import ru.shark.home.legomanager.enums.UserPartRequestType;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.text.MessageFormat;
@@ -40,9 +42,10 @@ public class UserPartsDaoTest extends DaoServiceTest {
         // GIVEN
         Long userId = entityFinder.findUserId(USER);
         RequestCriteria requestCriteria = new RequestCriteria(0, 3);
+        UserPartListRequest requestDto = new UserPartListRequest(UserPartRequestType.ALL, userId);
 
         // WHEN
-        PageableList<UserPartListDto> list = userPartsDao.getList(userId, false, requestCriteria);
+        PageableList<UserPartListDto> list = userPartsDao.getList(requestDto, requestCriteria);
 
         // THEN
         checkPagingDtoList(list, 3, 3L);
@@ -59,13 +62,14 @@ public class UserPartsDaoTest extends DaoServiceTest {
     }
 
     @Test
-    public void getListWithOnlyIntroduced() {
+    public void getListWithOnlyAdded() {
         // GIVEN
         Long userId = entityFinder.findUserId(USER);
         RequestCriteria requestCriteria = new RequestCriteria(0, 3);
+        UserPartListRequest requestDto = new UserPartListRequest(UserPartRequestType.ONLY_ADDED, userId);
 
         // WHEN
-        PageableList<UserPartListDto> list = userPartsDao.getList(userId, true, requestCriteria);
+        PageableList<UserPartListDto> list = userPartsDao.getList(requestDto, requestCriteria);
 
         // THEN
         checkPagingDtoList(list, 2, 2L);
@@ -79,14 +83,33 @@ public class UserPartsDaoTest extends DaoServiceTest {
     }
 
     @Test
+    public void getListWithOnlyNotAdded() {
+        // GIVEN
+        Long userId = entityFinder.findUserId(USER);
+        RequestCriteria requestCriteria = new RequestCriteria(0, 3);
+        UserPartListRequest requestDto = new UserPartListRequest(UserPartRequestType.ONLY_NOT_ADDED, userId);
+
+        // WHEN
+        PageableList<UserPartListDto> list = userPartsDao.getList(requestDto, requestCriteria);
+
+        // THEN
+        checkPagingDtoList(list, 1, 1L);
+        List<UserPartListDto> data = list.getData();
+        Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
+                item.getColorNumber().equalsIgnoreCase("55531") &&
+                item.getUserCount() == 3 && item.getSetsCount() == 3));
+    }
+
+    @Test
     public void getListWithSearch() {
         // GIVEN
         Long userId = entityFinder.findUserId(USER);
         RequestCriteria requestCriteria = new RequestCriteria(0, 3);
         requestCriteria.setSearch(new RequestSearch("112231", false));
+        UserPartListRequest requestDto = new UserPartListRequest(UserPartRequestType.ALL, userId);
 
         // WHEN
-        PageableList<UserPartListDto> list = userPartsDao.getList(userId, false, requestCriteria);
+        PageableList<UserPartListDto> list = userPartsDao.getList(requestDto, requestCriteria);
 
         // THEN
         checkPagingDtoList(list, 1, 1L);

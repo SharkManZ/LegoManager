@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.dto.PartDto;
-import ru.shark.home.legomanager.dao.dto.load.MissingSetPartsResponseDto;
+import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
@@ -59,7 +59,7 @@ public class LoadServiceTest extends BaseServiceTest {
 
         // THEN
         checkResponseWithBody(response);
-        List<MissingSetPartsResponseDto> body = (List<MissingSetPartsResponseDto>) response.getBody();
+        List<RemoteSetPartsDto> body = (List<RemoteSetPartsDto>) response.getBody();
         Assertions.assertEquals(263, body.size());
         verify(partColorDataManager, times(1)).findALl();
         verify(remoteDataProvider, times(2)).getDataFromUrl(anyString(), anyString());

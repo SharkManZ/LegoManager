@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.shark.home.common.services.BaseLogicService;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
-import ru.shark.home.legomanager.dao.dto.load.MissingSetPartsResponseDto;
+import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
 import ru.shark.home.legomanager.exception.RemoteDataException;
 
@@ -58,7 +58,7 @@ public class LoadService extends BaseLogicService {
                 .orElse(null);
     }
 
-    private List<MissingSetPartsResponseDto> getMissingParts(String setId, String setNumber) {
+    private List<RemoteSetPartsDto> getMissingParts(String setId, String setNumber) {
         List<PartColorDto> list = partColorDataManager.findALl();
         return getPartsFromRemote(setId, setNumber)
                 .stream()
@@ -66,7 +66,7 @@ public class LoadService extends BaseLogicService {
                 .collect(Collectors.toList());
     }
 
-    private boolean containsPartColor(List<PartColorDto> list, MissingSetPartsResponseDto responseDto) {
+    private boolean containsPartColor(List<PartColorDto> list, RemoteSetPartsDto responseDto) {
         for (PartColorDto partColorDto : list) {
             List<String> numbers = Stream.of(partColorDto.getPart().getNumber()).collect(Collectors.toList());
             if (!StringUtils.isBlank(partColorDto.getPart().getAlternateNumber())) {
@@ -89,20 +89,20 @@ public class LoadService extends BaseLogicService {
         return false;
     }
 
-    private List<MissingSetPartsResponseDto> getPartsFromRemote(String setId, String setNumber) {
+    private List<RemoteSetPartsDto> getPartsFromRemote(String setId, String setNumber) {
         String partsData = remoteDataProvider.getDataFromUrl(String.format(SOURCE_PORTAL + PARTS_URL, setId, setNumber),
                 "Не удалось получить данные по деталям набора с id " + setId);
         String[] rows = partsData.split("\n");
         int idx = 0;
         boolean tableStarted = false;
-        List<MissingSetPartsResponseDto> result = new ArrayList<>();
-        MissingSetPartsResponseDto dto;
+        List<RemoteSetPartsDto> result = new ArrayList<>();
+        RemoteSetPartsDto dto;
         while (idx < rows.length) {
             String row = rows[idx];
             if (row.contains("pciinvItemTypeHeader")) {
                 tableStarted = true;
             } else if (tableStarted && row.contains("TD") && row.contains("src=")) {
-                dto = new MissingSetPartsResponseDto();
+                dto = new RemoteSetPartsDto();
                 String rowPart = row.substring(row.indexOf("src=")).replace("src=\"", "");
                 dto.setImgUrl(rowPart.substring(2, rowPart.indexOf("\" ")));
                 String countRow = rows[idx + 1];

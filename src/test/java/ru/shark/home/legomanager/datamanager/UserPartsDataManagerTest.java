@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
+import ru.shark.home.legomanager.dao.dto.request.UserPartListRequest;
+import ru.shark.home.legomanager.services.dto.UserPartRequestDto;
+import ru.shark.home.legomanager.enums.UserPartRequestType;
 import ru.shark.home.legomanager.util.DaoServiceTest;
 
 import java.util.List;
@@ -29,9 +32,10 @@ public class UserPartsDataManagerTest extends DaoServiceTest {
     public void getList() {
         // GIVEN
         Long userId = entityFinder.findUserId("Максим");
+        UserPartListRequest requestDto = new UserPartListRequest(UserPartRequestType.ALL, userId);
 
         // WHEN
-        PageableList<UserPartListDto> list = userPartsDataManager.getList(userId, false, new RequestCriteria(0, 10));
+        PageableList<UserPartListDto> list = userPartsDataManager.getList(requestDto, new RequestCriteria(0, 10));
 
         // THEN
         checkPagingDtoList(list, 3, 3L);

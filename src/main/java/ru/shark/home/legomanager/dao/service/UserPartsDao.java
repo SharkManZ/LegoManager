@@ -6,12 +6,14 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
+import ru.shark.home.legomanager.dao.dto.request.UserPartListRequest;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.dao.entity.UserPartEntity;
 import ru.shark.home.legomanager.dao.repository.PartColorRepository;
 import ru.shark.home.legomanager.dao.repository.UserPartsRepository;
 import ru.shark.home.legomanager.dao.repository.UsersRepository;
+import ru.shark.home.legomanager.enums.UserPartRequestType;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -32,10 +34,11 @@ public class UserPartsDao extends BaseDao<UserPartEntity> {
         super(UserPartEntity.class);
     }
 
-    public PageableList<UserPartListDto> getList(Long userId, boolean onlyIntroduced, RequestCriteria request) {
+    public PageableList<UserPartListDto> getList(UserPartListRequest requestDto, RequestCriteria request) {
         Map<String, Object> params = new HashMap<>();
-        params.put("userId", userId);
-        params.put("introduced", onlyIntroduced ? 1 : 0);
+        params.put("userId", requestDto.getUserId());
+        params.put("added", UserPartRequestType.ONLY_ADDED.equals(requestDto.getRequestType()) ? 1 : 0);
+        params.put("notAdded", UserPartRequestType.ONLY_NOT_ADDED.equals(requestDto.getRequestType()) ? 1 : 0);
         List<String> searchFields = Arrays.asList("colorNumber", "alternateColorNumber", "number", "alternateNumber",
                 "categoryName", "partName");
         return userPartsRepository.getNativeWithPagination("getUserPartsByUser", request, params, searchFields,

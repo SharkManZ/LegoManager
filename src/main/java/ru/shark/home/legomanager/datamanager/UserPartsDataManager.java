@@ -6,6 +6,7 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.datamanager.BaseDataManager;
 import ru.shark.home.legomanager.dao.dto.UserPartDto;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
+import ru.shark.home.legomanager.dao.dto.request.UserPartListRequest;
 import ru.shark.home.legomanager.dao.entity.UserPartEntity;
 import ru.shark.home.legomanager.dao.service.UserPartsDao;
 
@@ -15,8 +16,8 @@ public class UserPartsDataManager extends BaseDataManager<UserPartEntity, UserPa
         super(dao, UserPartDto.class);
     }
 
-    public PageableList<UserPartListDto> getList(Long userId, boolean onlyIntroduced, RequestCriteria request) {
+    public PageableList<UserPartListDto> getList(UserPartListRequest requestDto, RequestCriteria request) {
         UserPartsDao dao = (UserPartsDao) getDao();
-        return dao.getList(userId, onlyIntroduced, request);
+        return dao.getList(requestDto, request);
     }
 }

@@ -53,8 +53,11 @@
                     join lego_color lc on lc.lego_id = lpc.lego_color_id
                 where lup.lego_user_id = :userId
             ) up
-            where (:introduced = 0 or
+            where (:added = 0 or
                 exists (select 1 from lego_user_parts lup where lup.lego_part_color_id = up.partColorId)
+            ) and
+            (:notAdded = 0 or
+                not exists (select 1 from lego_user_parts lup where lup.lego_part_color_id = up.partColorId)
             )
             group by partColorId, userId, colorNumber, alternateColorNumber, number, alternateNumber, colorId, colorName, categoryId, categoryName, partName
             order by colorName, number
