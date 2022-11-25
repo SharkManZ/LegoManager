@@ -10,7 +10,7 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.common.RequestSearch;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
@@ -23,7 +23,7 @@ import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
 import static ru.shark.home.legomanager.common.ErrorConstants.PART_CATEGORY_DELETE_WITH_SETS;
 
-public class PartCategoryDaoTest extends DaoServiceTest {
+public class PartCategoryDaoTest extends DbTest {
 
     @Autowired
     private PartCategoryDao partCategoryDao;

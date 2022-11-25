@@ -10,9 +10,9 @@ import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.dto.SetDto;
 import ru.shark.home.legomanager.dao.dto.SetPartDto;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
-public class SetPartDataManagerTest extends DaoServiceTest {
+public class SetPartDataManagerTest extends DbTest {
     @Autowired
     private SetPartDataManager setPartDataManager;
 

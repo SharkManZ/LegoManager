@@ -8,21 +8,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
-import ru.shark.home.common.dao.common.RequestFilter;
-import ru.shark.home.common.enums.FieldType;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.dao.entity.UserSetEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
 
-public class UserSetsDaoTest extends DaoServiceTest {
+public class UserSetsDaoTest extends DbTest {
     @Autowired
     private UserSetsDao userSetsDao;
 

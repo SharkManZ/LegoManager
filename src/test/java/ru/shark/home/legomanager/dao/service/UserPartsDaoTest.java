@@ -13,7 +13,7 @@ import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.dao.entity.UserPartEntity;
 import ru.shark.home.legomanager.enums.UserPartRequestType;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
 
-public class UserPartsDaoTest extends DaoServiceTest {
+public class UserPartsDaoTest extends DbTest {
     public static final String USER = "Максим";
 
     @Autowired

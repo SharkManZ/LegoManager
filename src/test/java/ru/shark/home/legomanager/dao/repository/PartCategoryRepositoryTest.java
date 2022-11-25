@@ -7,13 +7,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
-import ru.shark.home.legomanager.dao.entity.SeriesEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class PartCategoryRepositoryTest extends DaoServiceTest {
+public class PartCategoryRepositoryTest extends DbTest {
     @Autowired
     private PartCategoryRepository partCategoryRepository;
 

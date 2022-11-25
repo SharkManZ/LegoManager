@@ -11,7 +11,7 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.common.RequestSearch;
 import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
 import static ru.shark.home.legomanager.common.ErrorConstants.SERIES_DELETE_WITH_SETS;
 
-public class SeriesDaoTest extends DaoServiceTest {
+public class SeriesDaoTest extends DbTest {
 
     @Autowired
     private SeriesDao seriesDao;

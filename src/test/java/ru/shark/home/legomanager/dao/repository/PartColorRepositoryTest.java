@@ -7,13 +7,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class PartColorRepositoryTest extends DaoServiceTest {
+public class PartColorRepositoryTest extends DbTest {
     @Autowired
     private PartColorRepository partColorRepository;
 
@@ -89,7 +89,7 @@ public class PartColorRepositoryTest extends DaoServiceTest {
         // THEN
         Assertions.assertNotNull(byNumber);
         Assertions.assertEquals("112231", byNumber.getNumber());
-        Assertions.assertEquals("898", byNumber.getAlternateNumber());
+        Assertions.assertEquals("898, 899", byNumber.getAlternateNumber());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class PartColorRepositoryTest extends DaoServiceTest {
         Assertions.assertNotNull(byNumber);
         Assertions.assertEquals(1, byNumber.size());
         Assertions.assertEquals("112231", byNumber.get(0).getNumber());
-        Assertions.assertEquals("898", byNumber.get(0).getAlternateNumber());
+        Assertions.assertEquals("898, 899", byNumber.get(0).getAlternateNumber());
         Assertions.assertEquals("3010", byNumber.get(0).getPart().getNumber());
     }
 
@@ -130,5 +130,17 @@ public class PartColorRepositoryTest extends DaoServiceTest {
         Assertions.assertNotNull(entity);
         Assertions.assertEquals(partId, entity.getPart().getId());
         Assertions.assertEquals(colorId, entity.getColor().getId());
+    }
+
+    @Test
+    public void getPartColorIdByPartColorNumberAndPartNumber() {
+        // GIVEN
+        String partNumber = "30102", colorNumber = "899";
+
+        // WHEN
+        Long partColorId = partColorRepository.getPartColorIdByPartColorNumberAndPartNumber(partNumber, colorNumber);
+
+        // THEN
+        Assertions.assertNotNull(partColorId);
     }
 }

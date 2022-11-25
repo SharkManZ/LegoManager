@@ -41,4 +41,17 @@
     <named-query name="getPartColorByPartAndColor">
         <query>select pc from PartColorEntity pc where pc.part.id = :partId and pc.color.id = :colorId</query>
     </named-query>
+
+    <named-native-query name="getPartColorIdByPartColorNumberAndPartNumber">
+        <query>
+            select a.lego_id from (
+            select  lpc.lego_id,
+                    string_to_array(replace(lpc.lego_number || case when lpc.lego_alternate_number is not null then ( ',' || lpc.lego_alternate_number) else '' end, ' ', ''), ',') as colorNums,
+                    string_to_array(replace(lp.lego_number || case when lp.lego_alternate_number is not null then ( ',' || lp.lego_alternate_number) else '' end, ' ', ''),',') as partNums
+            from lego_part_color lpc join lego_part lp on lp.lego_id = lpc.LEGO_PART_ID
+                ) a
+            where array_position(cast(a.partNums as varchar[]), :partNumber) > 0
+            and array_position(cast(a.colorNums as varchar[]), :colorNumber) > 0
+        </query>
+    </named-native-query>
 </entity-mappings>

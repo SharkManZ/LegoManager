@@ -21,6 +21,12 @@ public class LoadEndpoint {
         return Response.ok(loadService.checkParts(setNumber)).build();
     }
 
+    @POST
+    @Path("/{setNumber}/loadParts")
+    public Response loadSetParts(@PathParam("setNumber") String setNumber) {
+        return Response.ok(loadService.loadSetParts(setNumber)).build();
+    }
+
     @Autowired
     public void setLoadService(LoadService loadService) {
         this.loadService = loadService;

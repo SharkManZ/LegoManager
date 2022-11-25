@@ -8,13 +8,12 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
 import ru.shark.home.legomanager.dao.dto.request.UserPartListRequest;
-import ru.shark.home.legomanager.services.dto.UserPartRequestDto;
 import ru.shark.home.legomanager.enums.UserPartRequestType;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.List;
 
-public class UserPartsDataManagerTest extends DaoServiceTest {
+public class UserPartsDataManagerTest extends DbTest {
     @Autowired
     private UserPartsDataManager userPartsDataManager;
 

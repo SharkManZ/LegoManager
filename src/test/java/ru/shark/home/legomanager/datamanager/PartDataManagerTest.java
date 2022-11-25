@@ -12,13 +12,13 @@ import ru.shark.home.legomanager.dao.dto.PartCategoryDto;
 import ru.shark.home.legomanager.dao.dto.PartDto;
 import ru.shark.home.legomanager.dao.dto.PartFullDto;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PartDataManagerTest extends DaoServiceTest {
+public class PartDataManagerTest extends DbTest {
 
     @Autowired
     private PartDataManager partDataManager;

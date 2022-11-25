@@ -7,12 +7,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class ColorRepositoryTest extends DaoServiceTest {
+public class ColorRepositoryTest extends DbTest {
     @Autowired
     private ColorRepository colorRepository;
 

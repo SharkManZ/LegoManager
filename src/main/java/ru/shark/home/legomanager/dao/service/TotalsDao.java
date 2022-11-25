@@ -39,7 +39,7 @@ public class TotalsDao {
 
     public TotalDto getSetPartsTotal() {
         TotalDto dto = new TotalDto();
-        dto.setTotal(setPartRepository.getSetPartsCount());
+        dto.setTotal(setPartRepository.getAllSetsPartsCount());
         dto.setInStock(0L);
         return dto;
     }

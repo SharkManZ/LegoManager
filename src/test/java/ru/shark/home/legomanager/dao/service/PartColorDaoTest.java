@@ -10,7 +10,7 @@ import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
 import ru.shark.home.legomanager.services.dto.SearchDto;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
@@ -20,7 +20,7 @@ import java.util.List;
 import static ru.shark.home.common.common.ErrorConstants.*;
 import static ru.shark.home.legomanager.common.ErrorConstants.MORE_THAN_ONE_PART_COLOR;
 
-public class PartColorDaoTest extends DaoServiceTest {
+public class PartColorDaoTest extends DbTest {
     @Autowired
     private PartColorDao partColorDao;
 

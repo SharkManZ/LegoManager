@@ -24,7 +24,7 @@ public class ExportService {
                 new FileDto("series.json", exportDao.exportSeries()),
                 new FileDto("users.json", exportDao.exportUsers()));
         byte[] bytes = ZipUtils.objectsListToZip(files);
-        String dateStr = DateFormatUtils.format(new Date(), "dd.mm.yyyy");
+        String dateStr = DateFormatUtils.format(new Date(), "dd.MM.yyyy");
         String fileName = "lego_data_export_" + dateStr + ".zip";
         return Response.ok(bytes, MediaType.APPLICATION_OCTET_STREAM_TYPE)
                 .header("content-disposition", "attachment; filename=\"" + fileName + "\"")

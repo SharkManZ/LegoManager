@@ -14,7 +14,7 @@ import ru.shark.home.legomanager.dao.dto.PartFullDto;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.shark.home.common.common.ErrorConstants.*;
 
-public class PartDaoTest extends DaoServiceTest {
+public class PartDaoTest extends DbTest {
 
     @Autowired
     private PartDao partDao;

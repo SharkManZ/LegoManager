@@ -33,8 +33,17 @@ public interface SetPartRepository extends BaseRepository<SetPartEntity> {
      *
      * @return количество
      */
+    @Query(name = "getAllSetsPartsCount")
+    Long getAllSetsPartsCount();
+
+    /**
+     * Возвращает количество видов деталей в наборе.
+     *
+     * @param setId идентификатор набора
+     * @return количество видом деталей
+     */
     @Query(name = "getSetPartsCount")
-    Long getSetPartsCount();
+    Long getSetPartsCount(@Param("setId") Long setId);
 
     /**
      * Возвращает детали набора с сортировкой по номеру цвета детали.

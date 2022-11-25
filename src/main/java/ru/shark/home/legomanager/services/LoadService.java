@@ -1,21 +1,22 @@
 package ru.shark.home.legomanager.services;
 
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import ru.shark.home.common.services.BaseLogicService;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
 import ru.shark.home.legomanager.exception.RemoteDataException;
+import ru.shark.home.legomanager.loader.SetDataLoader;
 
-import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +30,14 @@ public class LoadService extends BaseLogicService {
 
     private PartColorDataManager partColorDataManager;
     private RemoteDataProvider remoteDataProvider;
+    private SetDataLoader setDataLoader;
+    private final Map<String, Pair<String, String>> partsComparison;
+
+    public LoadService() {
+        partsComparison = Maps.newHashMap();
+        partsComparison.put("6628_Black Technic, Pin with Friction Ridges and Tow Ball (Undetermined Type)",
+                Pair.of("6628a", "4184169"));
+    }
 
     public BaseResponse checkParts(String setNumber) {
         BaseResponse response;
@@ -50,6 +59,26 @@ public class LoadService extends BaseLogicService {
         return response;
     }
 
+    public BaseResponse loadSetParts(String setNumber) {
+        BaseResponse response;
+        try {
+            String setData = remoteDataProvider.getDataFromUrl(String.format(SOURCE_PORTAL + SET_ID_URL, setNumber),
+                    "Не удалось получить идентификатор набора " + setNumber);
+            String setId = getSetIdFromResponse(setData);
+            setDataLoader.loadSetParts(setNumber, getPartsFromRemote(setId, setNumber));
+            response = new BaseResponse();
+            response.setSuccess(true);
+        } catch (RemoteDataException e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при получении данных с удаленного источника " +
+                    ": " + e.getMessage());
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при загрузка деталей набора " + setNumber +
+                    ": " + e.getMessage());
+        }
+
+        return response;
+    }
+
     private String getSetIdFromResponse(String response) {
         return Stream.of(response.split("\n"))
                 .filter(item -> item.contains("idItem:"))
@@ -59,10 +88,14 @@ public class LoadService extends BaseLogicService {
     }
 
     private List<RemoteSetPartsDto> getMissingParts(String setId, String setNumber) {
+        return getMissingParts(getPartsFromRemote(setId, setNumber));
+    }
+
+    private List<RemoteSetPartsDto> getMissingParts(List<RemoteSetPartsDto> remoteParts) {
         List<PartColorDto> list = partColorDataManager.findALl();
-        return getPartsFromRemote(setId, setNumber)
+        return remoteParts
                 .stream()
-                .filter(item -> !item.getName().contains("Sticker Sheet") && !containsPartColor(list, item))
+                .filter(item -> !containsPartColor(list, item))
                 .collect(Collectors.toList());
     }
 
@@ -82,7 +115,7 @@ public class LoadService extends BaseLogicService {
             }
             List<String> responseColors = Arrays.stream(responseDto.getColorNumber().split(",")).map(String::trim)
                     .collect(Collectors.toList());
-            if (numbers.contains(responseDto.getNumber()) && responseColors.stream().anyMatch(colorNums::contains)) {
+            if (numbers.contains(responseDto.getNumber()) && responseColors.stream().allMatch(colorNums::contains)) {
                 return true;
             }
         }
@@ -113,14 +146,20 @@ public class LoadService extends BaseLogicService {
                 dto.setNumber(numberRow.substring(2, numberRow.indexOf("</A>")));
                 String lastRow = rows[idx + 3];
                 lastRow = lastRow.substring(lastRow.indexOf("<b>"));
-                dto.setName(lastRow.substring(3, lastRow.indexOf("</b>")));
+                String partName = lastRow.substring(3, lastRow.indexOf("</b>"));
+                if (partName.toLowerCase().contains("sticker sheet") || partName.toLowerCase().contains("leaflet")) {
+                    idx++;
+                    continue;
+                }
+                dto.setName(partName);
                 lastRow = lastRow.substring(lastRow.indexOf("pciinvPartsColorCode"));
                 dto.setColorNumber(lastRow.substring(22, lastRow.indexOf("</SPAN>"))
                         .replace("<span style='color: black;'>", "")
                         .replace("</span>", "")
-                        .replace("or", ",")
+                        .replace(" ", "")
+                        .replace("or", ", ")
                 );
-                result.add(dto);
+                result.add(checkPartComparison(dto));
                 idx = idx + 3;
             } else if (tableStarted && row.contains("Extra Items")) {
                 break;
@@ -128,6 +167,16 @@ public class LoadService extends BaseLogicService {
             idx++;
         }
         return result;
+    }
+
+    private RemoteSetPartsDto checkPartComparison(RemoteSetPartsDto dto) {
+        String partKey = dto.getNumber().trim() + "_" + dto.getName().trim();
+        Pair<String, String> comparison = partsComparison.getOrDefault(partKey, null);
+        if (comparison != null) {
+            dto.setNumber(comparison.getLeft());
+            dto.setColorNumber(comparison.getRight());
+        }
+        return dto;
     }
 
     @Autowired
@@ -138,5 +187,10 @@ public class LoadService extends BaseLogicService {
     @Autowired
     public void setRemoteDataProvider(RemoteDataProvider remoteDataProvider) {
         this.remoteDataProvider = remoteDataProvider;
+    }
+
+    @Autowired
+    public void setSetDataLoader(SetDataLoader setDataLoader) {
+        this.setDataLoader = setDataLoader;
     }
 }

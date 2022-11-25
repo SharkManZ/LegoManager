@@ -7,15 +7,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.*;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-public class SeriesRepositoryTest extends DaoServiceTest {
+public class SeriesRepositoryTest extends DbTest {
 
     @Autowired
     private SeriesRepository seriesRepository;

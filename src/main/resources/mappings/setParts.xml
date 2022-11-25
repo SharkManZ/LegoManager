@@ -17,7 +17,13 @@
     <named-query name="getSetPartBySetAndPrtColorId">
         <query>select sp from SetPartEntity sp where sp.set.id = :setId and sp.partColor.id = :partColorId</query>
     </named-query>
-    <named-query name="getSetPartsCount">
+    <named-query name="getAllSetsPartsCount">
         <query>select sum(s.count) from SetPartEntity s</query>
+    </named-query>
+    <named-query name="getSetPartsCount">
+        <query>select count(1)
+            from SetPartEntity s
+            where s.set.id = :setId
+        </query>
     </named-query>
 </entity-mappings>

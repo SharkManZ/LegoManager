@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.dto.TotalDto;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
-public class TotalsDaoTest extends DaoServiceTest {
+public class TotalsDaoTest extends DbTest {
     @Autowired
     private TotalsDao totalsDao;
 

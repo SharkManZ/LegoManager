@@ -5,13 +5,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class SetRepositoryTest extends DaoServiceTest {
+public class SetRepositoryTest extends DbTest {
     @Autowired
     private SetRepository setRepository;
 

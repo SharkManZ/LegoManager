@@ -11,14 +11,14 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.dto.UserDto;
 import ru.shark.home.legomanager.dao.dto.UserSetsSummaryDto;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class UsersDataManagerTest extends DaoServiceTest {
+public class UsersDataManagerTest extends DbTest {
     @Autowired
     private UsersDataManager usersDataManager;
 

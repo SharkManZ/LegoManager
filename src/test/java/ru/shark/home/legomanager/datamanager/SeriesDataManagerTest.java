@@ -11,14 +11,14 @@ import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.dto.SeriesDto;
 import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
 import ru.shark.home.legomanager.dao.entity.SeriesEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SeriesDataManagerTest extends DaoServiceTest {
+public class SeriesDataManagerTest extends DbTest {
     @Autowired
     private SeriesDataManager seriesDataManager;
 

@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-public class DaoServiceTest {
+public class DbTest {
     @Autowired
     private TestDataLoader testDataLoader;
 

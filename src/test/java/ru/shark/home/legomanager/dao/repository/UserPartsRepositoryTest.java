@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.dto.UserPartListDto;
 import ru.shark.home.legomanager.dao.entity.UserPartEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-public class UserPartsRepositoryTest extends DaoServiceTest {
+public class UserPartsRepositoryTest extends DbTest {
 
     @Autowired
     private UserPartsRepository userPartsRepository;

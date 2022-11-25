@@ -10,14 +10,14 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.legomanager.dao.dto.ColorDto;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ColorDataManagerTest extends DaoServiceTest {
+public class ColorDataManagerTest extends DbTest {
     @Autowired
     private ColorDataManager colorDataManager;
 

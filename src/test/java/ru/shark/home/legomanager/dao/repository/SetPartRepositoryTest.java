@@ -7,11 +7,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.SetPartEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.List;
 
-public class SetPartRepositoryTest extends DaoServiceTest {
+public class SetPartRepositoryTest extends DbTest {
 
     @Autowired
     private SetPartRepository setPartRepository;
@@ -61,15 +61,28 @@ public class SetPartRepositoryTest extends DaoServiceTest {
     }
 
     @Test
-    public void getSetPartsCount() {
+    public void getAllSetsPartsCount() {
         // GIVEN
         Long expected = 13L;
 
         // WHEN
-        Long count = setPartRepository.getSetPartsCount();
+        Long count = setPartRepository.getAllSetsPartsCount();
 
         // THEN
         Assertions.assertEquals(expected, count);
+    }
+
+    @Test
+    public void getSetPartsCount() {
+        // GIVEN
+        Long setId = entityFinder.findSetId("42082");
+        Long expected = 2L;
+
+        // WHEN
+        Long setPartsCount = setPartRepository.getSetPartsCount(setId);
+
+        // THEN
+        Assertions.assertEquals(expected, setPartsCount);
     }
 
     @Test

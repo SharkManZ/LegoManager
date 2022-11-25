@@ -11,7 +11,7 @@ import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.dao.entity.SetPartEntity;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
 
-public class SetPartDaoTest extends DaoServiceTest {
+public class SetPartDaoTest extends DbTest {
     @Autowired
     private SetPartDao setPartDao;
 

@@ -14,13 +14,13 @@ import ru.shark.home.legomanager.dao.dto.SetFullDto;
 import ru.shark.home.legomanager.dao.dto.SetSummaryDto;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.services.dto.SearchDto;
-import ru.shark.home.legomanager.util.DaoServiceTest;
+import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SetDataManagerTest extends DaoServiceTest {
+public class SetDataManagerTest extends DbTest {
 
     @Autowired
     private SetDataManager setDataManager;
