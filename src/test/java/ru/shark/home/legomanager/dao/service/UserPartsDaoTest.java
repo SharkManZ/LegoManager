@@ -41,7 +41,7 @@ public class UserPartsDaoTest extends DbTest {
     public void getList() {
         // GIVEN
         Long userId = entityFinder.findUserId(USER);
-        RequestCriteria requestCriteria = new RequestCriteria(0, 3);
+        RequestCriteria requestCriteria = new RequestCriteria(0, 30);
         UserPartListRequest requestDto = new UserPartListRequest(UserPartRequestType.ALL, userId);
 
         // WHEN
@@ -66,7 +66,7 @@ public class UserPartsDaoTest extends DbTest {
 
         Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("112231") &&
-                item.getUserCount() == 25 && item.getSetsCount() == 10));
+                item.getUserCount() == 5 && item.getSetsCount() == 10));
         Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("55531") &&
                 item.getUserCount() == 3 && item.getSetsCount() == 3));
@@ -90,7 +90,7 @@ public class UserPartsDaoTest extends DbTest {
         List<UserPartListDto> data = list.getData();
         Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("112231") &&
-                item.getUserCount() == 25 && item.getSetsCount() == 10));
+                item.getUserCount() == 5 && item.getSetsCount() == 10));
         Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("55521") &&
                 item.getUserCount() == 5 && item.getSetsCount() == 0));
@@ -115,6 +115,40 @@ public class UserPartsDaoTest extends DbTest {
     }
 
     @Test
+    public void getListWithOnlyNotEquals() {
+        // GIVEN
+        Long userId = entityFinder.findUserId(USER);
+        RequestCriteria requestCriteria = new RequestCriteria(0, 3);
+        UserPartListRequest requestDto = new UserPartListRequest(UserPartRequestType.NOT_EQUALS, userId);
+
+        // WHEN
+        PageableList<UserPartListDto> list = userPartsDao.getList(requestDto, requestCriteria);
+
+        // THEN
+        checkPagingDtoList(list, 2, 2L);
+        List<UserPartListDto> data = list.getData();
+        Assertions.assertTrue(data.stream().allMatch(item -> item.getUserId().equals(userId) &&
+                item.getUserCount() != item.getSetsCount()));
+    }
+
+    @Test
+    public void getListWithOnlyLowerCount() {
+        // GIVEN
+        Long userId = entityFinder.findUserId(USER);
+        RequestCriteria requestCriteria = new RequestCriteria(0, 3);
+        UserPartListRequest requestDto = new UserPartListRequest(UserPartRequestType.LOWER_COUNT, userId);
+
+        // WHEN
+        PageableList<UserPartListDto> list = userPartsDao.getList(requestDto, requestCriteria);
+
+        // THEN
+        checkPagingDtoList(list, 1, 1L);
+        List<UserPartListDto> data = list.getData();
+        Assertions.assertTrue(data.stream().allMatch(item -> item.getUserId().equals(userId) &&
+                item.getUserCount() < item.getSetsCount()));
+    }
+
+    @Test
     public void getListWithSearch() {
         // GIVEN
         Long userId = entityFinder.findUserId(USER);
@@ -130,7 +164,7 @@ public class UserPartsDaoTest extends DbTest {
         List<UserPartListDto> data = list.getData();
         Assertions.assertTrue(data.stream().anyMatch(item -> item.getUserId().equals(userId) &&
                 item.getColorNumber().equalsIgnoreCase("112231") &&
-                item.getUserCount() == 25 && item.getSetsCount() == 10));
+                item.getUserCount() == 5 && item.getSetsCount() == 10));
     }
 
     @Test

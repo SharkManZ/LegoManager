@@ -37,6 +37,12 @@ public class LoadService extends BaseLogicService {
         partsComparison = Maps.newHashMap();
         partsComparison.put("6628_Black Technic, Pin with Friction Ridges and Tow Ball (Undetermined Type)",
                 Pair.of("6628a", "4184169"));
+        partsComparison.put("6628_Red Technic, Pin with Friction Ridges and Tow Ball (Undetermined Type)",
+                Pair.of("6628a", "6254216"));
+        partsComparison.put("66645_Plastic Sails with '42105', 'Kool Keels', 'Anchor Bouy', and Waves with Dots Pattern, Sheet of 2",
+                Pair.of("66645", "6289128"));
+        partsComparison.put("5102c10_Black Hose, Pneumatic 4mm D. 10L / 8.0cm",
+                Pair.of("5102c10", "6217913"));
     }
 
     public BaseResponse checkParts(String setNumber) {

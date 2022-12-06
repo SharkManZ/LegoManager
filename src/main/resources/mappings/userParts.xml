@@ -24,7 +24,12 @@
         </query>
     </named-query>
     <named-native-query name="getUserPartsByUser" result-set-mapping="getUserPartsByUserMapping">
-        <query>select max(id) as id, partColorId, userId, colorNumber, alternateColorNumber, number, alternateNumber,
+        <query>
+            <![CDATA[
+            select a.id, a.partColorId, a.userId, a.colorNumber, a.alternateColorNumber, a.number, a.alternateNumber,
+                a.categoryId, a.categoryName, a.partName, a.colorId, a.colorName, a.userCount, a.setsCount
+            from (
+            select max(id) as id, partColorId, userId, colorNumber, alternateColorNumber, number, alternateNumber,
             categoryId, categoryName, partName, colorId, colorName,
             sum(coalesce(setsCount, 0)) + sum(coalesce(userCount, 0)) as userCount, max(coalesce(setsCount, 0)) as setsCount
             from (
@@ -53,14 +58,17 @@
                     join lego_color lc on lc.lego_id = lpc.lego_color_id
                 where lup.lego_user_id = :userId
             ) up
+            group by partColorId, userId, colorNumber, alternateColorNumber, number, alternateNumber, colorId, colorName, categoryId, categoryName, partName
+            order by colorName, number) a
             where (:added = 0 or
-                exists (select 1 from lego_user_parts lup where lup.lego_part_color_id = up.partColorId)
+                exists (select 1 from lego_user_parts lup where lup.lego_part_color_id = a.partColorId)
             ) and
             (:notAdded = 0 or
-                not exists (select 1 from lego_user_parts lup where lup.lego_part_color_id = up.partColorId)
+                not exists (select 1 from lego_user_parts lup where lup.lego_part_color_id = a.partColorId)
             )
-            group by partColorId, userId, colorNumber, alternateColorNumber, number, alternateNumber, colorId, colorName, categoryId, categoryName, partName
-            order by colorName, number
+            and (:notEquals = 0 or a.userCount <> a.setsCount)
+            and (:lowerCount = 0 or a.userCount < a.setsCount)
+            ]]>
         </query>
     </named-native-query>
     <sql-result-set-mapping name="getUserPartsByUserMapping">
