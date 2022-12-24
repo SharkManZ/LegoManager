@@ -4,8 +4,7 @@ import java.util.List;
 
 public class PartTestDto {
     private String name;
-    private String number;
-    private String alternateNumber;
+    private List<NumberTestDto> numbers;
     private String category;
     private List<PartColorTestDto> colors;
 
@@ -17,20 +16,12 @@ public class PartTestDto {
         this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public List<NumberTestDto> getNumbers() {
+        return numbers;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getAlternateNumber() {
-        return alternateNumber;
-    }
-
-    public void setAlternateNumber(String alternateNumber) {
-        this.alternateNumber = alternateNumber;
+    public void setNumbers(List<NumberTestDto> numbers) {
+        this.numbers = numbers;
     }
 
     public String getCategory() {

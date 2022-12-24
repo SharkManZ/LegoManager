@@ -3,18 +3,9 @@ package ru.shark.home.legomanager.dao.dto.export;
 import java.util.List;
 
 public class PartDictionaryDto {
-    private String number;
     private String name;
-    private String alternateNumber;
     private List<String> colors;
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
+    private List<NumberDictionaryDto> numbers;
 
     public String getName() {
         return name;
@@ -24,12 +15,12 @@ public class PartDictionaryDto {
         this.name = name;
     }
 
-    public String getAlternateNumber() {
-        return alternateNumber;
+    public List<NumberDictionaryDto> getNumbers() {
+        return numbers;
     }
 
-    public void setAlternateNumber(String alternateNumber) {
-        this.alternateNumber = alternateNumber;
+    public void setNumbers(List<NumberDictionaryDto> numbers) {
+        this.numbers = numbers;
     }
 
     public List<String> getColors() {

@@ -1,22 +1,42 @@
 [
   {
     "name": "Brick 1x4",
-    "number": "3010",
+    "numbers": [
+      {
+        "number": "3010",
+        "main": true
+      }
+    ],
     "category": "Brick",
     "colors": [
       {
         "color": "Black",
-        "number": "112231"
+        "numbers": [
+          {
+            "number": "112231",
+            "main": true
+          }
+        ]
       },
       {
         "color": "Red",
-        "number": "332221"
+        "numbers": [
+          {
+            "number": "332221",
+            "main": true
+          }
+        ]
       }
     ]
   },
   {
     "name": "Brick 2x4",
-    "number": "3001",
+    "numbers": [
+      {
+        "number": "3001",
+        "main": true
+      }
+    ],
     "category": "Brick"
   }
 ]

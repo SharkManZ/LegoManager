@@ -38,7 +38,7 @@ public class PartCategoryServiceTest extends BaseServiceTest {
     public void getList() {
         // GIVEN
         PageRequest request = new PageRequest(0, 10);
-        PageableList<PartCategoryDto> pageList = new PageableList<>(Arrays.asList(new PartCategoryDto()), 1L);
+        PageableList<PartCategoryDto> pageList = new PageableList<>(Arrays.asList(new PartCategoryDto(1L, "name")), 1L);
         when(partCategoryDataManager.getWithPagination(any(RequestCriteria.class))).thenReturn(pageList);
 
         // WHEN
@@ -65,9 +65,9 @@ public class PartCategoryServiceTest extends BaseServiceTest {
     @Test
     public void save() {
         // GIVEN
-        when(partCategoryDataManager.save(any(PartCategoryDto.class))).thenReturn(new PartCategoryDto());
+        when(partCategoryDataManager.save(any(PartCategoryDto.class))).thenReturn(new PartCategoryDto(1L, "name"));
         // WHEN
-        BaseResponse response = partCategoryService.save(new PartCategoryDto());
+        BaseResponse response = partCategoryService.save(new PartCategoryDto(1L, "name"));
 
         // THEN
         checkResponseWithBody(response);

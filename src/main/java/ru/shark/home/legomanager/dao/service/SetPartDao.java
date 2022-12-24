@@ -6,9 +6,7 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
-import ru.shark.home.legomanager.dao.entity.PartColorEntity;
-import ru.shark.home.legomanager.dao.entity.SetEntity;
-import ru.shark.home.legomanager.dao.entity.SetPartEntity;
+import ru.shark.home.legomanager.dao.entity.*;
 import ru.shark.home.legomanager.dao.repository.PartColorRepository;
 import ru.shark.home.legomanager.dao.repository.SetPartRepository;
 import ru.shark.home.legomanager.dao.repository.SetRepository;
@@ -16,8 +14,8 @@ import ru.shark.home.legomanager.dao.repository.SetRepository;
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static ru.shark.home.common.common.ErrorConstants.*;
 
 @Component
@@ -34,30 +32,10 @@ public class SetPartDao extends BaseDao<SetPartEntity> {
     public PageableList<SetPartFullDto> getPartsBySetId(Long setId, RequestCriteria requestCriteria) {
         Map<String, Object> params = new HashMap<>();
         params.put("setId", setId);
-        PageableList<SetPartEntity> pageLIst = setPartRepository.getWithPagination("getSetPartsBySetId", requestCriteria, params,
-                Arrays.asList("partColor.number", "partColor.alternateNumber", "partColor.part.number",
-                        "partColor.part.alternateNumber", "partColor.part.name", "partColor.color.name"));
-        List<SetPartFullDto> list = new ArrayList<>();
-        for (SetPartEntity entity : pageLIst.getData()) {
-            SetPartFullDto dto = new SetPartFullDto();
-            dto.setId(entity.getId());
-            dto.setCount(entity.getCount());
-            dto.setSetId(entity.getSet().getId());
-            dto.setPartColorId(entity.getPartColor().getId());
-            dto.setNumber(entity.getPartColor().getPart().getNumber());
-            if (!isBlank(entity.getPartColor().getPart().getAlternateNumber())) {
-                dto.setAlternateNumber(entity.getPartColor().getPart().getAlternateNumber());
-            }
-            dto.setColorNumber(entity.getPartColor().getNumber());
-            if (!isBlank(entity.getPartColor().getAlternateNumber())) {
-                dto.setAlternateColorNumber(entity.getPartColor().getAlternateNumber());
-            }
-            dto.setHexColor(entity.getPartColor().getColor().getHexColor());
-            dto.setPartName(entity.getPartColor().getPart().getName());
-
-            list.add(dto);
-        }
-        return new PageableList<>(list, pageLIst.getTotalCount());
+        return setPartRepository.getNativeWithPagination("getSetPartsBySetId",
+                requestCriteria, params,
+                Arrays.asList("colorNumber", "alternateColorNumber", "number",
+                        "alternateNumber", "partName", "colorName"), "getSetPartsBySetIdColumns");
     }
 
     @Override

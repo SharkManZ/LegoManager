@@ -6,15 +6,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.shark.home.legomanager.dao.dto.ColorDto;
+import ru.shark.home.legomanager.dao.dto.PartColorDto;
+import ru.shark.home.legomanager.dao.dto.PartDto;
 import ru.shark.home.legomanager.dao.entity.ColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
+import ru.shark.home.legomanager.dao.entity.PartColorNumberEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
 import ru.shark.home.legomanager.services.dto.SearchDto;
 import ru.shark.home.legomanager.util.DbTest;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
-import java.util.Comparator;
 import java.util.List;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
@@ -38,8 +41,13 @@ public class PartColorDaoTest extends DbTest {
         Ordering<PartColorEntity> ordering = new Ordering<PartColorEntity>() {
             @Override
             public int compare(@Nullable PartColorEntity partColorEntity, @Nullable PartColorEntity t1) {
-                return Comparator.comparing(PartColorEntity::getNumber)
-                        .compare(partColorEntity, t1);
+                String color1 = partColorEntity.getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                        .findFirst().orElseThrow(() -> new ValidationException("Не найден главный цвет детали"))
+                        .getNumber();
+                String color2 = t1.getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                        .findFirst().orElseThrow(() -> new ValidationException("Не найден главный цвет детали"))
+                        .getNumber();
+                return color1.compareTo(color2);
             }
         };
 
@@ -54,95 +62,95 @@ public class PartColorDaoTest extends DbTest {
     @Test
     public void saveWithCreate() {
         // GIVEN
-        PartColorEntity entity = prepareEntity();
+        PartColorDto dto = prepareDto();
 
         // WHEN
-        PartColorEntity saved = partColorDao.save(entity);
+        PartColorDto saved = partColorDao.savePartColor(dto);
 
         // THEN
         Assertions.assertNotNull(saved);
         Assertions.assertNotNull(saved.getId());
-        Assertions.assertEquals(entity.getNumber(), saved.getNumber());
-        Assertions.assertEquals(entity.getPart().getId(), saved.getPart().getId());
-        Assertions.assertEquals(entity.getColor().getId(), saved.getColor().getId());
-        Assertions.assertEquals(entity.getAlternateNumber(), saved.getAlternateNumber());
+        Assertions.assertEquals(dto.getNumber(), saved.getNumber());
+        Assertions.assertEquals(dto.getPart().getId(), saved.getPart().getId());
+        Assertions.assertEquals(dto.getColor().getId(), saved.getColor().getId());
+        Assertions.assertEquals(dto.getAlternateNumber(), saved.getAlternateNumber());
     }
 
     @Test
     public void saveWithCreateExistsByPartAndColor() {
         // GIVEN
-        PartColorEntity entity = prepareEntity();
-        entity.getPart().setId(entityFinder.findPartId("3010"));
-        entity.getColor().setId(entityFinder.findColorId("Red"));
+        PartColorDto dto = prepareDto();
+        dto.getPart().setId(entityFinder.findPartId("3010"));
+        dto.getColor().setId(entityFinder.findColorId("Red"));
 
         // WHEN
-        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(entity));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> partColorDao.savePartColor(dto));
 
         // THEN
         Assertions.assertEquals(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartColorEntity.getDescription(),
-                entity.getPart().getId() + " " + entity.getColor().getId()), exception.getMessage());
+                dto.getPart().getId() + " " + dto.getColor().getId()), exception.getMessage());
     }
 
     @Test
     public void saveWithUpdate() {
         // GIVEN
-        PartColorEntity entity = prepareEntity();
-        entity.setId(entityFinder.findPartColorId("098765"));
+        PartColorDto dto = prepareDto();
+        dto.setId(entityFinder.findPartColorId("098765"));
 
         // WHEN
-        PartColorEntity saved = partColorDao.save(entity);
+        PartColorDto saved = partColorDao.savePartColor(dto);
 
         // THEN
         Assertions.assertNotNull(saved);
-        Assertions.assertEquals(entity.getId(), saved.getId());
-        Assertions.assertEquals(entity.getNumber(), saved.getNumber());
-        Assertions.assertEquals(entity.getPart().getId(), saved.getPart().getId());
-        Assertions.assertEquals(entity.getColor().getId(), saved.getColor().getId());
-        Assertions.assertEquals(entity.getAlternateNumber(), saved.getAlternateNumber());
+        Assertions.assertEquals(dto.getId(), saved.getId());
+        Assertions.assertEquals(dto.getNumber(), saved.getNumber());
+        Assertions.assertEquals(dto.getPart().getId(), saved.getPart().getId());
+        Assertions.assertEquals(dto.getColor().getId(), saved.getColor().getId());
+        Assertions.assertEquals(dto.getAlternateNumber(), saved.getAlternateNumber());
     }
 
     @Test
     public void saveWithUpdateExistsByPartAndColor() {
         // GIVEN
-        PartColorEntity entity = prepareEntity();
-        entity.setId(entityFinder.findPartColorId("112231", "3010"));
-        entity.getPart().setId(entityFinder.findPartId("3010"));
-        entity.getColor().setId(entityFinder.findColorId("Red"));
+        PartColorDto dto = prepareDto();
+        dto.setId(entityFinder.findPartColorId("112231", "3010"));
+        dto.getPart().setId(entityFinder.findPartId("3010"));
+        dto.getColor().setId(entityFinder.findColorId("Red"));
 
         // WHEN
-        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(entity));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> partColorDao.savePartColor(dto));
 
         // THEN
         Assertions.assertEquals(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartColorEntity.getDescription(),
-                entity.getPart().getId() + " " + entity.getColor().getId()), exception.getMessage());
+                dto.getPart().getId() + " " + dto.getColor().getId()), exception.getMessage());
     }
 
     @Test
     public void saveWithValidate() {
         // GIVEN
-        PartColorEntity noNumber = prepareEntity();
+        PartColorDto noNumber = prepareDto();
         noNumber.setNumber(null);
-        PartColorEntity noPart = prepareEntity();
+        PartColorDto noPart = prepareDto();
         noPart.setPart(null);
-        PartColorEntity noPartId = prepareEntity();
+        PartColorDto noPartId = prepareDto();
         noPartId.getPart().setId(null);
-        PartColorEntity partNotFound = prepareEntity();
+        PartColorDto partNotFound = prepareDto();
         partNotFound.getPart().setId(999L);
-        PartColorEntity noColor = prepareEntity();
+        PartColorDto noColor = prepareDto();
         noColor.setColor(null);
-        PartColorEntity noColorId = prepareEntity();
+        PartColorDto noColorId = prepareDto();
         noColorId.getColor().setId(null);
-        PartColorEntity colorNotFound = prepareEntity();
+        PartColorDto colorNotFound = prepareDto();
         colorNotFound.getColor().setId(999L);
 
         // WHEN
-        ValidationException noNumberException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(noNumber));
-        ValidationException noPartException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(noPart));
-        ValidationException noPartIdException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(noPartId));
-        ValidationException partNotFoundException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(partNotFound));
-        ValidationException noColorException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(noColor));
-        ValidationException noColorIdException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(noColorId));
-        ValidationException colorNotFoundException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.save(colorNotFound));
+        ValidationException noNumberException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.savePartColor(noNumber));
+        ValidationException noPartException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.savePartColor(noPart));
+        ValidationException noPartIdException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.savePartColor(noPartId));
+        ValidationException partNotFoundException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.savePartColor(partNotFound));
+        ValidationException noColorException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.savePartColor(noColor));
+        ValidationException noColorIdException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.savePartColor(noColorId));
+        ValidationException colorNotFoundException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.savePartColor(colorNotFound));
 
         // THEN
         Assertions.assertEquals(MessageFormat.format(ENTITY_EMPTY_FIELD, "number",
@@ -172,7 +180,7 @@ public class PartColorDaoTest extends DbTest {
 
         // THEN
         Assertions.assertNotNull(entity);
-        Assertions.assertEquals(entity.getNumber(), dto.getSearchValue());
+        Assertions.assertTrue(entity.getNumbers().stream().anyMatch(item -> item.getNumber().equalsIgnoreCase(dto.getSearchValue())));
     }
 
     @Test
@@ -200,19 +208,19 @@ public class PartColorDaoTest extends DbTest {
 
         // THEN
         Assertions.assertNotNull(entity);
-        Assertions.assertEquals("112231", entity.getNumber());
-        Assertions.assertEquals("3010", entity.getPart().getNumber());
+        Assertions.assertTrue(entity.getNumbers().stream().anyMatch(item -> item.getNumber().equalsIgnoreCase("112231")));
+        Assertions.assertTrue(entity.getPart().getNumbers().stream().anyMatch(item -> item.getNumber().equalsIgnoreCase("3010")));
     }
 
-    private PartColorEntity prepareEntity() {
-        PartColorEntity entity = new PartColorEntity();
-        entity.setNumber("5555");
-        entity.setPart(new PartEntity());
-        entity.getPart().setId(entityFinder.findPartId("3001"));
-        entity.setColor(new ColorEntity());
-        entity.getColor().setId(entityFinder.findColorId("Red"));
-        entity.setAlternateNumber("111");
+    private PartColorDto prepareDto() {
+        PartColorDto dto = new PartColorDto();
+        dto.setNumber("5555");
+        dto.setPart(new PartDto());
+        dto.getPart().setId(entityFinder.findPartId("3001"));
+        dto.setColor(new ColorDto());
+        dto.getColor().setId(entityFinder.findColorId("Red"));
+        dto.setAlternateNumber("111");
 
-        return entity;
+        return dto;
     }
 }

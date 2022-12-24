@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
 import ru.shark.home.legomanager.util.DbTest;
 
+import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,13 +76,12 @@ public class SetDataLoaderTest extends DbTest {
         Long setId = entityFinder.findSetId(setNum);
 
         // WHEN
-        setDataLoader.loadSetParts(setNum, list);
+        ValidationException validationException = Assertions.assertThrows(ValidationException.class, () -> setDataLoader.loadSetParts(setNum, list));
+
 
         // THEN
-        Long setPartId1 = entityFinder.findSetPartId(setId, partColorId1);
-        Long setPartId2 = entityFinder.findSetPartId(setId, partColorId2);
-        Assertions.assertNotNull(setPartId1);
-        Assertions.assertNotNull(setPartId2);
+        Assertions.assertNotNull(validationException);
+        Assertions.assertEquals("Не найдена деталь с номером 555 и номером цвета 55532", validationException.getMessage());
     }
 
     private void loadWithError(String setNum, List<RemoteSetPartsDto> list, String err) {

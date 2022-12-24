@@ -7,11 +7,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
+import ru.shark.home.legomanager.dao.entity.PartColorNumberEntity;
 import ru.shark.home.legomanager.util.DbTest;
 
+import javax.validation.ValidationException;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PartColorRepositoryTest extends DbTest {
     @Autowired
@@ -32,8 +34,13 @@ public class PartColorRepositoryTest extends DbTest {
         Ordering<PartColorEntity> ordering = new Ordering<PartColorEntity>() {
             @Override
             public int compare(@Nullable PartColorEntity partColorEntity, @Nullable PartColorEntity t1) {
-                return Comparator.comparing(PartColorEntity::getNumber)
-                        .compare(partColorEntity, t1);
+                String color1 = partColorEntity.getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                        .findFirst().orElseThrow(() -> new ValidationException("Не найден главный цвет детали"))
+                        .getNumber();
+                String color2 = t1.getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                        .findFirst().orElseThrow(() -> new ValidationException("Не найден главный цвет детали"))
+                        .getNumber();
+                return color1.compareTo(color2);
             }
         };
 
@@ -58,8 +65,13 @@ public class PartColorRepositoryTest extends DbTest {
                 if (result != 0) {
                     return result;
                 }
-                return Comparator.comparing(PartColorEntity::getNumber)
-                        .compare(partColorEntity, t1);
+                String color1 = partColorEntity.getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                        .findFirst().orElseThrow(() -> new ValidationException("Не найден главный цвет детали"))
+                        .getNumber();
+                String color2 = t1.getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                        .findFirst().orElseThrow(() -> new ValidationException("Не найден главный цвет детали"))
+                        .getNumber();
+                return color1.compareTo(color2);
             }
         };
 
@@ -78,7 +90,8 @@ public class PartColorRepositoryTest extends DbTest {
 
         // THEN
         Assertions.assertNotNull(byNumber);
-        Assertions.assertEquals("112231", byNumber.getNumber());
+        Assertions.assertEquals("112231", byNumber.getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                .findFirst().get().getNumber());
     }
 
     @Test
@@ -88,8 +101,10 @@ public class PartColorRepositoryTest extends DbTest {
 
         // THEN
         Assertions.assertNotNull(byNumber);
-        Assertions.assertEquals("112231", byNumber.getNumber());
-        Assertions.assertEquals("898, 899", byNumber.getAlternateNumber());
+        Assertions.assertEquals("112231", byNumber.getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                .findFirst().get().getNumber());
+        Assertions.assertTrue(byNumber.getNumbers().stream().filter(item -> !item.getMain())
+                .map(PartColorNumberEntity::getNumber).collect(Collectors.toList()).containsAll(Arrays.asList("898", "899")));
     }
 
     @Test
@@ -100,8 +115,8 @@ public class PartColorRepositoryTest extends DbTest {
         // THEN
         Assertions.assertNotNull(byNumber);
         Assertions.assertEquals(1, byNumber.size());
-        Assertions.assertEquals("112231", byNumber.get(0).getNumber());
-        Assertions.assertEquals("3010", byNumber.get(0).getPart().getNumber());
+        Assertions.assertTrue(byNumber.get(0).getNumbers().stream().anyMatch(item -> item.getNumber().equalsIgnoreCase("112231")));
+        Assertions.assertTrue(byNumber.get(0).getPart().getNumbers().stream().anyMatch(item -> item.getNumber().equalsIgnoreCase("3010")));
     }
 
     @Test
@@ -112,9 +127,11 @@ public class PartColorRepositoryTest extends DbTest {
         // THEN
         Assertions.assertNotNull(byNumber);
         Assertions.assertEquals(1, byNumber.size());
-        Assertions.assertEquals("112231", byNumber.get(0).getNumber());
-        Assertions.assertEquals("898, 899", byNumber.get(0).getAlternateNumber());
-        Assertions.assertEquals("3010", byNumber.get(0).getPart().getNumber());
+        Assertions.assertEquals("112231", byNumber.get(0).getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                .findFirst().get().getNumber());
+        Assertions.assertTrue(byNumber.get(0).getNumbers().stream().filter(item -> !item.getMain())
+                .map(item -> item.getNumber()).collect(Collectors.toList()).containsAll(Arrays.asList("898", "899")));
+        Assertions.assertTrue(byNumber.get(0).getPart().getNumbers().stream().anyMatch(item -> item.getNumber().equalsIgnoreCase("3010")));
     }
 
     @Test

@@ -52,7 +52,7 @@ public class PartCategoryDataManagerTest extends DbTest {
     @Test
     public void save() {
         // GIVEN
-        PartCategoryDto dto = prepareDto();
+        PartCategoryDto dto = new PartCategoryDto(null, "Plate");
 
         // WHEN
         PartCategoryDto saved = partCategoryDataManager.save(dto);
@@ -104,12 +104,5 @@ public class PartCategoryDataManagerTest extends DbTest {
 
         // THEN
         Assertions.assertEquals(2L, list.size());
-    }
-
-    private PartCategoryDto prepareDto() {
-        PartCategoryDto dto = new PartCategoryDto();
-        dto.setName("Plate");
-
-        return dto;
     }
 }

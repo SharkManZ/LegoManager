@@ -29,7 +29,9 @@ public class TestDataLoader {
             "LEGO_USER_SETS",
             "LEGO_USERS",
             "LEGO_SET_PART",
+            "LEGO_PART_COLOR_NUMBER",
             "LEGO_PART_COLOR",
+            "LEGO_PART_NUMBER",
             "LEGO_PART",
             "LEGO_PART_CATEGORY",
             "LEGO_COLOR",
@@ -69,6 +71,12 @@ public class TestDataLoader {
 
     @Autowired
     private UserPartsRepository userPartsRepository;
+
+    @Autowired
+    private PartNumberRepository partNumberRepository;
+
+    @Autowired
+    private PartColorNumberRepository partColorNumberRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -200,14 +208,23 @@ public class TestDataLoader {
                     entity.setCategory(new PartCategoryEntity());
                     entity.getCategory().setId(entityFinder.findPartCategoryId(dto.getCategory()));
                     entity = partRepository.save(entity);
+                    if (!isEmpty(dto.getNumbers())) {
+                        for (NumberTestDto numberDto : dto.getNumbers()) {
+                            saveTestPartNumberToEntity(entity, numberDto);
+                        }
+                    }
                     if (!isEmpty(dto.getColors())) {
                         for (PartColorTestDto color : dto.getColors()) {
                             PartColorEntity partColorEntity = new PartColorEntity();
                             partColorEntity.setColor(entityFinder.findColor(color.getColor()));
                             partColorEntity.setPart(entity);
-                            partColorEntity.setNumber(color.getNumber());
-                            partColorEntity.setAlternateNumber(color.getAlternateNumber());
-                            partColorRepository.save(partColorEntity);
+                            partColorEntity = partColorRepository.save(partColorEntity);
+
+                            if (!isEmpty(color.getNumbers())) {
+                                for (NumberTestDto numberDto : color.getNumbers()) {
+                                    saveTestPartColorNumberToEntity(partColorEntity, numberDto);
+                                }
+                            }
                         }
                     }
 
@@ -218,6 +235,24 @@ public class TestDataLoader {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void saveTestPartNumberToEntity(PartEntity partEntity, NumberTestDto dto) {
+        PartNumberEntity entity = new PartNumberEntity();
+        entity.setPart(partEntity);
+        entity.setMain(dto.isMain());
+        entity.setNumber(dto.getNumber());
+
+        partNumberRepository.save(entity);
+    }
+
+    private void saveTestPartColorNumberToEntity(PartColorEntity partEntity, NumberTestDto dto) {
+        PartColorNumberEntity entity = new PartColorNumberEntity();
+        entity.setPartColor(partEntity);
+        entity.setMain(dto.isMain());
+        entity.setNumber(dto.getNumber());
+
+        partColorNumberRepository.save(entity);
     }
 
     private SetEntity mapTestSetToEntity(SetTestDto dto) {
@@ -232,8 +267,6 @@ public class TestDataLoader {
     private PartEntity mapTestPartToEntity(PartTestDto dto) {
         PartEntity entity = new PartEntity();
         entity.setName(dto.getName());
-        entity.setNumber(dto.getNumber());
-        entity.setAlternateNumber(dto.getAlternateNumber());
         return entity;
     }
 

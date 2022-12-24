@@ -54,7 +54,7 @@ public class PartServiceTest extends BaseServiceTest {
 
         // THEN
         checkResponse(response);
-        verify(partDataManager, times(1)).save(any(PartDto.class));
+        verify(partDataManager, times(1)).savePart(any(PartDto.class));
     }
 
     @Test

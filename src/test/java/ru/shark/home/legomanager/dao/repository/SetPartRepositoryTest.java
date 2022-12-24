@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
 import ru.shark.home.legomanager.dao.entity.SetPartEntity;
 import ru.shark.home.legomanager.util.DbTest;
 
@@ -30,15 +32,15 @@ public class SetPartRepositoryTest extends DbTest {
         // GIVEN
         Long setId = entityFinder.findSetId("42082");
         // GIVEN
-        Ordering<SetPartEntity> ordering = new Ordering<SetPartEntity>() {
+        Ordering<SetPartFullDto> ordering = new Ordering<SetPartFullDto>() {
             @Override
-            public int compare(@Nullable SetPartEntity setPartEntity, @Nullable SetPartEntity t1) {
+            public int compare(@Nullable SetPartFullDto setPartEntity, @Nullable SetPartFullDto t1) {
                 return setPartEntity.getId().compareTo(t1.getId());
             }
         };
 
         // WHEN
-        List<SetPartEntity> list = setPartRepository.getSetPartsBySetId(setId);
+        List<SetPartFullDto> list = setPartRepository.getSetPartsBySetId(setId);
 
         // THEN
         Assertions.assertEquals(2, list.size());

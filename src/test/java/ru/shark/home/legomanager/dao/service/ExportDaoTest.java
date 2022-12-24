@@ -9,6 +9,7 @@ import ru.shark.home.legomanager.dao.dto.export.*;
 import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -56,11 +57,12 @@ public class ExportDaoTest extends DbTest {
             } else if ("brick".equalsIgnoreCase(category.getName())) {
                 partsCatChecked = true;
                 for (PartDictionaryDto part : category.getParts()) {
-                    Assertions.assertNotNull(part.getNumber());
+                    Assertions.assertNotNull(part.getNumbers());
                     Assertions.assertNotNull(part.getName());
-                    if ("3001".equalsIgnoreCase(part.getNumber())) {
+                    List<String> numbers = part.getNumbers().stream().map(item -> item.getNumber()).collect(Collectors.toList());
+                    if (numbers.contains("3001")) {
                         emptyPartChecked = true;
-                    } else if ("3010".equalsIgnoreCase(part.getNumber())) {
+                    } else if (numbers.contains("3010")) {
                         colorsPartChecked = true;
                         Assertions.assertEquals(part.getColors().size(), 2);
                     }
@@ -124,7 +126,7 @@ public class ExportDaoTest extends DbTest {
                 partsChecked = true;
                 Assertions.assertTrue(dto.getParts().stream()
                         .allMatch(item -> !isBlank(item.getPartNumber()) &&
-                                !isBlank(item.getPartColorNUmber()) &&
+                                !isBlank(item.getPartColorNumber()) &&
                                 item.getCount() != 0));
             }
 

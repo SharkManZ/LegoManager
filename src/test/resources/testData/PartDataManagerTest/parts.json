@@ -1,13 +1,25 @@
 [
   {
     "name": "Brick 1x4",
-    "number": "3010",
+    "numbers": [
+      {
+        "number": "3010",
+        "main": true
+      }
+    ],
     "category": "Brick"
   },
   {
     "name": "Brick 2x4",
-    "number": "3001",
-    "category": "Brick",
-    "alternateNumber": "1003"
+    "numbers": [
+      {
+        "number": "3001",
+        "main": true
+      },
+      {
+        "number": "1003"
+      }
+    ],
+    "category": "Brick"
   }
 ]

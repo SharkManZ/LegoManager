@@ -20,3 +20,4 @@ spring:
       - mappings/users.xml
       - mappings/userSets.xml
       - mappings/userParts.xml
+    show-sql: true

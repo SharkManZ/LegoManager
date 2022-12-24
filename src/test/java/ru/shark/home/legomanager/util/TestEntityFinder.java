@@ -80,7 +80,8 @@ public class TestEntityFinder {
     public Long findUserPartId(String userName, String partColorNumber) {
         return (Long) em.createQuery("select up.id from UserPartEntity up " +
                         "join up.user u join up.partColor pc " +
-                        "where lower(u.name) = :userName and lower(pc.number) = :partColorNumber")
+                        "where lower(u.name) = :userName " +
+                        "and exists (select 1 from PartColorNumberEntity pn where pn.partColor.id = pc.id and lower(pn.number) = :partColorNumber)")
                 .setParameter("userName", userName.toLowerCase())
                 .setParameter("partColorNumber", partColorNumber.toLowerCase())
                 .getSingleResult();
@@ -99,25 +100,29 @@ public class TestEntityFinder {
     }
 
     public PartEntity findPart(String number) {
-        return (PartEntity) em.createQuery("select p from PartEntity p where lower(p.number) = :number")
+        return (PartEntity) em.createQuery("select p from PartEntity p " +
+                        "where exists (select 1 from PartNumberEntity pn where pn.part.id = p.id and lower(pn.number) = :number)")
                 .setParameter("number", number.toLowerCase())
                 .getSingleResult();
     }
 
     public Long findPartId(String number) {
-        return (Long) em.createQuery("select p.id from PartEntity p where lower(p.number) = :number")
+        return (Long) em.createQuery("select p.id from PartEntity p " +
+                        "where exists (select 1 from PartNumberEntity pn where pn.part.id = p.id and lower(pn.number) = :number)")
                 .setParameter("number", number.toLowerCase())
                 .getSingleResult();
     }
 
     public PartColorEntity findPartColor(String number) {
-        return (PartColorEntity) em.createQuery("select p from PartColorEntity p where lower(p.number) = :number")
+        return (PartColorEntity) em.createQuery("select p from PartColorEntity p " +
+                        "where exists (select 1 from PartColorNumberEntity pn where pn.partColor.id = p.id and lower(pn.number) = :number)")
                 .setParameter("number", number.toLowerCase())
                 .getSingleResult();
     }
 
     public Long findPartColorId(String number) {
-        return (Long) em.createQuery("select p.id from PartColorEntity p where lower(p.number) = :number")
+        return (Long) em.createQuery("select p.id from PartColorEntity p " +
+                        "where exists (select 1 from PartColorNumberEntity pn where pn.partColor.id = p.id and lower(pn.number) = :number)")
                 .setParameter("number", number.toLowerCase())
                 .getSingleResult();
     }
@@ -125,8 +130,8 @@ public class TestEntityFinder {
     public Long findPartColorId(String number, String partNumber) {
         return (Long) em.createQuery("select pc.id " +
                         "from PartColorEntity pc join pc.part p " +
-                        "where lower(pc.number) = :number " +
-                        "and lower(p.number) = :partNumber")
+                        "where exists (select 1 from PartColorNumberEntity pn where pn.partColor.id = pc.id and lower(pn.number) = :number) " +
+                        "and exists (select 1 from PartNumberEntity pn where pn.part.id = p.id and lower(pn.number) = :partNumber)")
                 .setParameter("number", number.toLowerCase())
                 .setParameter("partNumber", partNumber.toLowerCase())
                 .getSingleResult();

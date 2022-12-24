@@ -6,7 +6,6 @@ import ru.shark.home.common.dao.repository.BaseRepository;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
 
 import java.util.List;
-import java.util.Map;
 
 public interface PartRepository extends BaseRepository<PartEntity> {
     /**
@@ -34,16 +33,15 @@ public interface PartRepository extends BaseRepository<PartEntity> {
     Long getPartsCount();
 
     /**
-     * Возвращает дополнительные данные по деталям:
-     * количество цветов
-     * один из кодов цветов деталей (минимальный по номеру)
-     */
-    @Query(name = "getPartAdditionalDataByIds")
-    List<Map<String, Object>> getPartAdditionalDataByIds(@Param("ids") List<Long> ids);
-
-    /**
      * Возвращает все детали по идентификатору категории.
      */
-    @Query(value = "select p from PartEntity p where p.category.id = :categoryId order by p.number")
+    @Query(value = "select p from PartEntity p join p.numbers pn with pn.main = true " +
+            "where p.category.id = :categoryId order by pn.number")
     List<PartEntity> findByCategoryId(@Param("categoryId") Long categoryId);
+
+    /**
+     * Возвращает идентификаторы деталей для переданного списка номеров.
+     */
+    @Query(name = "getPartIdsByNumbers")
+    List<Long> getPartIdsByNumbers(@Param("numbers") List<String> numbers);
 }

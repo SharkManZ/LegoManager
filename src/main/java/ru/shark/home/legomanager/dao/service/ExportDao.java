@@ -6,6 +6,7 @@ import ru.shark.home.legomanager.dao.dto.export.*;
 import ru.shark.home.legomanager.dao.entity.*;
 import ru.shark.home.legomanager.dao.repository.*;
 
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,8 +91,11 @@ public class ExportDao {
 
     private UserPartDictionaryDto userPartEntityToDictionary(UserPartEntity entity) {
         UserPartDictionaryDto dto = new UserPartDictionaryDto();
-        dto.setPartNumber(entity.getPartColor().getPart().getNumber());
-        dto.setPartColorNUmber(entity.getPartColor().getNumber());
+        dto.setPartNumber(entity.getPartColor().getPart().getNumbers()
+                .stream().filter(PartNumberEntity::getMain).findFirst().orElseThrow(() -> new ValidationException("Не найден главный номер детали"))
+                .getNumber());
+        dto.setPartColorNumber(entity.getPartColor().getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                .findFirst().orElseThrow(() -> new ValidationException("Не найлен главный номер цвета детали")).getNumber());
         dto.setCount(entity.getCount());
 
         return dto;
@@ -123,7 +127,8 @@ public class ExportDao {
 
     private SetPartDictionaryDto setPartEntityToDictionary(SetPartEntity entity) {
         SetPartDictionaryDto dto = new SetPartDictionaryDto();
-        dto.setPartColorNumber(entity.getPartColor().getNumber());
+        dto.setPartColorNumber(entity.getPartColor().getNumbers().stream().filter(PartColorNumberEntity::getMain)
+                .findFirst().orElseThrow(() -> new ValidationException("Не найлен главный номер цвета детали")).getNumber());
         dto.setCount(entity.getCount());
 
         return dto;
@@ -140,14 +145,13 @@ public class ExportDao {
 
     private PartDictionaryDto partEntityToDictionary(PartEntity entity) {
         PartDictionaryDto dto = new PartDictionaryDto();
-        dto.setNumber(entity.getNumber());
         dto.setName(entity.getName());
-        dto.setAlternateNumber(entity.getAlternateNumber());
         dto.setColors(partColorRepository.getPartColorsByPartId(entity.getId())
                 .stream()
                 .map(item -> item.getColor().getName())
                 .collect(Collectors.toList()));
-
+        dto.setNumbers(entity.getNumbers().stream().map(item -> new NumberDictionaryDto(item.getNumber(), item.getMain()))
+                .collect(Collectors.toList()));
         return dto;
     }
 

@@ -33,7 +33,7 @@ public class PartColorService extends BaseLogicService {
         BaseResponse baseResponse;
         try {
             baseResponse = new BaseResponse();
-            baseResponse.setBody(partColorDataManager.save(dto));
+            baseResponse.setBody(partColorDataManager.savePartColor(dto));
             baseResponse.setSuccess(true);
         } catch (Exception e) {
             baseResponse = BaseResponse.buildError(ERR_500, "Ошибка при сохранении цвета детали: " + e.getMessage());

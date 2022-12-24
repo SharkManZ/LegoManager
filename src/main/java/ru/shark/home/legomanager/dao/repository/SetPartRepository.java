@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.dao.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.shark.home.common.dao.repository.BaseRepository;
+import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
 import ru.shark.home.legomanager.dao.entity.SetPartEntity;
 
 import java.util.List;
@@ -15,8 +16,8 @@ public interface SetPartRepository extends BaseRepository<SetPartEntity> {
      * @param setId идентификатор набора
      * @return список деталей
      */
-    @Query(name = "getSetPartsBySetId")
-    List<SetPartEntity> getSetPartsBySetId(@Param("setId") Long setId);
+    @Query(name = "getSetPartsBySetId", nativeQuery = true)
+    List<SetPartFullDto> getSetPartsBySetId(@Param("setId") Long setId);
 
     /**
      * Возвращает деталь набора по идентификаторам набора и цвета детали.
@@ -51,6 +52,8 @@ public interface SetPartRepository extends BaseRepository<SetPartEntity> {
      * @param setId идентификатор набора
      * @return коллекция деталей наборов
      */
-    @Query(value = "select sp from SetPartEntity sp where sp.set.id = :setId order by sp.partColor.number")
+    @Query(value = "select sp from SetPartEntity sp " +
+            "join sp.partColor pc join pc.numbers pcn with pcn.main = true " +
+            "where sp.set.id = :setId order by pcn.number")
     List<SetPartEntity> findBySetId(@Param("setId") Long setId);
 }

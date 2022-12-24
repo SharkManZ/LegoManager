@@ -15,6 +15,7 @@ import ru.shark.home.legomanager.dao.repository.UserPartsRepository;
 import ru.shark.home.legomanager.dao.repository.UsersRepository;
 import ru.shark.home.legomanager.enums.UserPartRequestType;
 
+import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -62,7 +63,10 @@ public class UserPartsDao extends BaseDao<UserPartEntity> {
         UserPartEntity existsEntity = userPartsRepository.findUserPartByUserAndPartColor(partColor.getId(), entity.getUser().getId());
         if (existsEntity != null && (entity.getId() == null || !entity.getId().equals(existsEntity.getId()))) {
             throw new IllegalArgumentException(MessageFormat.format(ENTITY_ALREADY_EXISTS,
-                    UserPartEntity.getDescription(), partColor.getNumber()));
+                    UserPartEntity.getDescription(),
+                    partColor.getNumbers().stream().filter(item -> item.getMain())
+                            .findFirst().orElseThrow(() -> new ValidationException("Не найден главный номер цвета детали"))
+                            .getNumber()));
         }
 
         Long countInSets = userPartsRepository.getPartCountInUserSets(entity.getUser().getId(), entity.getPartColor().getId());

@@ -47,38 +47,38 @@ public class PartDataManagerTest extends DbTest {
         checkPagingDtoList(list, 2, 2L);
         assertTrue(ordering.isOrdered(list.getData()));
     }
-
-    @Test
-    public void save() {
-        // GIVEN
-        PartDto dto = new PartDto();
-        dto.setName("plate 1x10");
-        dto.setNumber("4477");
-        dto.setAlternateNumber("9876");
-        dto.setCategory(new PartCategoryDto());
-        dto.getCategory().setId(entityFinder.findPartCategoryId("brick"));
-
-        // WHEN
-        PartDto saved = partDataManager.save(dto);
-
-        // THEN
-        Assertions.assertNotNull(saved);
-        Assertions.assertNotNull(saved.getId());
-        Assertions.assertEquals(dto.getNumber(), saved.getNumber());
-        Assertions.assertEquals(dto.getName(), saved.getName());
-        Assertions.assertEquals(dto.getCategory().getId(), saved.getCategory().getId());
-        Assertions.assertEquals(dto.getAlternateNumber(), saved.getAlternateNumber());
-    }
-
-    @Test
-    public void deleteById() {
-        // GIVEN
-        Long setId = entityFinder.findPartId("3010");
-
-        // WHEN
-        partDataManager.deleteById(setId);
-
-        // THEN
-        isDeleted(setId, PartEntity.class);
-    }
+//
+//    @Test
+//    public void save() {
+//        // GIVEN
+//        PartDto dto = new PartDto();
+//        dto.setName("plate 1x10");
+//        dto.setNumber("4477");
+//        dto.setAlternateNumber("9876");
+//        dto.setCategory(new PartCategoryDto());
+//        dto.getCategory().setId(entityFinder.findPartCategoryId("brick"));
+//
+//        // WHEN
+//        PartDto saved = partDataManager.save(dto);
+//
+//        // THEN
+//        Assertions.assertNotNull(saved);
+//        Assertions.assertNotNull(saved.getId());
+//        Assertions.assertEquals(dto.getNumber(), saved.getNumber());
+//        Assertions.assertEquals(dto.getName(), saved.getName());
+//        Assertions.assertEquals(dto.getCategory().getId(), saved.getCategory().getId());
+//        Assertions.assertEquals(dto.getAlternateNumber(), saved.getAlternateNumber());
+//    }
+//
+//    @Test
+//    public void deleteById() {
+//        // GIVEN
+//        Long setId = entityFinder.findPartId("3010");
+//
+//        // WHEN
+//        partDataManager.deleteById(setId);
+//
+//        // THEN
+//        isDeleted(setId, PartEntity.class);
+//    }
 }

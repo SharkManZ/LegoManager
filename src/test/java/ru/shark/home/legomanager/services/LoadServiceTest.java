@@ -10,6 +10,7 @@ import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.dto.PartDto;
 import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
+import ru.shark.home.legomanager.loader.SetDataLoader;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
 import java.io.File;
@@ -26,19 +27,22 @@ public class LoadServiceTest extends BaseServiceTest {
     private LoadService loadService;
     private RemoteDataProvider remoteDataProvider;
     private PartColorDataManager partColorDataManager;
+    private SetDataLoader setDataLoader;
 
     @BeforeAll
     public void init() {
         partColorDataManager = mock(PartColorDataManager.class);
         remoteDataProvider = mock(RemoteDataProvider.class);
+        setDataLoader = mock(SetDataLoader.class);
         loadService = new LoadService();
         loadService.setPartColorDataManager(partColorDataManager);
         loadService.setRemoteDataProvider(remoteDataProvider);
+        loadService.setSetDataLoader(setDataLoader);
     }
 
     @BeforeEach
     public void initMethod() {
-        clearInvocations(partColorDataManager);
+        clearInvocations(partColorDataManager, remoteDataProvider);
     }
 
     @Test
@@ -63,6 +67,26 @@ public class LoadServiceTest extends BaseServiceTest {
         Assertions.assertEquals(263, body.size());
         verify(partColorDataManager, times(1)).findALl();
         verify(remoteDataProvider, times(2)).getDataFromUrl(anyString(), anyString());
+    }
+
+    @Test
+    public void loadSetParts() throws IOException, URISyntaxException {
+        // GIVEN
+        String setNumber = "42082";
+        String setData = getFileData("/remote/remote42082SetData.txt");
+        String setPartsData = getFileData("/remote/remote42082PartsData.txt");
+        when(remoteDataProvider.getDataFromUrl(eq(String.format(SOURCE_PORTAL + SET_ID_URL, setNumber)), anyString()))
+                .thenReturn(setData);
+        when(remoteDataProvider.getDataFromUrl(eq(String.format(SOURCE_PORTAL + PARTS_URL, 162427, setNumber)), anyString()))
+                .thenReturn(setPartsData);
+
+        // WHEN
+        BaseResponse response = loadService.loadSetParts("42082");
+
+        // THEN
+        checkResponse(response);
+        verify(remoteDataProvider, times(2)).getDataFromUrl(anyString(), anyString());
+        verify(setDataLoader, times(1)).loadSetParts(eq("42082"), anyList());
     }
 
     private String getFileData(String path) throws IOException, URISyntaxException {

@@ -33,7 +33,7 @@ public class PartService extends BaseLogicService {
         BaseResponse response;
         try {
             response = new BaseResponse();
-            response.setBody(partDataManager.save(dto));
+            response.setBody(partDataManager.savePart(dto));
             response.setSuccess(true);
         } catch (Exception e) {
             response = BaseResponse.buildError(ERR_500, "Ошибка при сохранении детали: " + e.getMessage());

@@ -1,29 +1,32 @@
 package ru.shark.home.legomanager.dao.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
+import ru.shark.home.common.dao.common.RequestSort;
 import ru.shark.home.common.dao.service.BaseDao;
-import ru.shark.home.common.dao.util.SpecificationUtils;
 import ru.shark.home.legomanager.dao.dto.ColorDto;
-import ru.shark.home.legomanager.dao.dto.PartCategoryDto;
+import ru.shark.home.legomanager.dao.dto.NumberDto;
+import ru.shark.home.legomanager.dao.dto.PartDto;
 import ru.shark.home.legomanager.dao.dto.PartFullDto;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
+import ru.shark.home.legomanager.dao.entity.PartNumberEntity;
 import ru.shark.home.legomanager.dao.repository.PartCategoryRepository;
 import ru.shark.home.legomanager.dao.repository.PartColorRepository;
+import ru.shark.home.legomanager.dao.repository.PartNumberRepository;
 import ru.shark.home.legomanager.dao.repository.PartRepository;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -33,49 +36,38 @@ import static ru.shark.home.common.common.ErrorConstants.*;
 public class PartDao extends BaseDao<PartEntity> {
     private static String NAME_FIELD = "name";
     private static String NUMBER_FIELD = "number";
-    private static String ALTERNATE_NUMBER_FIELD = "alternateNumber";
+    private static String ALTERNATE_NUMBER_FIELD_SEARCH = "exists (select 1 from lego_part_number lpn " +
+            "where lpn.lego_part_id = a.id and lpn.lego_number {0})";
 
     private PartRepository partRepository;
     private PartCategoryRepository partCategoryRepository;
     private PartColorRepository partColorRepository;
+    private PartNumberDao partNumberDao;
+    private PartNumberRepository partNumberRepository;
 
     public PartDao() {
         super(PartEntity.class);
     }
 
     public PageableList<PartFullDto> getWithPagination(RequestCriteria request) {
-        Specification<PartEntity> searchSpec = SpecificationUtils.searchSpecification(request.getSearch(),
-                NAME_FIELD, NUMBER_FIELD, ALTERNATE_NUMBER_FIELD);
-        return getListWithAdditionalFields(partRepository.getWithPagination(request, searchSpec, NUMBER_FIELD));
+        List<String> searchFields = Arrays.asList(NAME_FIELD);
+        List<String> advancedSearchFields = Arrays.asList(ALTERNATE_NUMBER_FIELD_SEARCH);
+        if (isEmpty(request.getSorts())) {
+            request.setSorts(Arrays.asList(new RequestSort(NUMBER_FIELD, null)));
+        }
+        return getListWithAdditionalFields(partRepository.getNativeWithPagination("getParts", request,
+                null, searchFields, advancedSearchFields, "getPartsColumns"));
     }
 
-    private PageableList<PartFullDto> getListWithAdditionalFields(PageableList<PartEntity> list) {
+    private PageableList<PartFullDto> getListWithAdditionalFields(PageableList<PartFullDto> list) {
         List<PartFullDto> dtoList = new ArrayList<>();
-        List<Map<String, Object>> partColorsCountByIds = new ArrayList<>();
         List<PartColorEntity> colors = new ArrayList<>();
         if (!isEmpty(list.getData())) {
             List<Long> ids = list.getData().stream().map(entity -> entity.getId()).collect(Collectors.toList());
-            partColorsCountByIds = partRepository.getPartAdditionalDataByIds(ids);
             colors = partColorRepository.getPartColorsByPartIds(ids);
         }
-        for (PartEntity entity : list.getData()) {
-            PartFullDto dto = new PartFullDto();
-            dto.setId(entity.getId());
-            dto.setName(entity.getName());
-            dto.setNumber(entity.getNumber());
-            dto.setAlternateNumber(entity.getAlternateNumber());
-            dto.setColorsCount(((Long) partColorsCountByIds.stream()
-                    .filter(item -> item.get("id").equals(dto.getId()))
-                    .findFirst()
-                    .map(item -> item.get("cnt")).orElse(0L)).intValue());
-            dto.setMinColorNumber((String) partColorsCountByIds.stream()
-                    .filter(item -> item.get("id").equals(dto.getId()))
-                    .findFirst()
-                    .map(item -> item.get("minColorNumber")).orElse(null));
-            dto.setCategory(new PartCategoryDto());
-            dto.getCategory().setId(entity.getCategory().getId());
-            dto.getCategory().setName(entity.getCategory().getName());
-            dto.setColors(getPartColorNumbers(entity.getId(), colors));
+        for (PartFullDto dto : list.getData()) {
+            dto.setColors(getPartColorNumbers(dto.getId(), colors));
 
             dtoList.add(dto);
         }
@@ -93,18 +85,47 @@ public class PartDao extends BaseDao<PartEntity> {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public PartEntity save(PartEntity entity) {
-        if (entity == null) {
+    public PartDto savePart(PartDto dto) {
+        if (dto == null) {
             return null;
         }
-        validateFields(entity);
-        PartEntity setByNumber = partRepository.findPartByNumber(entity.getNumber());
-        if (setByNumber != null && (entity.getId() == null || !entity.getId().equals(setByNumber.getId()))) {
-            throw new ValidationException(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartEntity.getDescription(),
-                    entity.getNumber()));
+        validateFields(dto);
+        List<NumberDto> numbersListDto = mapNumbersToList(dto);
+        List<String> numbers = numbersListDto.stream()
+                .map(item -> item.getNumber().toLowerCase()).collect(Collectors.toList());
+        List<Long> partIdsByNumbers = partRepository.getPartIdsByNumbers(numbers);
+        if (!isEmpty(partIdsByNumbers)) {
+            if (partIdsByNumbers.size() > 1) {
+                throw new ValidationException(MessageFormat.format("Найдено несколько деталей с номерами {0}", numbers));
+            } else if (dto.getId() == null || !dto.getId().equals(partIdsByNumbers.get(0))) {
+                throw new ValidationException(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartEntity.getDescription(),
+                        numbers));
+            }
         }
-        return super.save(entity);
+        PartEntity entity = getConverterUtil().dtoToEntity(dto, PartEntity.class);
+        entity = super.save(entity);
+        PartDto result = getConverterUtil().entityToDto(entity, PartDto.class);
+        List<PartNumberEntity> numberDtos = partNumberDao.savePartNumbers(entity, numbersListDto);
+        result.setNumber(numberDtos.stream().filter(PartNumberEntity::getMain).findFirst()
+                .orElseThrow(() -> new ValidationException("Не найден основной номер детали")).getNumber());
+        if (numberDtos.size() > 1) {
+            result.setAlternateNumber(numberDtos.stream()
+                    .filter(item -> !item.getMain())
+                    .map(item -> item.getNumber())
+                    .collect(Collectors.joining(", ")));
+        }
+        return result;
+    }
+
+    private List<NumberDto> mapNumbersToList(PartDto dto) {
+        List<NumberDto> result = new ArrayList<>();
+        result.add(new NumberDto(dto.getNumber(), true));
+        if (!isBlank(dto.getAlternateNumber())) {
+            result.addAll(Stream.of(dto.getAlternateNumber().split(","))
+                    .map(item -> new NumberDto(item.trim(), false))
+                    .collect(Collectors.toList()));
+        }
+        return result;
     }
 
     @Override
@@ -115,22 +136,22 @@ public class PartDao extends BaseDao<PartEntity> {
         super.deleteById(id);
     }
 
-    private void validateFields(PartEntity partEntity) {
-        if (isBlank(partEntity.getNumber())) {
+    private void validateFields(PartDto dto) {
+        if (isEmpty(dto.getNumber())) {
             throw new ValidationException(MessageFormat.format(ENTITY_EMPTY_FIELD, "number",
                     PartEntity.getDescription()));
         }
-        if (isBlank(partEntity.getName())) {
+        if (isBlank(dto.getName())) {
             throw new ValidationException(MessageFormat.format(ENTITY_EMPTY_FIELD, "name",
                     PartEntity.getDescription()));
         }
-        if (partEntity.getCategory() == null || partEntity.getCategory().getId() == null) {
+        if (dto.getCategory() == null || dto.getCategory().getId() == null) {
             throw new ValidationException(MessageFormat.format(ENTITY_EMPTY_FIELD, "category",
                     PartEntity.getDescription()));
         }
-        partCategoryRepository.findById(partEntity.getCategory().getId()).orElseThrow(() ->
+        partCategoryRepository.findById(dto.getCategory().getId()).orElseThrow(() ->
                 new ValidationException(MessageFormat.format(ENTITY_NOT_FOUND_BY_ID, PartCategoryEntity.getDescription(),
-                        partEntity.getCategory().getId())));
+                        dto.getCategory().getId())));
     }
 
     @Autowired
@@ -146,5 +167,15 @@ public class PartDao extends BaseDao<PartEntity> {
     @Autowired
     public void setPartColorRepository(PartColorRepository partColorRepository) {
         this.partColorRepository = partColorRepository;
+    }
+
+    @Autowired
+    public void setPartNumberDao(PartNumberDao partNumberDao) {
+        this.partNumberDao = partNumberDao;
+    }
+
+    @Autowired
+    public void setPartNumberRepository(PartNumberRepository partNumberRepository) {
+        this.partNumberRepository = partNumberRepository;
     }
 }

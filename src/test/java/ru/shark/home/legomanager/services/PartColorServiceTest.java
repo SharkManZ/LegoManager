@@ -46,14 +46,14 @@ public class PartColorServiceTest extends BaseServiceTest {
     @Test
     public void save() {
         // GIVEN
-        when(partColorDataManager.save(any(PartColorDto.class))).thenReturn(new PartColorDto());
+        when(partColorDataManager.savePartColor(any(PartColorDto.class))).thenReturn(new PartColorDto());
 
         // WHEN
         BaseResponse response = partColorService.save(new PartColorDto());
 
         // THEN
         checkResponseWithBody(response);
-        verify(partColorDataManager, times(1)).save(any(PartColorDto.class));
+        verify(partColorDataManager, times(1)).savePartColor(any(PartColorDto.class));
     }
 
     @Test

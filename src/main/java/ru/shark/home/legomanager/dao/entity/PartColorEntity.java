@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.dao.entity;
 import ru.shark.home.common.dao.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "LEGO_PART_COLOR")
@@ -27,11 +28,8 @@ public class PartColorEntity extends BaseEntity {
     @JoinColumn(name = "LEGO_COLOR_ID", nullable = false)
     private ColorEntity color;
 
-    @Column(name = "LEGO_NUMBER", length = 10, nullable = false)
-    private String number;
-
-    @Column(name = "LEGO_ALTERNATE_NUMBER")
-    private String alternateNumber;
+    @OneToMany(mappedBy = "partColor", fetch = FetchType.EAGER)
+    private Set<PartColorNumberEntity> numbers;
 
     @Override
     public Long getId() {
@@ -59,20 +57,12 @@ public class PartColorEntity extends BaseEntity {
         this.color = color;
     }
 
-    public String getNumber() {
-        return number;
+    public Set<PartColorNumberEntity> getNumbers() {
+        return numbers;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getAlternateNumber() {
-        return alternateNumber;
-    }
-
-    public void setAlternateNumber(String alternateNumber) {
-        this.alternateNumber = alternateNumber;
+    public void setNumbers(Set<PartColorNumberEntity> numbers) {
+        this.numbers = numbers;
     }
 
     public static String getDescription() {

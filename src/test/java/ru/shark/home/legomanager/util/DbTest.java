@@ -87,4 +87,8 @@ public class DbTest {
     public void cleanUp() {
         testDataLoader.cleanUp();
     }
+
+    protected EntityManager getEm() {
+        return em;
+    }
 }

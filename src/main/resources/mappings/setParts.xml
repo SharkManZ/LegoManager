@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm"
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
-        http://java.sun.com/xml/ns/persistence/orm_2_0.xsd ">
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     <!-- Детали набора -->
-    <named-query name="getSetPartsBySetId">
-        <query>select sp from SetPartEntity sp
-            join sp.partColor pc
-            join pc.part p
-            join p.category ca
-            join pc.color c
-            where sp.set.id = :setId
-            order by sp.id desc
-        </query>
-    </named-query>
     <named-query name="getSetPartBySetAndPrtColorId">
         <query>select sp from SetPartEntity sp where sp.set.id = :setId and sp.partColor.id = :partColorId</query>
     </named-query>
@@ -26,4 +15,43 @@
             where s.set.id = :setId
         </query>
     </named-query>
+
+    <named-native-query name="getSetPartsBySetId" result-set-mapping="getSetPartsBySetIdColumns">
+        <query>
+            select id, setId, partColorId, partsCount,
+                   colorNumber, alternateColorNumber, number, alternateNumber, partName, hexColor
+            from (
+            select sp.LEGO_ID as id, sp.LEGO_SET_ID as setId, pc.LEGO_ID as partColorId, sp.LEGO_COUNT as partsCount,
+                   lpc.LEGO_NUMBER as colorNumber,
+                   (select string_agg(lpc1.lego_number, ', ' order by lpc1.lego_number) from LEGO_PART_COLOR_NUMBER lpc1 where lpc1.LEGO_PART_COLOR_ID = pc.lego_id and lego_main = false) as alternateColorNumber,
+                   lpn.LEGO_NUMBER as number,
+                   (select string_agg(lpn1.lego_number, ', ' order by lpn1.lego_number) from lego_part_number lpn1 where lpn1.lego_part_id = p.lego_id and lego_main = false) as alternateNumber,
+                   p.LEGO_NAME as partName, c.LEGO_HEX_COLOR as hexColor, c.LEGO_NAME as colorName, c.LEGO_ID as colorId,
+                   ca.LEGO_ID as categoryId
+            from LEGO_SET_PART sp
+            join LEGO_PART_COLOR pc on pc.LEGO_ID = sp.LEGO_PART_COLOR_ID
+            join LEGO_PART p on p.LEGO_ID = pc.LEGO_PART_ID
+            join LEGO_PART_CATEGORY ca on ca.LEGO_ID = p.LEGO_PART_CATEGORY_ID
+            join LEGO_COLOR c on c.LEGO_ID = pc.LEGO_COLOR_ID
+            join LEGO_PART_NUMBER lpn on lpn.LEGO_PART_ID = p.LEGO_ID and lpn.LEGO_MAIN = true
+            join LEGO_PART_COLOR_NUMBER lpc on lpc.LEGO_PART_COLOR_ID = pc.LEGO_ID and lpc.LEGO_MAIN = true
+            where sp.LEGO_SET_ID = :setId) a
+            order by id desc
+        </query>
+    </named-native-query>
+
+    <sql-result-set-mapping name="getSetPartsBySetIdColumns">
+        <constructor-result target-class="ru.shark.home.legomanager.dao.dto.SetPartFullDto">
+            <column name="id" class="java.lang.Long"/>
+            <column name="setId" class="java.lang.Long"/>
+            <column name="partColorId" class="java.lang.Long"/>
+            <column name="partsCount" class="java.lang.Integer"/>
+            <column name="colorNumber" class="java.lang.String"/>
+            <column name="alternateColorNumber" class="java.lang.String"/>
+            <column name="number" class="java.lang.String"/>
+            <column name="alternateNumber" class="java.lang.String"/>
+            <column name="partName" class="java.lang.String"/>
+            <column name="hexColor" class="java.lang.String"/>
+        </constructor-result>
+    </sql-result-set-mapping>
 </entity-mappings>

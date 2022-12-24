@@ -5,37 +5,42 @@
         http://java.sun.com/xml/ns/persistence/orm_2_0.xsd ">
     <!-- Цвета деталей-->
     <named-query name="getPartColorsByPartId">
-        <query>select pc from PartColorEntity pc where pc.part.id = :partId order by pc.number</query>
+        <query>select pc from PartColorEntity pc
+            join pc.numbers pn with pn.main = true
+            where pc.part.id = :partId order by pn.number</query>
     </named-query>
     <named-query name="getPartColorsByPartIds">
-        <query>select pc from PartColorEntity pc where pc.part.id in (:partIds) order by pc.part.id, pc.number</query>
+        <query>select pc from PartColorEntity pc join pc.numbers pcn with pcn.main = true
+            where pc.part.id in (:partIds) order by pc.part.id, pcn.number</query>
     </named-query>
     <named-query name="getPartColorsByPartIdAndEqualsSearch">
-        <query>select pc from PartColorEntity pc where pc.part.id = :partId
+        <query>select pc from PartColorEntity pc join pc.numbers pcn with pcn.main = true
+            where pc.part.id = :partId
             and lower(pc.color.name) = lower(:search)
-            order by pc.number
+            order by pcn.number
         </query>
     </named-query>
     <named-query name="getPartColorsByPartIdAndNotEqualsSearch">
-        <query>select pc from PartColorEntity pc where pc.part.id = :partId
+        <query>select pc from PartColorEntity pc join pc.numbers pcn with pcn.main = true
+            where pc.part.id = :partId
             and lower(pc.color.name) like '%' || lower(:search) || '%'
-            order by pc.number
+            order by pcn.number
         </query>
     </named-query>
     <named-query name="getPartColorCountByNumber">
-        <query>select count(pc.id) from PartColorEntity pc where lower(pc.number) = lower(:number) or
-            lower(pc.alternateNumber) like '%' || lower(:number) || '%'
+        <query>select count(pc.id) from PartColorEntity pc where
+            exists (select 1 from PartColorNumberEntity pcn where pcn.partColor.id = pc.id and lower(pcn.number) = lower(:number))
         </query>
     </named-query>
     <named-query name="getPartColorByNumber">
-        <query>select pc from PartColorEntity pc where lower(pc.number) = lower(:number) or
-            lower(pc.alternateNumber) like '%' || lower(:number) || '%'
+        <query>select pc from PartColorEntity pc
+            where exists (select 1 from PartColorNumberEntity pcn where pcn.partColor.id = pc.id and lower(pcn.number) = lower(:number))
         </query>
     </named-query>
     <named-query name="getPartColorByNumberPartNumber">
         <query>select pc from PartColorEntity pc join pc.part p
-            where (lower(pc.number) = lower(:number) or
-            lower(pc.alternateNumber) like '%' || lower(:number) || '%')and lower(p.number) = lower(:partNumber)
+            where exists (select 1 from PartNumberEntity pn where pn.part.id = p.id and lower(pn.number) = lower(:partNumber))
+            and exists (select 1 from PartColorNumberEntity pcn where pcn.partColor.id = pc.id and lower(pcn.number) = lower(:number))
         </query>
     </named-query>
     <named-query name="getPartColorByPartAndColor">
@@ -44,14 +49,10 @@
 
     <named-native-query name="getPartColorIdByPartColorNumberAndPartNumber">
         <query>
-            select a.lego_id from (
-            select  lpc.lego_id,
-                    string_to_array(replace(lpc.lego_number || case when lpc.lego_alternate_number is not null then ( ',' || lpc.lego_alternate_number) else '' end, ' ', ''), ',') as colorNums,
-                    string_to_array(replace(lp.lego_number || case when lp.lego_alternate_number is not null then ( ',' || lp.lego_alternate_number) else '' end, ' ', ''),',') as partNums
+            select  lpc.lego_id
             from lego_part_color lpc join lego_part lp on lp.lego_id = lpc.LEGO_PART_ID
-                ) a
-            where array_position(cast(a.partNums as varchar[]), :partNumber) > 0
-            and array_position(cast(a.colorNums as varchar[]), :colorNumber) > 0
+                where exists (select 1 from lego_part_number pn where pn.lego_part_id = lp.lego_id and lower(pn.lego_number) = :partNumber)
+                and exists (select 1 from lego_part_color_number pcn where pcn.lego_part_color_id = lpc.lego_id and lower(pcn.lego_number) = :colorNumber)
         </query>
     </named-native-query>
 </entity-mappings>

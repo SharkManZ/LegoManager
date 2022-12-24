@@ -1,6 +1,5 @@
 package ru.shark.home.legomanager.dao.repository;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -8,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
 import ru.shark.home.legomanager.util.DbTest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class PartRepositoryTest extends DbTest {
     @Autowired
@@ -25,13 +22,13 @@ public class PartRepositoryTest extends DbTest {
     }
 
     @Test
-    public void findSetByNumber() {
+    public void findPartByNumber() {
         // WHEN
         PartEntity entity = partRepository.findPartByNumber("3010");
 
         // THEN
         Assertions.assertNotNull(entity);
-        Assertions.assertEquals(entity.getNumber(), "3010");
+        Assertions.assertTrue(entity.getNumbers().stream().anyMatch(item -> item.getNumber().equalsIgnoreCase("3010")));
     }
 
     @Test
@@ -56,24 +53,6 @@ public class PartRepositoryTest extends DbTest {
     }
 
     @Test
-    public void getPartColorsCountByIds() {
-        // GIVEN
-        Map<Long, Pair<Long, String>> counts = new HashMap<>();
-        counts.put(entityFinder.findPartId("3010"), Pair.of(2L, "112231"));
-        counts.put(entityFinder.findPartId("3001"), Pair.of(0L, null));
-
-        // WHEN
-        List<Map<String, Object>> partCounts = partRepository.getPartAdditionalDataByIds(new ArrayList<>(counts.keySet()));
-
-        // THEN
-        Assertions.assertEquals(counts.size(), partCounts.size());
-        partCounts.forEach(count -> {
-            Assertions.assertEquals(counts.get(count.get("id")).getLeft(), count.get("cnt"));
-            Assertions.assertEquals(counts.get(count.get("id")).getRight(), count.get("minColorNumber"));
-        });
-    }
-
-    @Test
     public void findByCategoryId() {
         // GIVEN
         Long categoryId = entityFinder.findPartCategoryId("Brick");
@@ -84,5 +63,18 @@ public class PartRepositoryTest extends DbTest {
         // THEN
         Assertions.assertFalse(list.isEmpty());
         Assertions.assertTrue(list.stream().allMatch(item -> item.getCategory().getId().equals(categoryId)));
+    }
+
+    @Test
+    public void getPartIdsByNumbers() {
+        // GIVEN
+        List<Long> ids = Arrays.asList(entityFinder.findPartId("3010"), entityFinder.findPartId("3001"));
+
+        // WHEN
+        List<Long> partIdsByNumbers = partRepository.getPartIdsByNumbers(Arrays.asList("3010", "3001"));
+
+        // THEN
+        Assertions.assertEquals(2, partIdsByNumbers.size());
+        Assertions.assertTrue(partIdsByNumbers.containsAll(ids));
     }
 }

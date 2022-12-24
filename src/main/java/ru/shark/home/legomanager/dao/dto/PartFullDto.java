@@ -7,6 +7,17 @@ public class PartFullDto extends PartDto{
     private String minColorNumber;
     private List<ColorDto> colors;
 
+    public PartFullDto() {
+
+    }
+
+    public PartFullDto(Long id, String name, Long categoryId, String categoryName, String number,
+                       String alternateNumber, Integer colorsCount, String minColorNumber) {
+        super(id, name, number, alternateNumber, new PartCategoryDto(categoryId, categoryName));
+        this.colorsCount = colorsCount;
+        this.minColorNumber = minColorNumber;
+    }
+
     public Integer getColorsCount() {
         return colorsCount;
     }

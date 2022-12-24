@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm"
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
-        http://java.sun.com/xml/ns/persistence/orm_2_0.xsd ">
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     <!-- Детали-->
     <named-query name="findPartByNumber">
-        <query>select p from PartEntity p where lower(p.number) = lower(:number)</query>
+        <query>select p from PartEntity p where
+            exists (select 1 from PartNumberEntity pn where pn.part.id = p.id and lower(pn.number) = lower(:number))
+        </query>
     </named-query>
     <named-query name="getPartCountByCategory">
         <query>select count(1) from PartEntity p where p.category.id = :categoryId</query>
@@ -13,12 +14,36 @@
     <named-query name="getPartsCount">
         <query>select count(p.id) from PartEntity p</query>
     </named-query>
-    <named-query name="getPartAdditionalDataByIds">
-        <query>select new Map(p.id as id,
-            (select count(1) from PartColorEntity pc where pc.part.id = p.id) as cnt,
-            (select min(pc.number) from PartColorEntity pc where pc.part.id = p.id) as minColorNumber
-            )
-            from PartEntity p where p.id in (:ids)
+    <named-query name="getPartIdsByNumbers">
+        <query>
+            select distinct pn.part.id
+            from PartNumberEntity pn
+            where lower(pn.number) in (:numbers)
         </query>
     </named-query>
+    <named-native-query name="getParts">
+        <query>
+            select id, name, categoryId, categoryName, number, alternateNumber, colorsCount, minColorNumber
+            from (
+            select lp.lego_id as id, lp.lego_name as name, lpc.lego_id as categoryId, lpc.lego_name as categoryName,
+            (select lpn.lego_number from lego_part_number lpn where lpn.lego_part_id = lp.lego_id and lego_main = true) as number,
+            (select string_agg(lpn.lego_number, ', ' order by lpn.lego_number) from lego_part_number lpn where lpn.lego_part_id = lp.lego_id and lego_main = false) as alternateNumber,
+            (select count(1) from lego_part_color lc where lc.lego_part_id = lp.lego_id) as colorsCount,
+            (select min(pcn.lego_number) from lego_part_color lc join lego_part_color_number pcn on pcn.lego_part_color_id = lc.lego_id where lc.lego_part_id = lp.lego_id) as minColorNumber
+            from lego_part lp
+            join lego_part_category lpc on lpc.lego_id = lp.lego_part_category_id) a
+        </query>
+    </named-native-query>
+    <sql-result-set-mapping name="getPartsColumns">
+        <constructor-result target-class="ru.shark.home.legomanager.dao.dto.PartFullDto">
+            <column name="id" class="java.lang.Long"/>
+            <column name="name" class="java.lang.String"/>
+            <column name="categoryId" class="java.lang.Long"/>
+            <column name="categoryName" class="java.lang.String"/>
+            <column name="number" class="java.lang.String"/>
+            <column name="alternateNumber" class="java.lang.String"/>
+            <column name="colorsCount" class="java.lang.Integer"/>
+            <column name="minColorNumber" class="java.lang.String"/>
+        </constructor-result>
+    </sql-result-set-mapping>
 </entity-mappings>

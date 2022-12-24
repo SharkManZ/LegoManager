@@ -38,7 +38,7 @@ public class SetPartDaoTest extends DbTest {
         Long setId = entityFinder.findSetId("42082");
         ColorEntity color = entityFinder.findColor("Black");
         RequestCriteria request = new RequestCriteria(0, 10);
-        request.setFilters(Arrays.asList(new RequestFilter("partColor.color.id", FieldType.INTEGER, "=", color.getId().toString())));
+        request.setFilters(Arrays.asList(new RequestFilter("colorId", FieldType.INTEGER, "=", color.getId().toString())));
 
         // WHEN
         PageableList<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, request);
@@ -65,7 +65,7 @@ public class SetPartDaoTest extends DbTest {
         Long catId = entityFinder.findPartCategoryId("Tile");
         Long partColorId = entityFinder.findPartColorId("55521");
         RequestCriteria request = new RequestCriteria(0, 10);
-        request.setFilters(Arrays.asList(new RequestFilter("partColor.part.category.id", FieldType.INTEGER, "=", catId.toString())));
+        request.setFilters(Arrays.asList(new RequestFilter("categoryId", FieldType.INTEGER, "=", catId.toString())));
 
         // WHEN
         PageableList<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, request);
@@ -112,7 +112,7 @@ public class SetPartDaoTest extends DbTest {
         // GIVEN
         Long setId = entityFinder.findSetId("42082");
         RequestCriteria requestCriteria = new RequestCriteria(0, 10);
-        requestCriteria.setSorts(Arrays.asList(new RequestSort("partColor.number", "desc")));
+        requestCriteria.setSorts(Arrays.asList(new RequestSort("colorNumber", "desc")));
 
         // WHEN
         PageableList<SetPartFullDto> list = setPartDao.getPartsBySetId(setId, requestCriteria);

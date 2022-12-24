@@ -56,7 +56,7 @@ public class PartCategoryEndpointTest extends BaseEndpointTest {
     @Test
     public void save() {
         // WHEN
-        Response response = partCategoryEndpoint.save(new PartCategoryDto());
+        Response response = partCategoryEndpoint.save(new PartCategoryDto(1L, "name"));
 
         // THEN
         checkResponse(response);

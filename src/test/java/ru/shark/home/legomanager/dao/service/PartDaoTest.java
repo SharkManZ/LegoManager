@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.common.RequestSearch;
+import ru.shark.home.legomanager.dao.dto.PartCategoryDto;
+import ru.shark.home.legomanager.dao.dto.PartDto;
 import ru.shark.home.legomanager.dao.dto.PartFullDto;
 import ru.shark.home.legomanager.dao.entity.PartCategoryEntity;
 import ru.shark.home.legomanager.dao.entity.PartEntity;
@@ -18,9 +20,7 @@ import ru.shark.home.legomanager.util.DbTest;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -41,6 +41,7 @@ public class PartDaoTest extends DbTest {
 
     @Test
     public void getWithPagination() {
+
         // GIVEN
         Ordering<PartFullDto> ordering = new Ordering<PartFullDto>() {
             @Override
@@ -96,87 +97,87 @@ public class PartDaoTest extends DbTest {
     @Test
     public void saveWithCreate() {
         // GIVEN
-        PartEntity entity = prepareEntity();
+        PartDto dto = prepareDto();
 
         // WHEN
-        PartEntity saved = partDao.save(entity);
+        PartDto saved = partDao.savePart(dto);
 
         // THEN
         Assertions.assertNotNull(saved);
         Assertions.assertNotNull(saved.getId());
-        Assertions.assertEquals(entity.getName(), saved.getName());
-        Assertions.assertEquals(entity.getNumber(), saved.getNumber());
-        Assertions.assertEquals(entity.getCategory().getId(), saved.getCategory().getId());
-        Assertions.assertEquals(entity.getAlternateNumber(), saved.getAlternateNumber());
+        Assertions.assertEquals(dto.getName(), saved.getName());
+        Assertions.assertEquals(dto.getNumber(), saved.getNumber());
+        Assertions.assertEquals(dto.getCategory().getId(), saved.getCategory().getId());
+        Assertions.assertEquals(dto.getAlternateNumber(), saved.getAlternateNumber());
     }
 
     @Test
     public void saveWithUpdate() {
         // GIVEN
-        PartEntity entity = prepareEntity();
-        entity.setId(entityFinder.findPartId("3010"));
+        PartDto dto = prepareDto();
+        dto.setId(entityFinder.findPartId("3010"));
 
         // WHEN
-        PartEntity saved = partDao.save(entity);
+        PartDto saved = partDao.savePart(dto);
 
         // THEN
         Assertions.assertNotNull(saved);
-        Assertions.assertEquals(entity.getId(), saved.getId());
-        Assertions.assertEquals(entity.getName(), saved.getName());
-        Assertions.assertEquals(entity.getNumber(), saved.getNumber());
-        Assertions.assertEquals(entity.getCategory().getId(), saved.getCategory().getId());
-        Assertions.assertEquals(entity.getAlternateNumber(), saved.getAlternateNumber());
+        Assertions.assertEquals(dto.getId(), saved.getId());
+        Assertions.assertEquals(dto.getName(), saved.getName());
+        Assertions.assertEquals(dto.getNumber(), saved.getNumber());
+        Assertions.assertEquals(dto.getCategory().getId(), saved.getCategory().getId());
+        Assertions.assertEquals(dto.getAlternateNumber(), saved.getAlternateNumber());
     }
 
     @Test
     public void saveWithCreateAndExists() {
         // GIVEN
-        PartEntity entity = prepareEntity();
-        entity.setNumber("3010");
+        PartDto dto = prepareDto();
+        dto.setNumber("3010");
 
         // WHEN
-        ValidationException validationException = assertThrows(ValidationException.class, () -> partDao.save(entity));
+        ValidationException validationException = assertThrows(ValidationException.class, () -> partDao.savePart(dto));
 
         // THEN
         Assertions.assertEquals(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartEntity.getDescription(),
-                entity.getNumber()), validationException.getMessage());
+                Arrays.asList(dto.getNumber(), dto.getAlternateNumber())), validationException.getMessage());
     }
 
     @Test
     public void saveWithUpdateAndExists() {
         // GIVEN
-        PartEntity entity = prepareEntity();
-        entity.setId(entityFinder.findPartId("3010"));
-        entity.setNumber("3001");
+        PartDto dto = prepareDto();
+        dto.setId(entityFinder.findPartId("3010"));
+        dto.setNumber("3001");
 
         // WHEN
-        ValidationException validationException = assertThrows(ValidationException.class, () -> partDao.save(entity));
+        ValidationException validationException = assertThrows(ValidationException.class, () -> partDao.savePart(dto));
 
         // THEN
         Assertions.assertEquals(MessageFormat.format(ENTITY_ALREADY_EXISTS, PartEntity.getDescription(),
-                entity.getNumber()), validationException.getMessage());
+                Arrays.asList(dto.getNumber(), dto.getAlternateNumber())), validationException.getMessage());
     }
 
     @Test
     public void saveWithValidation() {
         // GIVEN
-        PartEntity entityNoName = prepareEntity();
-        entityNoName.setName(null);
-        PartEntity entityNoNumber = prepareEntity();
-        entityNoNumber.setNumber(null);
-        PartEntity entityNoCategory = prepareEntity();
-        entityNoCategory.setCategory(null);
-        PartEntity entityNoCategoryId = prepareEntity();
-        entityNoCategoryId.getCategory().setId(null);
-        PartEntity entityCategoryNotFound = prepareEntity();
-        entityCategoryNotFound.getCategory().setId(999L);
+        PartDto dtoNoName = prepareDto();
+        dtoNoName.setName(null);
+        PartDto dtoNoNumber = prepareDto();
+        dtoNoNumber.setNumber(null);
+        PartDto dtoNoCategory = prepareDto();
+        dtoNoCategory.setCategory(null);
+        PartDto dtoNoCategoryId = prepareDto();
+        dtoNoCategoryId.getCategory().setId(null);
+        PartDto dtoCategoryNotFound = prepareDto();
+        dtoCategoryNotFound.getCategory().setId(999L);
 
         // WHEN
-        ValidationException noName = assertThrows(ValidationException.class, () -> partDao.save(entityNoName));
-        ValidationException noNumber = assertThrows(ValidationException.class, () -> partDao.save(entityNoNumber));
-        ValidationException noCategory = assertThrows(ValidationException.class, () -> partDao.save(entityNoCategory));
-        ValidationException noCategoryId = assertThrows(ValidationException.class, () -> partDao.save(entityNoCategoryId));
-        ValidationException categoryNotFound = assertThrows(ValidationException.class, () -> partDao.save(entityCategoryNotFound));
+        ValidationException noName = assertThrows(ValidationException.class, () -> partDao.savePart(dtoNoName));
+        ValidationException noNumber = assertThrows(ValidationException.class, () -> partDao.savePart(dtoNoNumber));
+        ValidationException noCategory = assertThrows(ValidationException.class, () -> partDao.savePart(dtoNoCategory));
+        ValidationException noCategoryId = assertThrows(ValidationException.class, () -> partDao.savePart(dtoNoCategoryId));
+        ValidationException categoryNotFound = assertThrows(ValidationException.class, () -> partDao.savePart(dtoCategoryNotFound));
 
         // THEN
         Assertions.assertEquals(MessageFormat.format(ENTITY_EMPTY_FIELD, "name",
@@ -188,7 +189,7 @@ public class PartDaoTest extends DbTest {
         Assertions.assertEquals(MessageFormat.format(ENTITY_EMPTY_FIELD, "category",
                 PartEntity.getDescription()), noCategoryId.getMessage());
         Assertions.assertEquals(MessageFormat.format(ENTITY_NOT_FOUND_BY_ID, PartCategoryEntity.getDescription(),
-                entityCategoryNotFound.getCategory().getId()), categoryNotFound.getMessage());
+                dtoCategoryNotFound.getCategory().getId()), categoryNotFound.getMessage());
     }
 
     @Test
@@ -203,13 +204,12 @@ public class PartDaoTest extends DbTest {
         isDeleted(setId, SetEntity.class);
     }
 
-    private PartEntity prepareEntity() {
-        PartEntity entity = new PartEntity();
-        entity.setCategory(new PartCategoryEntity());
-        entity.getCategory().setId(entityFinder.findPartCategoryId("brick"));
-        entity.setName("plate 1x10");
-        entity.setNumber("4488");
-        entity.setAlternateNumber("8844");
-        return entity;
+    private PartDto prepareDto() {
+        PartDto dto = new PartDto();
+        dto.setCategory(new PartCategoryDto(entityFinder.findPartCategoryId("brick"), null));
+        dto.setName("plate 1x10");
+        dto.setNumber("4488");
+        dto.setAlternateNumber("8844");
+        return dto;
     }
 }

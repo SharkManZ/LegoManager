@@ -8,6 +8,18 @@ public class PartDto extends BaseDto {
     private String alternateNumber;
     private PartCategoryDto category;
 
+    public PartDto() {
+
+    }
+
+    public PartDto(Long id, String name, String number, String alternateNumber, PartCategoryDto partCategoryDto) {
+        this.setId(id);
+        this.name = name;
+        this.number = number;
+        this.alternateNumber = alternateNumber;
+        this.category = partCategoryDto;
+    }
+
     public String getName() {
         return name;
     }

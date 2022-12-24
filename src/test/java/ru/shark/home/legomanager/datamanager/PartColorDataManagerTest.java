@@ -98,6 +98,6 @@ public class PartColorDataManagerTest extends DbTest {
 
         // THEN
         Assertions.assertNotNull(search);
-        Assertions.assertEquals(search.getNumber(), dto.getSearchValue());
+        Assertions.assertEquals(dto.getSearchValue(), search.getNumber());
     }
 }

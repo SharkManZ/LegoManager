@@ -1,38 +1,77 @@
 [
   {
     "name": "Brick 1x4",
-    "number": "3010",
-    "alternateNumber": "1001",
+    "numbers": [
+      {
+        "number": "3010",
+        "main": true
+      },
+      {
+        "number": "1001"
+      }
+    ],
     "category": "Brick",
     "colors": [
       {
         "color": "Black",
-        "number": "112231",
-        "alternateNumber": "1122319"
+        "numbers": [
+          {
+            "number": "112231",
+            "main": true
+          },
+          {
+            "number": "1122319"
+          }
+        ]
       },
       {
         "color": "Red",
-        "number": "332221"
+        "numbers": [
+          {
+            "number": "332221",
+            "main": true
+          }
+        ]
       }
     ]
   },
   {
     "name": "Brick 2x4",
-    "number": "3001",
+    "numbers": [
+      {
+        "number": "3001",
+        "main": true
+      }
+    ],
     "category": "Brick"
   },
   {
     "name": "Tile 1x1",
-    "number": "555",
+    "numbers": [
+      {
+        "number": "555",
+        "main": true
+      }
+    ],
     "category": "Tile",
     "colors": [
       {
         "color": "Black",
-        "number": "55531"
+        "numbers": [
+          {
+            "number": "55531",
+            "main": true
+          }
+        ]
       },
       {
         "color": "Red",
-        "number": "55521"
+        "numbers": [
+          {
+            "number": "55521",
+            "main": true
+          }
+        ]
       }
     ]
   }

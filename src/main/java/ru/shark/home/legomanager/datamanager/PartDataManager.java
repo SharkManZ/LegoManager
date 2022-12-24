@@ -18,6 +18,10 @@ public class PartDataManager extends BaseDataManager<PartEntity, PartDto> {
     public PageableList<PartFullDto> getWithPagination(RequestCriteria request) {
         PartDao dao = (PartDao) getDao();
         return dao.getWithPagination(request);
+    }
 
+    public PartDto savePart(PartDto dto) {
+        PartDao dao = (PartDao) getDao();
+        return dao.savePart(dto);
     }
 }

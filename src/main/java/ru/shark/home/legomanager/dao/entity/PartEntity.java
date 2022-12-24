@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.dao.entity;
 import ru.shark.home.common.dao.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "LEGO_PART")
@@ -21,11 +22,8 @@ public class PartEntity extends BaseEntity {
     @Column(name = "LEGO_NAME", nullable = false)
     private String name;
 
-    @Column(name = "LEGO_NUMBER", length = 20, nullable = false)
-    private String number;
-
-    @Column(name = "LEGO_ALTERNATE_NUMBER")
-    private String alternateNumber;
+    @OneToMany(mappedBy = "part", fetch = FetchType.EAGER)
+    private Set<PartNumberEntity> numbers;
 
     @ManyToOne
     @JoinColumn(name = "LEGO_PART_CATEGORY_ID", nullable = false)
@@ -49,20 +47,12 @@ public class PartEntity extends BaseEntity {
         this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public Set<PartNumberEntity> getNumbers() {
+        return numbers;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getAlternateNumber() {
-        return alternateNumber;
-    }
-
-    public void setAlternateNumber(String alternateNumber) {
-        this.alternateNumber = alternateNumber;
+    public void setNumbers(Set<PartNumberEntity> numbers) {
+        this.numbers = numbers;
     }
 
     public PartCategoryEntity getCategory() {

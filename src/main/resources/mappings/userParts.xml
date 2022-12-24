@@ -33,9 +33,12 @@
             categoryId, categoryName, partName, colorId, colorName,
             sum(coalesce(setsCount, 0)) + sum(coalesce(userCount, 0)) as userCount, max(coalesce(setsCount, 0)) as setsCount
             from (
-                select null as id, lpc.lego_id as partColorId, lus.lego_user_id as userId, lpc.lego_number as colorNumber,
-                    lpc.lego_alternate_number as alternateColorNumber, lp.lego_number as number,
-                    lp.lego_alternate_number as alternateNumber, lc.lego_id as colorId, lc.lego_name as colorName,
+                select null as id, lpc.lego_id as partColorId, lus.lego_user_id as userId,
+                    (select lpn.lego_number from lego_part_color_number lpn where lpn.lego_part_color_id = lpc.lego_id and lpn.lego_main = true) as colorNumber,
+                    (select string_agg(lpn.lego_number, ', ' order by lpn.lego_number) from lego_part_color_number lpn where lpn.lego_part_color_id = lpc.lego_id and lpn.lego_main = false) as alternateColorNumber,
+                    (select lpn.lego_number from lego_part_number lpn where lpn.lego_part_id = lp.lego_id and lpn.lego_main = true) as number,
+                    (select string_agg(lpn.lego_number, ', ' order by lpn.lego_number) from lego_part_number lpn where lpn.lego_part_id = lp.lego_id and lpn.lego_main = false) as alternateNumber,
+                    lc.lego_id as colorId, lc.lego_name as colorName,
                     lpcc.lego_id as categoryId, lpcc.lego_name as categoryName, lp.lego_name as partName, null as userCount, sum(lsp.lego_count) as setsCount
                 from lego_user_sets lus
                     join lego_set_part lsp on lsp.lego_set_id = lus.lego_set_id
@@ -44,12 +47,15 @@
                     join lego_part_category lpcc on lpcc.lego_id = lp.lego_part_category_id
                     join lego_color lc on lc.lego_id = lpc.lego_color_id
                 where lus.lego_user_id = :userId
-                group by lus.lego_user_id, lpc.lego_id, lpc.lego_number, lpc.lego_alternate_number, lp.lego_number,
-                    lp.lego_alternate_number, lc.lego_id, lc.lego_name, lpcc.lego_id, lpcc.lego_name, lp.lego_name
+                group by lus.lego_user_id, lpc.lego_id, lp.lego_id,
+                    lc.lego_id, lc.lego_name, lpcc.lego_id, lpcc.lego_name, lp.lego_name
                 union all
-                select lup.lego_id as id, lup.lego_part_color_id as partColorId, lup.lego_user_id as userId, lpc.lego_number as colorNumber,
-                    lpc.lego_alternate_number as alternateColorNumber, lp.lego_number as number,
-                    lp.lego_alternate_number as alternateNumber, lc.lego_id as colorId, lc.lego_name as colorName,
+                select lup.lego_id as id, lup.lego_part_color_id as partColorId, lup.lego_user_id as userId,
+                    (select lpn.lego_number from lego_part_color_number lpn where lpn.lego_part_color_id = lpc.lego_id and lpn.lego_main = true) as colorNumber,
+                    (select string_agg(lpn.lego_number, ', ' order by lpn.lego_number) from lego_part_color_number lpn where lpn.lego_part_color_id = lpc.lego_id and lpn.lego_main = false) as alternateColorNumber,
+                    (select lpn.lego_number from lego_part_number lpn where lpn.lego_part_id = lp.lego_id and lpn.lego_main = true) as number,
+                    (select string_agg(lpn.lego_number, ', ' order by lpn.lego_number) from lego_part_number lpn where lpn.lego_part_id = lp.lego_id and lpn.lego_main = false) as alternateNumber,
+                    lc.lego_id as colorId, lc.lego_name as colorName,
                     lpcc.lego_id as categoryId, lpcc.lego_name as categoryName, lp.lego_name as partName, lup.lego_count as userCount, null as setsCount
                 from lego_user_parts lup
                     join lego_part_color lpc on lpc.lego_id = lup.lego_part_color_id

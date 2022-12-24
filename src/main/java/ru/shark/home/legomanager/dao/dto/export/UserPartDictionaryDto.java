@@ -2,7 +2,7 @@ package ru.shark.home.legomanager.dao.dto.export;
 
 public class UserPartDictionaryDto {
     private String partNumber;
-    private String partColorNUmber;
+    private String partColorNumber;
     private Integer count;
 
     public String getPartNumber() {
@@ -13,12 +13,12 @@ public class UserPartDictionaryDto {
         this.partNumber = partNumber;
     }
 
-    public String getPartColorNUmber() {
-        return partColorNUmber;
+    public String getPartColorNumber() {
+        return partColorNumber;
     }
 
-    public void setPartColorNUmber(String partColorNUmber) {
-        this.partColorNUmber = partColorNUmber;
+    public void setPartColorNumber(String partColorNumber) {
+        this.partColorNumber = partColorNumber;
     }
 
     public Integer getCount() {
