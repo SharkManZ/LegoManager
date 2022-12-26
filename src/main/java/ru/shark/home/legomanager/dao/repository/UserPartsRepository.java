@@ -37,4 +37,22 @@ public interface UserPartsRepository extends BaseRepository<UserPartEntity> {
      */
     @Query(name = "getPartCountInUserSets")
     Long getPartCountInUserSets(@Param("userId") Long userId, @Param("partColorId") Long partColorId);
+
+    /**
+     * Возвращает количество видов деталей владельца
+     *
+     * @param userId идентификатор владельца
+     * @return количество видов деталей
+     */
+    @Query(name = "getUserPartsCountByUserId", nativeQuery = true)
+    Long getUserPartsCountByUserId(@Param("userId") Long userId);
+
+    /**
+     * Возвращает общее количество деталей владельца.
+     *
+     * @param userId идентификатор владельца
+     * @return количество деталей
+     */
+    @Query(name = "getUserPartColorsCountByUserId", nativeQuery = true)
+    Long getUserPartColorsCountByUserId(@Param("userId") Long userId);
 }

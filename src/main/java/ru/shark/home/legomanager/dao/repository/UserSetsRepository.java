@@ -27,4 +27,22 @@ public interface UserSetsRepository extends BaseRepository<UserSetEntity> {
      */
     @Query(name = "getUserSetsByUser")
     List<UserSetEntity> getUserSetsByUser(@Param("userId") Long userId);
+
+    /**
+     * Возвращает количество серий по пользователю.
+     *
+     * @param userId идентификатор пользователя
+     * @return количество серий
+     */
+    @Query(name = "getUserSeriesCountByUserId")
+    Long getUserSeriesCountByUserId(@Param("userId") Long userId);
+
+    /**
+     * Возвращает количество наборов пользователя.
+     *
+     * @param userId идентификатор пользователя
+     * @return количество наборов
+     */
+    @Query(name = "getUserSetsCountByUserId")
+    Long getUserSetsCountByUserId(@Param("userId") Long userId);
 }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.shark.home.legomanager.services.TotalsService;
+import ru.shark.home.legomanager.services.dto.TotalsRequestDto;
 import ru.shark.home.legomanager.util.BaseEndpointTest;
 
 import javax.ws.rs.core.Response;
@@ -29,10 +30,10 @@ public class ReportEndpointTest extends BaseEndpointTest {
     @Test
     public void getTotals() {
         // WHEN
-        Response totals = reportEndpoint.getTotals();
+        Response totals = reportEndpoint.getTotals(new TotalsRequestDto());
 
         // THEN
         checkResponse(totals);
-        verify(totalsService, times(1)).getTotals();
+        verify(totalsService, times(1)).getTotals(any(TotalsRequestDto.class));
     }
 }

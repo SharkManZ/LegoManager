@@ -69,8 +69,27 @@ public class UserPartsRepositoryTest extends DbTest {
         Assertions.assertEquals(expected, count);
     }
 
-    private boolean checkListDto(UserPartListDto dto) {
-        return !isBlank(dto.getPartName()) && !isBlank(dto.getCategoryName()) && !isBlank(dto.getColorNumber()) &&
-                !isBlank(dto.getNumber()) && dto.getUserCount() != null && dto.getSetsCount() != null;
+    @Test
+    public void getUserPartsCountByUserId() {
+        // GIVEN
+        Long userId = entityFinder.findUserId("Максим");
+
+        // WHEN
+        Long userPartsCountByUserId = userPartsRepository.getUserPartsCountByUserId(userId);
+
+        // THEN
+        Assertions.assertEquals(4L, userPartsCountByUserId);
+    }
+
+    @Test
+    public void getUserPartColorsCountByUserId() {
+        // GIVEN
+        Long userId = entityFinder.findUserId("Максим");
+
+        // WHEN
+        Long userPartColorsCountByUserId = userPartsRepository.getUserPartColorsCountByUserId(userId);
+
+        // THEN
+        Assertions.assertEquals(30L, userPartColorsCountByUserId);
     }
 }

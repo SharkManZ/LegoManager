@@ -47,4 +47,28 @@ public class UserSetsRepositoryTest extends DbTest {
         // THEN
         Assertions.assertEquals(2, list.size());
     }
+
+    @Test
+    public void getUserSeriesCountByUserId() {
+        // GIVEN
+        Long userId = entityFinder.findUserId("Максим");
+
+        // WHEN
+        Long result = userSetsRepository.getUserSeriesCountByUserId(userId);
+
+        // THEN
+        Assertions.assertEquals(1L, result);
+    }
+
+    @Test
+    public void getUserSetsCountByUserId() {
+        // GIVEN
+        Long userId = entityFinder.findUserId("Максим");
+
+        // WHEN
+        Long result = userSetsRepository.getUserSetsCountByUserId(userId);
+
+        // THEN
+        Assertions.assertEquals(3L, result);
+    }
 }

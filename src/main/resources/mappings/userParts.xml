@@ -23,6 +23,42 @@
             where up.user.id = :userId
         </query>
     </named-query>
+    <named-native-query name="getUserPartsCountByUserId">
+        <query>
+            <![CDATA[
+            select sum(coalesce(setsCount, 0)) + sum(coalesce(userCount, 0))
+            from (
+                select null as userCount, count(distinct lpc.lego_part_id) as setsCount
+                from lego_user_sets lus
+                    join lego_set_part lsp on lsp.lego_set_id = lus.lego_set_id
+                    join lego_part_color lpc on lpc.lego_id = lsp.LEGO_PART_COLOR_ID
+                where lus.lego_user_id = :userId
+                union all
+                select count(distinct lpc.lego_part_id) as userCount, null as setsCount
+                from lego_user_parts lup
+                join lego_part_color lpc on lpc.lego_id = lup.LEGO_PART_COLOR_ID
+                where lup.lego_user_id = :userId
+            ) up
+            ]]>
+        </query>
+    </named-native-query>
+    <named-native-query name="getUserPartColorsCountByUserId">
+        <query>
+            <![CDATA[
+            select sum(coalesce(setsCount, 0)) + sum(coalesce(userCount, 0))
+            from (
+                select null as userCount, sum(lsp.lego_count) as setsCount
+                from lego_user_sets lus
+                    join lego_set_part lsp on lsp.lego_set_id = lus.lego_set_id
+                where lus.lego_user_id = :userId
+                union all
+                select lup.lego_count as userCount, null as setsCount
+                from lego_user_parts lup
+                where lup.lego_user_id = :userId
+            ) up
+            ]]>
+        </query>
+    </named-native-query>
     <named-native-query name="getUserPartsByUser" result-set-mapping="getUserPartsByUserMapping">
         <query>
             <![CDATA[

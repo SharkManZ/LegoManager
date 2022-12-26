@@ -15,4 +15,20 @@
             where us.user.id = :userId
             order by s.name</query>
     </named-query>
+    <named-query name="getUserSeriesCountByUserId">
+        <query>
+            select count (distinct ss.id)
+            from UserSetEntity us
+            join us.set s
+            join s.series ss
+            where us.user.id = :userId
+        </query>
+    </named-query>
+    <named-query name="getUserSetsCountByUserId">
+        <query>
+            select sum (us.count)
+            from UserSetEntity us
+            where us.user.id = :userId
+        </query>
+    </named-query>
 </entity-mappings>
