@@ -20,4 +20,5 @@ spring:
       - mappings/users.xml
       - mappings/userSets.xml
       - mappings/userParts.xml
+      - mappings/loader.xml
     show-sql: true

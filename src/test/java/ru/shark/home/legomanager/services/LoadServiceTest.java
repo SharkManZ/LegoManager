@@ -55,8 +55,8 @@ public class LoadServiceTest extends BaseServiceTest {
                 .thenReturn(setData);
         when(remoteDataProvider.getDataFromUrl(eq(String.format(SOURCE_PORTAL + PARTS_URL, 162427, setNumber)), anyString()))
                 .thenReturn(setPartsData);
-        when(partColorDataManager.findALl()).thenReturn(Arrays.asList(createPartColor("123", "123000"),
-                createPartColor("234", "234000")));
+        when(setDataLoader.findMissingParts(anyList())).thenReturn(Arrays.asList(prepareRemoteDto(1L, "123", "123000", 1),
+                prepareRemoteDto(2L, "234", "234000", 5)));
 
         // WHEN
         BaseResponse response = loadService.checkParts("42082");
@@ -64,8 +64,8 @@ public class LoadServiceTest extends BaseServiceTest {
         // THEN
         checkResponseWithBody(response);
         List<RemoteSetPartsDto> body = (List<RemoteSetPartsDto>) response.getBody();
-        Assertions.assertEquals(263, body.size());
-        verify(partColorDataManager, times(1)).findALl();
+        Assertions.assertEquals(2, body.size());
+        verify(setDataLoader, times(1)).findMissingParts(anyList());
         verify(remoteDataProvider, times(2)).getDataFromUrl(anyString(), anyString());
     }
 
@@ -102,6 +102,16 @@ public class LoadServiceTest extends BaseServiceTest {
         dto.getPart().setNumber(partNumber);
         dto.getPart().setName("part name " + partNumber);
 
+        return dto;
+    }
+
+    private RemoteSetPartsDto prepareRemoteDto(Long id, String number, String colorNumber, Integer count) {
+        RemoteSetPartsDto dto = new RemoteSetPartsDto();
+        dto.setId(id);
+        dto.setNumber(number);
+        dto.setColorNumber(colorNumber);
+        dto.setCount(count);
+        dto.setName(number + " title");
         return dto;
     }
 }

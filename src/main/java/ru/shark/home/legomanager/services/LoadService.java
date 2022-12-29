@@ -1,23 +1,19 @@
 package ru.shark.home.legomanager.services;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.services.BaseLogicService;
 import ru.shark.home.common.services.dto.response.BaseResponse;
-import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
 import ru.shark.home.legomanager.exception.RemoteDataException;
 import ru.shark.home.legomanager.loader.SetDataLoader;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ru.shark.home.common.common.ErrorConstants.ERR_500;
@@ -94,38 +90,7 @@ public class LoadService extends BaseLogicService {
     }
 
     private List<RemoteSetPartsDto> getMissingParts(String setId, String setNumber) {
-        return getMissingParts(getPartsFromRemote(setId, setNumber));
-    }
-
-    private List<RemoteSetPartsDto> getMissingParts(List<RemoteSetPartsDto> remoteParts) {
-        List<PartColorDto> list = partColorDataManager.findALl();
-        return remoteParts
-                .stream()
-                .filter(item -> !containsPartColor(list, item))
-                .collect(Collectors.toList());
-    }
-
-    private boolean containsPartColor(List<PartColorDto> list, RemoteSetPartsDto responseDto) {
-        for (PartColorDto partColorDto : list) {
-            List<String> numbers = Stream.of(partColorDto.getPart().getNumber()).collect(Collectors.toList());
-            if (!StringUtils.isBlank(partColorDto.getPart().getAlternateNumber())) {
-                numbers.addAll(Arrays.stream(partColorDto.getPart().getAlternateNumber().split(","))
-                        .map(String::trim)
-                        .collect(Collectors.toList()));
-            }
-            List<String> colorNums = Stream.of(partColorDto.getNumber()).collect(Collectors.toList());
-            if (!StringUtils.isBlank(partColorDto.getAlternateNumber())) {
-                colorNums.addAll(Arrays.stream(partColorDto.getAlternateNumber().split(","))
-                        .map(String::trim)
-                        .collect(Collectors.toList()));
-            }
-            List<String> responseColors = Arrays.stream(responseDto.getColorNumber().split(",")).map(String::trim)
-                    .collect(Collectors.toList());
-            if (numbers.contains(responseDto.getNumber()) && responseColors.stream().allMatch(colorNums::contains)) {
-                return true;
-            }
-        }
-        return false;
+        return setDataLoader.findMissingParts(getPartsFromRemote(setId, setNumber));
     }
 
     private List<RemoteSetPartsDto> getPartsFromRemote(String setId, String setNumber) {
@@ -133,6 +98,7 @@ public class LoadService extends BaseLogicService {
                 "Не удалось получить данные по деталям набора с id " + setId);
         String[] rows = partsData.split("\n");
         int idx = 0;
+        long id = 0L;
         boolean tableStarted = false;
         List<RemoteSetPartsDto> result = new ArrayList<>();
         RemoteSetPartsDto dto;
@@ -141,7 +107,9 @@ public class LoadService extends BaseLogicService {
             if (row.contains("pciinvItemTypeHeader")) {
                 tableStarted = true;
             } else if (tableStarted && row.contains("TD") && row.contains("src=")) {
+                id++;
                 dto = new RemoteSetPartsDto();
+                dto.setId(id);
                 String rowPart = row.substring(row.indexOf("src=")).replace("src=\"", "");
                 dto.setImgUrl(rowPart.substring(2, rowPart.indexOf("\" ")));
                 String countRow = rows[idx + 1];

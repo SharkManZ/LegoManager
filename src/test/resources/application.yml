@@ -17,6 +17,7 @@ spring:
       - mappings/users.xml
       - mappings/userSets.xml
       - mappings/userParts.xml
+      - mappings/loader.xml
   datasource:
     url: jdbc:h2:mem:l2info;MODE=PostgreSQL
     driver-class-name: org.h2.Driver

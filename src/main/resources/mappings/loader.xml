@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+    <named-native-query name="getMissingLoadPartIds">
+        <query>
+            <![CDATA[
+            select plt.lego_id as id
+            from LEGO_PART_LOAD_TABLE plt
+            join LEGO_PART_LOAD_NUMBER_TABLE plnt on plnt.lego_part_id = plt.lego_id and plnt.lego_type = 'MAIN'
+            join LEGO_PART_NUMBER pn on pn.lego_number = plnt.lego_number
+            where (
+                select count(1) from LEGO_PART_LOAD_NUMBER_TABLE plnt1
+                join LEGO_PART_COLOR_NUMBER pcn on pcn.lego_number = plnt1.lego_number
+                join LEGO_PART_COLOR pc on pc.lego_id = pcn.lego_part_color_id
+                where plnt1.lego_part_id = plt.lego_id and plnt1.lego_type = 'COLOR'
+                and pc.lego_part_id = pn.lego_part_id
+            ) <> (
+                select count(1) from LEGO_PART_LOAD_NUMBER_TABLE plnt1
+                where plnt1.lego_part_id = plt.lego_id and plnt1.lego_type = 'COLOR'
+            )
+            ]]>
+        </query>
+    </named-native-query>
+</entity-mappings>
