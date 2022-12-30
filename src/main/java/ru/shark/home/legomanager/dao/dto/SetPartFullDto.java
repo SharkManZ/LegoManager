@@ -1,8 +1,6 @@
 package ru.shark.home.legomanager.dao.dto;
 
-import ru.shark.home.common.dao.common.EntityClass;
 import ru.shark.home.common.dao.dto.BaseDto;
-import ru.shark.home.legomanager.dao.entity.SetPartEntity;
 
 //@EntityClass(clazz = SetPartEntity.class)
 public class SetPartFullDto extends BaseDto {
@@ -15,6 +13,7 @@ public class SetPartFullDto extends BaseDto {
     private String alternateNumber;
     private String partName;
     private String hexColor;
+    private String colorName;
     // TODO поля для поддержки фильтрации, переделать
     private Long colorId;
     private Long categoryId;
@@ -25,7 +24,7 @@ public class SetPartFullDto extends BaseDto {
 
     public SetPartFullDto(Long id, Long setId, Long partColorId, Integer count,
                           String colorNumber, String alternateColorNumber, String number, String alternateNumber,
-                          String partName, String hexColor) {
+                          String partName, String hexColor, String colorName) {
         setId(id);
         this.setId = setId;
         this.partColorId = partColorId;
@@ -36,6 +35,7 @@ public class SetPartFullDto extends BaseDto {
         this.alternateNumber = alternateNumber;
         this.partName = partName;
         this.hexColor = hexColor;
+        this.colorName = colorName;
     }
 
     public Long getSetId() {
@@ -108,5 +108,13 @@ public class SetPartFullDto extends BaseDto {
 
     public void setAlternateNumber(String alternateNumber) {
         this.alternateNumber = alternateNumber;
+    }
+
+    public String getColorName() {
+        return colorName;
+    }
+
+    public void setColorName(String colorName) {
+        this.colorName = colorName;
     }
 }

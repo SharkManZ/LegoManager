@@ -41,12 +41,12 @@ public class SetDataLoader {
     private EntityManager em;
 
     public List<RemoteSetPartsDto> findMissingParts(List<RemoteSetPartsDto> parts) {
-        em.createNativeQuery("delete from LEGO_PART_LOAD_TABLE").executeUpdate();
+        clearLoadTables();
         loadParts(parts);
         loadPartNumbers(parts);
         Set<Long> missingIds = (Set<Long>) em.createNamedQuery("getMissingLoadPartIds").getResultList().stream().map(item -> ((BigInteger) item).longValue())
                 .collect(Collectors.toSet());
-        em.createNativeQuery("delete from LEGO_PART_LOAD_TABLE").executeUpdate();
+        clearLoadTables();
         return parts.stream().filter(item -> missingIds.contains(item.getId())).collect(Collectors.toList());
     }
 
@@ -74,6 +74,11 @@ public class SetDataLoader {
         });
     }
 
+    private void clearLoadTables() {
+        em.createNativeQuery("delete from LEGO_PART_LOAD_TABLE").executeUpdate();
+        em.createNativeQuery("delete from LEGO_PART_LOAD_NUMBER_TABLE").executeUpdate();
+    }
+
     private void loadPartNumbers(List<RemoteSetPartsDto> parts) {
         em.unwrap(Session.class).doWork(connection -> {
             String insertString = "insert into LEGO_PART_LOAD_NUMBER_TABLE (LEGO_PART_ID, LEGO_NUMBER, LEGO_TYPE) " +
@@ -98,7 +103,7 @@ public class SetDataLoader {
         st.setString(3, type.name());
         st.addBatch();
 
-        if ((rowNum & BATCH_SIZE) == 0) {
+        if ((rowNum % BATCH_SIZE) == 0) {
             st.executeBatch();
             st.clearBatch();
         }

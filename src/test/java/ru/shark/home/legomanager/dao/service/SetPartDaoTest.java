@@ -55,6 +55,7 @@ public class SetPartDaoTest extends DbTest {
             Assertions.assertEquals(color.getHexColor(), dto.getHexColor());
             Assertions.assertNotNull(dto.getCount());
             Assertions.assertNotNull(dto.getPartName());
+            Assertions.assertNotNull(dto.getColorName());
         }
     }
 
