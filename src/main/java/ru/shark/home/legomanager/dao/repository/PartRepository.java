@@ -44,4 +44,13 @@ public interface PartRepository extends BaseRepository<PartEntity> {
      */
     @Query(name = "getPartIdsByNumbers")
     List<Long> getPartIdsByNumbers(@Param("numbers") List<String> numbers);
+
+    /**
+     * Возвращает количество цветов детали
+     *
+     * @param partId идентификатор детали
+     * @return кол-во
+     */
+    @Query(name = "getPartColorsCountByPartId")
+    Long getPartColorsCountByPartId(@Param("partId") Long partId);
 }

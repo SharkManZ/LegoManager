@@ -77,4 +77,16 @@ public class PartRepositoryTest extends DbTest {
         Assertions.assertEquals(2, partIdsByNumbers.size());
         Assertions.assertTrue(partIdsByNumbers.containsAll(ids));
     }
+
+    @Test
+    public void getPartColorsCountByPartId() {
+        // GIVEN
+        Long partId = entityFinder.findPartId("3010");
+
+        // WHEN
+        Long partColorsCountByPartId = partRepository.getPartColorsCountByPartId(partId);
+
+        // THEN
+        Assertions.assertEquals(2L, partColorsCountByPartId);
+    }
 }

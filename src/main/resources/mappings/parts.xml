@@ -21,6 +21,13 @@
             where lower(pn.number) in (:numbers)
         </query>
     </named-query>
+    <named-query name="getPartColorsCountByPartId">
+        <query>
+            select count(1)
+            from PartColorEntity pc
+            where pc.part.id = :partId
+        </query>
+    </named-query>
     <named-native-query name="getParts">
         <query>
             select id, name, categoryId, categoryName, number, alternateNumber, colorsCount, minColorNumber

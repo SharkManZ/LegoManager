@@ -26,6 +26,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.legomanager.common.ErrorConstants.PART_DELETE_WIT_COLORS;
 
 public class PartDaoTest extends DbTest {
 
@@ -195,13 +196,25 @@ public class PartDaoTest extends DbTest {
     @Test
     public void deleteById() {
         // GIVEN
-        Long setId = entityFinder.findPartId("3010");
+        Long setId = entityFinder.findPartId("3001");
 
         // WHEN
         partDao.deleteById(setId);
 
         // THEN
         isDeleted(setId, SetEntity.class);
+    }
+
+    @Test
+    public void deleteByIdWithColors() {
+        // GIVEN
+        Long setId = entityFinder.findPartId("3010");
+
+        // WHEN
+        ValidationException validationException = assertThrows(ValidationException.class, () -> partDao.deleteById(setId));
+
+        // THEN
+        Assertions.assertEquals(PART_DELETE_WIT_COLORS, validationException.getMessage());
     }
 
     private PartDto prepareDto() {

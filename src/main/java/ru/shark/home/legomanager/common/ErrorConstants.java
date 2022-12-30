@@ -10,6 +10,7 @@ public class ErrorConstants {
             "Воспользуйтесь поиском по 2м номерам (цвет детали и деталь)";
     public static final String PART_COLOR_DELETE_WITH_SET_PARTS = "Нельзя удалить цвет детали, если он используется в наборах";
     public static final String PART_COLOR_DELETE_WITH_USER_PARTS = "Нельзя удалить цвет детали, если по нему внесены данные в деталях владельцев";
+    public static final String PART_DELETE_WIT_COLORS = "Нельзя удалить деталь, если есть цвета детали";
 
     // loader constants
     public static final String EMPTY_SET_NUMBER = "Не указан номер набора для импорта!";

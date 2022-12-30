@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.ObjectUtils.isEmpty;
 import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.legomanager.common.ErrorConstants.PART_DELETE_WIT_COLORS;
 
 @Component
 public class PartDao extends BaseDao<PartEntity> {
@@ -130,9 +131,12 @@ public class PartDao extends BaseDao<PartEntity> {
 
     @Override
     public void deleteById(Long id) {
-        partRepository.findById(id).orElseThrow(() -> new ValidationException(MessageFormat.format(
+        if (partRepository.getPartColorsCountByPartId(id) > 0) {
+            throw new ValidationException(PART_DELETE_WIT_COLORS);
+        }
+        PartEntity partEntity = partRepository.findById(id).orElseThrow(() -> new ValidationException(MessageFormat.format(
                 ENTITY_NOT_FOUND_BY_ID, PartEntity.getDescription(), id)));
-
+        partEntity.getNumbers().forEach(item -> partNumberDao.deleteById(item.getId()));
         super.deleteById(id);
     }
 
