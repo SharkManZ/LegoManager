@@ -6,6 +6,8 @@ public class PartFullDto extends PartDto{
     private Integer colorsCount;
     private String minColorNumber;
     private List<ColorDto> colors;
+    // FIXME удалить
+    private Long categoryId;
 
     public PartFullDto() {
 

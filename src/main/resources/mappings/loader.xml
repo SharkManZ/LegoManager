@@ -8,7 +8,7 @@
             select plt.lego_id as id
             from LEGO_PART_LOAD_TABLE plt
             join LEGO_PART_LOAD_NUMBER_TABLE plnt on plnt.lego_part_id = plt.lego_id and plnt.lego_type = 'MAIN'
-            join LEGO_PART_NUMBER pn on pn.lego_number = plnt.lego_number
+            left join LEGO_PART_NUMBER pn on pn.lego_number = plnt.lego_number
             where (
                 select count(1) from LEGO_PART_LOAD_NUMBER_TABLE plnt1
                 join LEGO_PART_COLOR_NUMBER pcn on pcn.lego_number = plnt1.lego_number

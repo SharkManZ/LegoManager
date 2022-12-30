@@ -6,6 +6,7 @@ import ru.shark.home.common.services.BaseLogicService;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartDto;
+import ru.shark.home.legomanager.dao.dto.PartFullDto;
 import ru.shark.home.legomanager.datamanager.PartDataManager;
 
 import static ru.shark.home.common.common.ErrorConstants.ERR_500;
@@ -19,7 +20,7 @@ public class PartService extends BaseLogicService {
 
         try {
             response = new BaseResponse();
-            response.setBody(partDataManager.getWithPagination(getCriteria(request, PartDto.class)));
+            response.setBody(partDataManager.getWithPagination(getCriteria(request, PartFullDto.class)));
             response.setSuccess(true);
         } catch (Exception e) {
             response = BaseResponse.buildError(ERR_500, "Ошибка при получении списка деталей: " +
