@@ -54,6 +54,10 @@
           {
             "number": "112231",
             "main": true
+          },
+          {
+            "number": "212231",
+            "main": false
           }
         ]
       },
@@ -61,7 +65,7 @@
         "color": "Red",
         "numbers": [
           {
-            "number": "332221",
+            "number": "432221",
             "main": true
           }
         ]

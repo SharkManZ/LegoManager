@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import static ru.shark.home.common.common.ErrorConstants.*;
-import static ru.shark.home.legomanager.common.ErrorConstants.MORE_THAN_ONE_PART_COLOR;
+import static ru.shark.home.legomanager.common.ErrorConstants.*;
 
 public class PartColorDaoTest extends DbTest {
     @Autowired
@@ -32,6 +32,9 @@ public class PartColorDaoTest extends DbTest {
         loadPartCategories("PartColorDaoTest/partCats.json");
         loadColors("PartColorDaoTest/colors.json");
         loadParts("PartColorDaoTest/parts.json");
+        loadSeries("PartColorDaoTest/series.json");
+        loadSets("PartColorDaoTest/sets.json");
+        loadUsers("PartColorDaoTest/users.json");
     }
 
     @Test
@@ -210,6 +213,43 @@ public class PartColorDaoTest extends DbTest {
         Assertions.assertNotNull(entity);
         Assertions.assertTrue(entity.getNumbers().stream().anyMatch(item -> item.getNumber().equalsIgnoreCase("112231")));
         Assertions.assertTrue(entity.getPart().getNumbers().stream().anyMatch(item -> item.getNumber().equalsIgnoreCase("3010")));
+    }
+
+    @Test
+    public void deleteById() {
+        // GIVEN
+        PartColorEntity partColor = entityFinder.findPartColor("212231");
+
+        // WHEN
+        partColorDao.deleteById(partColor.getId());
+
+        // THEN
+        isDeleted(partColor.getId(), PartColorEntity.class);
+        Assertions.assertTrue(partColor.getNumbers().stream().allMatch(item -> isDeleted(item.getId(), PartColorNumberEntity.class)));
+    }
+
+    @Test
+    public void deleteByIdWithInSet() {
+        // GIVEN
+        PartColorEntity partColor = entityFinder.findPartColor("332221");
+
+        // WHEN
+        ValidationException validationException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.deleteById(partColor.getId()));
+
+        // THEN
+        Assertions.assertEquals(PART_COLOR_DELETE_WITH_SET_PARTS, validationException.getMessage());
+    }
+
+    @Test
+    public void deleteByIdWithInUserParts() {
+        // GIVEN
+        PartColorEntity partColor = entityFinder.findPartColor("098765");
+
+        // WHEN
+        ValidationException validationException = Assertions.assertThrows(ValidationException.class, () -> partColorDao.deleteById(partColor.getId()));
+
+        // THEN
+        Assertions.assertEquals(PART_COLOR_DELETE_WITH_USER_PARTS, validationException.getMessage());
     }
 
     private PartColorDto prepareDto() {

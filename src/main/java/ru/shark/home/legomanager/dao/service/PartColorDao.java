@@ -20,12 +20,13 @@ import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static ru.shark.home.common.common.ErrorConstants.*;
-import static ru.shark.home.legomanager.common.ErrorConstants.MORE_THAN_ONE_PART_COLOR;
+import static ru.shark.home.legomanager.common.ErrorConstants.*;
 
 @Component
 public class PartColorDao extends BaseDao<PartColorEntity> {
@@ -131,6 +132,21 @@ public class PartColorDao extends BaseDao<PartColorEntity> {
             }
             return list.stream().filter(item -> isEqualByAlternate(item, searchParts[0])).findFirst().orElse(null);
         }
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        if (partColorRepository.getPartColorCountInSets(id) > 0) {
+            throw new ValidationException(PART_COLOR_DELETE_WITH_SET_PARTS);
+        }
+        if (partColorRepository.getPartColorCountInUserParts(id) > 0) {
+            throw new ValidationException(PART_COLOR_DELETE_WITH_USER_PARTS);
+        }
+
+        PartColorEntity partColor = partColorRepository.findById(id).orElseThrow(() ->
+                new ValidationException(MessageFormat.format(ENTITY_NOT_FOUND_BY_ID, PartColorEntity.getDescription(), id)));
+        partColor.getNumbers().forEach(item -> partColorNumberDao.deleteById(item.getId()));
+        super.deleteById(id);
     }
 
     private boolean isEqualByAlternate(PartColorEntity entity, String number) {

@@ -8,6 +8,8 @@ public class ErrorConstants {
     public static final String PART_CATEGORY_DELETE_WITH_SETS = "Нельзя удалять категорию деталей при наличии в ней деталей";
     public static final String MORE_THAN_ONE_PART_COLOR = "Найдено {0} цветов деталей по номеру {1}. " +
             "Воспользуйтесь поиском по 2м номерам (цвет детали и деталь)";
+    public static final String PART_COLOR_DELETE_WITH_SET_PARTS = "Нельзя удалить цвет детали, если он используется в наборах";
+    public static final String PART_COLOR_DELETE_WITH_USER_PARTS = "Нельзя удалить цвет детали, если по нему внесены данные в деталях владельцев";
 
     // loader constants
     public static final String EMPTY_SET_NUMBER = "Не указан номер набора для импорта!";

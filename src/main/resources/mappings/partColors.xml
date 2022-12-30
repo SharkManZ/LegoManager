@@ -46,6 +46,20 @@
     <named-query name="getPartColorByPartAndColor">
         <query>select pc from PartColorEntity pc where pc.part.id = :partId and pc.color.id = :colorId</query>
     </named-query>
+    <named-query name="getPartColorCountInSets">
+        <query>
+            select count(1)
+            from SetPartEntity sp
+            where sp.partColor.id = :partColorId
+        </query>
+    </named-query>
+    <named-query name="getPartColorCountInUserParts">
+        <query>
+            select count(1)
+            from UserPartEntity up
+            where up.partColor.id = :partColorId
+        </query>
+    </named-query>
 
     <named-native-query name="getPartColorIdByPartColorNumberAndPartNumber">
         <query>

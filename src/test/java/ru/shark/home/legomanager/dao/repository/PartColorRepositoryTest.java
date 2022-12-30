@@ -24,6 +24,9 @@ public class PartColorRepositoryTest extends DbTest {
         loadPartCategories("PartColorRepositoryTest/partCats.json");
         loadColors("PartColorRepositoryTest/colors.json");
         loadParts("PartColorRepositoryTest/parts.json");
+        loadSeries("PartColorRepositoryTest/series.json");
+        loadSets("PartColorRepositoryTest/sets.json");
+        loadUsers("PartColorRepositoryTest/users.json");
     }
 
     @Test
@@ -159,5 +162,29 @@ public class PartColorRepositoryTest extends DbTest {
 
         // THEN
         Assertions.assertNotNull(partColorId);
+    }
+
+    @Test
+    public void getPartColorCountInSets() {
+        // GIVEN
+        Long partColorId = entityFinder.findPartColorId("332221");
+
+        // WHEN
+        Long partColorCountInSets = partColorRepository.getPartColorCountInSets(partColorId);
+
+        // THEN
+        Assertions.assertEquals(1L, partColorCountInSets);
+    }
+
+    @Test
+    public void getPartColorCountInUserParts() {
+        // GIVEN
+        Long partColorId = entityFinder.findPartColorId("422211");
+
+        // WHEN
+        Long partColorCountInSets = partColorRepository.getPartColorCountInUserParts(partColorId);
+
+        // THEN
+        Assertions.assertEquals(1L, partColorCountInSets);
     }
 }
