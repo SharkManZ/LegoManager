@@ -39,6 +39,10 @@ public class LoadService extends BaseLogicService {
                 Pair.of("66645", "6289128"));
         partsComparison.put("5102c10_Black Hose, Pneumatic 4mm D. 10L / 8.0cm",
                 Pair.of("5102c10", "6217913"));
+        partsComparison.put("44567_Black Hinge Plate 1 x 2 Locking with 1 Finger on Side (Undetermined Type)",
+                Pair.of("44567b", "4185620"));
+        partsComparison.put("51011u_Black Tire 17.5mm D. x 6mm with Shallow Staggered Treads (Undetermined Type)",
+                Pair.of("92409", "4617848"));
     }
 
     public BaseResponse checkParts(String setNumber) {
