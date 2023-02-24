@@ -47,6 +47,8 @@ public class LoadService extends BaseLogicService {
                 Pair.of("44567b", "4185620"));
         partsComparison.put("51011u_Black Tire 17.5mm D. x 6mm with Shallow Staggered Treads (Undetermined Type)",
                 Pair.of("92409", "4617848"));
+        partsComparison.put("4532_White Container, Cupboard 2 x 3 x 2 (Undetermined Type)",
+                Pair.of("4532", "4619665"));
     }
 
     public BaseResponse checkParts(String setNumber) {
