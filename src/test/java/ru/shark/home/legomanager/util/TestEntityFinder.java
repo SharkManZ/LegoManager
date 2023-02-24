@@ -3,8 +3,10 @@ package ru.shark.home.legomanager.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.legomanager.dao.entity.*;
+import ru.shark.home.legomanager.dao.entity.load.PartLoadSkipEntity;
 
 import javax.persistence.EntityManager;
+import java.util.Locale;
 
 @Component
 public class TestEntityFinder {
@@ -150,6 +152,18 @@ public class TestEntityFinder {
                         "and sp.partColor.id = :partColorId")
                 .setParameter("setId", setId)
                 .setParameter("partColorId", partColorId)
+                .getSingleResult();
+    }
+
+    public Long findPartLoadSkipId(String pattern) {
+        return (Long) em.createQuery("select p.id from PartLoadSkipEntity p where lower(p.pattern) = :pattern")
+                .setParameter("pattern", pattern.toLowerCase())
+                .getSingleResult();
+    }
+
+    public PartLoadSkipEntity findPartLoadSkip(String pattern) {
+        return (PartLoadSkipEntity) em.createQuery("select p from PartLoadSkipEntity p where lower(p.pattern) = :pattern")
+                .setParameter("pattern", pattern.toLowerCase())
                 .getSingleResult();
     }
 }

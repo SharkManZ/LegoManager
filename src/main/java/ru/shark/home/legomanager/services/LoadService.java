@@ -6,14 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.services.BaseLogicService;
 import ru.shark.home.common.services.dto.response.BaseResponse;
+import ru.shark.home.legomanager.dao.dto.load.PartLoadSkipDto;
 import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
+import ru.shark.home.legomanager.datamanager.PartLoadSkipDataManager;
 import ru.shark.home.legomanager.exception.RemoteDataException;
 import ru.shark.home.legomanager.loader.SetDataLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ru.shark.home.common.common.ErrorConstants.ERR_500;
@@ -27,6 +30,7 @@ public class LoadService extends BaseLogicService {
     private PartColorDataManager partColorDataManager;
     private RemoteDataProvider remoteDataProvider;
     private SetDataLoader setDataLoader;
+    private PartLoadSkipDataManager partLoadSkipDataManager;
     private final Map<String, Pair<String, String>> partsComparison;
 
     public LoadService() {
@@ -98,6 +102,8 @@ public class LoadService extends BaseLogicService {
     }
 
     private List<RemoteSetPartsDto> getPartsFromRemote(String setId, String setNumber) {
+        List<String> skipPatterns = partLoadSkipDataManager.findALl().stream().map(PartLoadSkipDto::getPattern)
+                .collect(Collectors.toList());
         String partsData = remoteDataProvider.getDataFromUrl(String.format(SOURCE_PORTAL + PARTS_URL, setId, setNumber),
                 "Не удалось получить данные по деталям набора с id " + setId);
         String[] rows = partsData.split("\n");
@@ -125,7 +131,8 @@ public class LoadService extends BaseLogicService {
                 String lastRow = rows[idx + 3];
                 lastRow = lastRow.substring(lastRow.indexOf("<b>"));
                 String partName = lastRow.substring(3, lastRow.indexOf("</b>"));
-                if (partName.toLowerCase().contains("sticker sheet") || partName.toLowerCase().contains("leaflet")) {
+
+                if (skipPatterns.stream().anyMatch(item -> partName.toLowerCase().contains(item.toLowerCase()))) {
                     idx++;
                     continue;
                 }
@@ -170,5 +177,10 @@ public class LoadService extends BaseLogicService {
     @Autowired
     public void setSetDataLoader(SetDataLoader setDataLoader) {
         this.setDataLoader = setDataLoader;
+    }
+
+    @Autowired
+    public void setPartLoadSkipDataManager(PartLoadSkipDataManager partLoadSkipDataManager) {
+        this.partLoadSkipDataManager = partLoadSkipDataManager;
     }
 }

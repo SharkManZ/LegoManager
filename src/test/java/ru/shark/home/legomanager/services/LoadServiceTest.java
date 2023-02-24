@@ -10,6 +10,7 @@ import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.dto.PartDto;
 import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
+import ru.shark.home.legomanager.datamanager.PartLoadSkipDataManager;
 import ru.shark.home.legomanager.loader.SetDataLoader;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
@@ -27,6 +28,7 @@ public class LoadServiceTest extends BaseServiceTest {
     private LoadService loadService;
     private RemoteDataProvider remoteDataProvider;
     private PartColorDataManager partColorDataManager;
+    private PartLoadSkipDataManager partLoadSkipDataManager;
     private SetDataLoader setDataLoader;
 
     @BeforeAll
@@ -34,10 +36,12 @@ public class LoadServiceTest extends BaseServiceTest {
         partColorDataManager = mock(PartColorDataManager.class);
         remoteDataProvider = mock(RemoteDataProvider.class);
         setDataLoader = mock(SetDataLoader.class);
+        partLoadSkipDataManager = mock(PartLoadSkipDataManager.class);
         loadService = new LoadService();
         loadService.setPartColorDataManager(partColorDataManager);
         loadService.setRemoteDataProvider(remoteDataProvider);
         loadService.setSetDataLoader(setDataLoader);
+        loadService.setPartLoadSkipDataManager(partLoadSkipDataManager);
     }
 
     @BeforeEach
