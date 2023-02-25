@@ -36,7 +36,7 @@
             (select lpn.lego_number from lego_part_number lpn where lpn.lego_part_id = lp.lego_id and lego_main = true) as number,
             (select string_agg(lpn.lego_number, ', ' order by lpn.lego_number) from lego_part_number lpn where lpn.lego_part_id = lp.lego_id and lego_main = false) as alternateNumber,
             (select count(1) from lego_part_color lc where lc.lego_part_id = lp.lego_id) as colorsCount,
-            (select min(pcn.lego_number) from lego_part_color lc join lego_part_color_number pcn on pcn.lego_part_color_id = lc.lego_id where lc.lego_part_id = lp.lego_id) as minColorNumber
+            (select min(pcn.lego_number) from lego_part_color lc join lego_part_color_number pcn on pcn.lego_part_color_id = lc.lego_id where lc.lego_part_id = lp.lego_id and pcn.lego_main = true) as minColorNumber
             from lego_part lp
             join lego_part_category lpc on lpc.lego_id = lp.lego_part_category_id) a
         </query>
