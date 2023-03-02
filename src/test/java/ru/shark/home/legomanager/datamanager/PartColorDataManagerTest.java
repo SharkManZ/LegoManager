@@ -36,6 +36,7 @@ public class PartColorDataManagerTest extends DbTest {
             Assertions.assertNotNull(dto.getNumber());
             Assertions.assertNotNull(dto.getPart());
             Assertions.assertNotNull(dto.getPart().getId());
+            Assertions.assertNotNull(dto.getPart().getNumber());
             Assertions.assertNotNull(dto.getColor());
             Assertions.assertNotNull(dto.getColor().getId());
             Assertions.assertNotNull(dto.getAlternateNumber());

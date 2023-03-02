@@ -8,17 +8,22 @@ import ru.shark.home.legomanager.dao.dto.NumberDto;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.PartColorNumberEntity;
+import ru.shark.home.legomanager.dao.entity.PartNumberEntity;
 import ru.shark.home.legomanager.dao.repository.PartColorNumberRepository;
+import ru.shark.home.legomanager.dao.repository.PartNumberRepository;
 import ru.shark.home.legomanager.dao.service.PartColorDao;
 import ru.shark.home.legomanager.services.dto.SearchDto;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Component
 public class PartColorDataManager extends BaseDataManager<PartColorEntity, PartColorDto> {
 
     private PartColorNumberRepository partColorNumberRepository;
+    private PartNumberRepository partNumberRepository;
 
     public PartColorDataManager(PartColorDao dao) {
         super(dao, PartColorDto.class);
@@ -28,10 +33,15 @@ public class PartColorDataManager extends BaseDataManager<PartColorEntity, PartC
         PartColorDao dao = (PartColorDao) getDao();
         List<PartColorDto> list = getConverterUtil().entityListToDtoList(dao.getPartColorListByPartId(partId, search), PartColorDto.class);
         Map<Long, List<NumberDto>> colorNumbers = getColorNumbers(list.stream().map(PartColorDto::getId).collect(Collectors.toSet()));
+        String partNumber = null;
+        if (!isEmpty(list)) {
+            partNumber = getPartMainNumber(list.get(0).getPart().getId());
+        }
         for (PartColorDto dto : list) {
             List<NumberDto> numbers = colorNumbers.getOrDefault(dto.getId(), Collections.emptyList());
             dto.setNumber(numbers.stream().filter(NumberDto::isMain).findFirst().get().getNumber());
             dto.setAlternateNumber(numbers.stream().filter(item -> !item.isMain()).map(NumberDto::getNumber).collect(Collectors.joining(", ")));
+            dto.getPart().setNumber(partNumber);
         }
 
         return list;
@@ -48,6 +58,13 @@ public class PartColorDataManager extends BaseDataManager<PartColorEntity, PartC
         }
 
         return result;
+    }
+
+    private String getPartMainNumber(Long partId) {
+        return partNumberRepository.getPartNumbersByPartId(partId).stream()
+                .filter(PartNumberEntity::getMain)
+                .map(PartNumberEntity::getNumber)
+                .findFirst().orElse(null);
     }
 
     public PartColorDto search(SearchDto dto) {
@@ -71,5 +88,10 @@ public class PartColorDataManager extends BaseDataManager<PartColorEntity, PartC
     @Autowired
     public void setPartColorNumberRepository(PartColorNumberRepository partColorNumberRepository) {
         this.partColorNumberRepository = partColorNumberRepository;
+    }
+
+    @Autowired
+    public void setPartNumberRepository(PartNumberRepository partNumberRepository) {
+        this.partNumberRepository = partNumberRepository;
     }
 }

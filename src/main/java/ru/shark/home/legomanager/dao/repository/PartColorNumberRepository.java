@@ -27,4 +27,14 @@ public interface PartColorNumberRepository extends BaseRepository<PartColorNumbe
      */
     @Query(value = "select pcn from PartColorNumberEntity pcn where pcn.partColor.id in (:ids)")
     List<PartColorNumberEntity> getPartColorNumbersByPartColorIds(@Param("ids") Set<Long> ids);
+
+    /**
+     * Возвращает основные номера цветов детали по основному номеру детали
+     *
+     * @param partNumber основное номер детали
+     * @return основные номера цветов
+     */
+    @Query(value = "select pcn.number from PartColorNumberEntity pcn join pcn.partColor pc join pc.part p " +
+            "join p.numbers pn where lower(pn.number) = lower(:partNumber) and pn.main = true and pcn.main = true")
+    List<String> getMainPartColorNumbersByMainPartNumber(@Param("partNumber") String partNumber);
 }

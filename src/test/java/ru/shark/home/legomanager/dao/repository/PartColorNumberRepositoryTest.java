@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ru.shark.home.legomanager.dao.entity.PartColorNumberEntity;
+import ru.shark.home.legomanager.dao.entity.PartEntity;
 import ru.shark.home.legomanager.util.DbTest;
 
 import java.util.Arrays;
@@ -52,5 +53,15 @@ public class PartColorNumberRepositoryTest extends DbTest {
         // THEN
         Assertions.assertEquals(4, list.size());
         Assertions.assertTrue(list.stream().map(PartColorNumberEntity::getNumber).collect(Collectors.toList()).containsAll(numbers));
+    }
+
+    @Test
+    public void getMainPartColorNumbersByMainPartNumber() {
+        // WHEN
+        List<String> list = partColorNumberRepository.getMainPartColorNumbersByMainPartNumber("3010");
+
+        // THEN
+        Assertions.assertEquals(2L, list.size());
+        Assertions.assertTrue(list.containsAll(List.of("112231", "332221")));
     }
 }
