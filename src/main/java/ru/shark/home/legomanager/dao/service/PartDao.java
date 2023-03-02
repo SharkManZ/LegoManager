@@ -30,7 +30,9 @@ import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.ObjectUtils.isEmpty;
-import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_EMPTY_FIELD;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
 import static ru.shark.home.legomanager.common.ErrorConstants.PART_DELETE_WIT_COLORS;
 
 @Component

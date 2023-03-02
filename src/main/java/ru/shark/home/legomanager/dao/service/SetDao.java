@@ -28,7 +28,9 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.ObjectUtils.isEmpty;
-import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_EMPTY_FIELD;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
 import static ru.shark.home.common.dao.util.SpecificationUtils.andSpecifications;
 
 @Component
@@ -109,7 +111,6 @@ public class SetDao extends BaseDao<SetEntity> {
         setRepository.findById(id).orElseThrow(() -> new ValidationException(MessageFormat.format(
                 ENTITY_NOT_FOUND_BY_ID, SetEntity.getDescription(), id)));
         Map<String, Object> summary = setRepository.getSetSummary(id);
-        List<ColorEntity> colors = colorRepository.getColorsBySetId(id);
 
         SetSummaryDto dto = new SetSummaryDto();
         dto.setNumber((String) summary.get("number"));
@@ -119,6 +120,7 @@ public class SetDao extends BaseDao<SetEntity> {
         dto.setPartsCount(partsCount != null ? partsCount.intValue() : 0);
         Long uniquePartsCount = (Long) summary.get("uniquePartsCount");
         dto.setUniquePartsCount(uniquePartsCount != null ? uniquePartsCount.intValue() : 0);
+        List<ColorEntity> colors = colorRepository.getColorsBySetId(id);
         if (!isEmpty(colors)) {
             dto.setColors(colors.stream().map(item -> new ColorDto(item.getName(), item.getHexColor()))
                     .collect(Collectors.toList()));

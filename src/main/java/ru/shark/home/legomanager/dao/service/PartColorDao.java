@@ -20,13 +20,16 @@ import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static ru.shark.home.common.common.ErrorConstants.*;
-import static ru.shark.home.legomanager.common.ErrorConstants.*;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_EMPTY_FIELD;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
+import static ru.shark.home.legomanager.common.ErrorConstants.MORE_THAN_ONE_PART_COLOR;
+import static ru.shark.home.legomanager.common.ErrorConstants.PART_COLOR_DELETE_WITH_SET_PARTS;
+import static ru.shark.home.legomanager.common.ErrorConstants.PART_COLOR_DELETE_WITH_USER_PARTS;
 
 @Component
 public class PartColorDao extends BaseDao<PartColorEntity> {

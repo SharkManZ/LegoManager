@@ -25,7 +25,8 @@ import static ru.shark.home.common.common.ErrorConstants.ERR_500;
 public class LoadService extends BaseLogicService {
     protected static final String SOURCE_PORTAL = "https://www.bricklink.com/v2/catalog/";
     protected static final String SET_ID_URL = "catalogitem.page?S=%s-1";
-    protected static final String PARTS_URL = "catalogitem_invtab.page?idItem=%s&st=1&show_invid=0&show_matchcolor=1&show_pglink=0&show_pcc=1&show_missingpcc=1&itemNoSeq=%s-1";
+    protected static final String PARTS_URL = "catalogitem_invtab.page?idItem=%s&st=1&show_invid=0&show_matchcolor=1&" +
+            "show_pglink=0&show_pcc=1&show_missingpcc=1&itemNoSeq=%s-1";
 
     private PartColorDataManager partColorDataManager;
     private RemoteDataProvider remoteDataProvider;

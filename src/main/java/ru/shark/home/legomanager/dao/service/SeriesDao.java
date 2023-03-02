@@ -5,7 +5,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
-import ru.shark.home.common.dao.entity.BaseEntity;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.common.dao.util.SpecificationUtils;
 import ru.shark.home.legomanager.dao.dto.SeriesFullDto;
@@ -20,7 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.common.common.ErrorConstants.EMPTY_ENTITY;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
 import static ru.shark.home.legomanager.common.ErrorConstants.SERIES_DELETE_WITH_SETS;
 
 @Component

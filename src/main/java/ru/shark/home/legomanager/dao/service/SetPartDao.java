@@ -6,17 +6,23 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.dao.service.BaseDao;
 import ru.shark.home.legomanager.dao.dto.SetPartFullDto;
-import ru.shark.home.legomanager.dao.entity.*;
+import ru.shark.home.legomanager.dao.entity.PartColorEntity;
+import ru.shark.home.legomanager.dao.entity.SetEntity;
+import ru.shark.home.legomanager.dao.entity.SetPartEntity;
 import ru.shark.home.legomanager.dao.repository.PartColorRepository;
 import ru.shark.home.legomanager.dao.repository.SetPartRepository;
 import ru.shark.home.legomanager.dao.repository.SetRepository;
 
 import javax.validation.ValidationException;
 import java.text.MessageFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_EMPTY_FIELD;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_FIELD_VALUE_LOWER;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
 
 @Component
 public class SetPartDao extends BaseDao<SetPartEntity> {

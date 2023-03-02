@@ -27,7 +27,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static ru.shark.home.legomanager.common.ErrorConstants.*;
+import static ru.shark.home.legomanager.common.ErrorConstants.EMPTY_IMPORT_PARTS;
+import static ru.shark.home.legomanager.common.ErrorConstants.EMPTY_SET_NUMBER;
+import static ru.shark.home.legomanager.common.ErrorConstants.PART_NOT_FOUND;
+import static ru.shark.home.legomanager.common.ErrorConstants.SET_MUST_BE_EMPTY;
+import static ru.shark.home.legomanager.common.ErrorConstants.SET_NOT_FOUND;
 
 @Component
 @Transactional(Transactional.TxType.REQUIRED)

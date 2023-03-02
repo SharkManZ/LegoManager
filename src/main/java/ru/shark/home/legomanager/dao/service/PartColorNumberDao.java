@@ -35,10 +35,13 @@ public class PartColorNumberDao extends BaseDao<PartColorNumberEntity> {
             throw new ValidationException("Не указаны номера цвета детали");
         }
 
-        List<PartColorNumberEntity> existsNumbers = partColorNumberRepository.getPartColorNumbersByPartColorId(partColorEntity.getId());
+        List<PartColorNumberEntity> existsNumbers = partColorNumberRepository
+                .getPartColorNumbersByPartColorId(partColorEntity.getId());
         if (!isEmpty(existsNumbers)) {
-            Map<String, NumberDto> numbersMap = dtos.stream().collect(Collectors.toMap(item -> item.getNumber().toLowerCase(), item -> item));
-            Map<String, PartColorNumberEntity> existsMap = existsNumbers.stream().collect(Collectors.toMap(item -> item.getNumber().toLowerCase(), item -> item));
+            Map<String, NumberDto> numbersMap = dtos.stream()
+                    .collect(Collectors.toMap(item -> item.getNumber().toLowerCase(), item -> item));
+            Map<String, PartColorNumberEntity> existsMap = existsNumbers.stream()
+                    .collect(Collectors.toMap(item -> item.getNumber().toLowerCase(), item -> item));
             // удаляем отсутствующие номера
             existsNumbers.stream().filter(item -> !numbersMap.containsKey(item.getNumber().toLowerCase()))
                     .forEach(this::delete);

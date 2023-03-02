@@ -3,10 +3,13 @@ package ru.shark.home.legomanager.dao.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.legomanager.dao.dto.TotalDto;
-import ru.shark.home.legomanager.dao.repository.*;
+import ru.shark.home.legomanager.dao.repository.PartRepository;
+import ru.shark.home.legomanager.dao.repository.SeriesRepository;
+import ru.shark.home.legomanager.dao.repository.SetPartRepository;
+import ru.shark.home.legomanager.dao.repository.SetRepository;
+import ru.shark.home.legomanager.dao.repository.UserPartsRepository;
+import ru.shark.home.legomanager.dao.repository.UserSetsRepository;
 import ru.shark.home.legomanager.services.dto.TotalsRequestDto;
-
-import java.util.Optional;
 
 @Component
 public class TotalsDao {

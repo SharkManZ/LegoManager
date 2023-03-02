@@ -24,7 +24,7 @@ public interface PartCategoryRepository extends BaseRepository<PartCategoryEntit
     List<PartCategoryEntity> getAllCategories();
 
     /**
-     * Возвращает категории деталей входящих в набор
+     * Возвращает категории деталей входящих в набор.
      *
      * @param setId идентификатор набора
      * @return коллекция категорий

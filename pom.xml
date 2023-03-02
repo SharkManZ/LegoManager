@@ -27,6 +27,7 @@
         <google.guava.version>30.1.1-jre</google.guava.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.common.version>1.0</java.common.version>
+        <maven.checkstyle.plugin.version>3.0.0</maven.checkstyle.plugin.version>
     </properties>
 
     <dependencies>
@@ -147,6 +148,33 @@
                     <source>9</source>
                     <target>9</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <configLocation>style_checks.xml</configLocation>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>6.18</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

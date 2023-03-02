@@ -29,7 +29,7 @@ public interface PartColorNumberRepository extends BaseRepository<PartColorNumbe
     List<PartColorNumberEntity> getPartColorNumbersByPartColorIds(@Param("ids") Set<Long> ids);
 
     /**
-     * Возвращает основные номера цветов детали по основному номеру детали
+     * Возвращает основные номера цветов детали по основному номеру детали.
      *
      * @param partNumber основное номер детали
      * @return основные номера цветов

@@ -18,7 +18,7 @@ public interface PartRepository extends BaseRepository<PartEntity> {
     PartEntity findPartByNumber(@Param("number") String number);
 
     /**
-     * Возвращает количество деталей по идентификатору категории
+     * Возвращает количество деталей по идентификатору категории.
      *
      * @param categoryId идентификатор категории
      * @return количество наборов
@@ -46,7 +46,7 @@ public interface PartRepository extends BaseRepository<PartEntity> {
     List<Long> getPartIdsByNumbers(@Param("numbers") List<String> numbers);
 
     /**
-     * Возвращает количество цветов детали
+     * Возвращает количество цветов детали.
      *
      * @param partId идентификатор детали
      * @return кол-во

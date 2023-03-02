@@ -2,7 +2,7 @@ package ru.shark.home.legomanager.dao.dto;
 
 import java.util.List;
 
-public class PartFullDto extends PartDto{
+public class PartFullDto extends PartDto {
     private Integer colorsCount;
     private String minColorNumber;
     private List<ColorDto> colors;

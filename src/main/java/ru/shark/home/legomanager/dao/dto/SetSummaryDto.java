@@ -5,7 +5,7 @@ import java.util.List;
 public class SetSummaryDto {
     private String name;
     private String number;
-    private Integer Year;
+    private Integer year;
     private Integer partsCount;
     private Integer uniquePartsCount;
     private List<ColorDto> colors;
@@ -27,11 +27,11 @@ public class SetSummaryDto {
     }
 
     public Integer getYear() {
-        return Year;
+        return year;
     }
 
     public void setYear(Integer year) {
-        Year = year;
+        this.year = year;
     }
 
     public Integer getPartsCount() {

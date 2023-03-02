@@ -39,7 +39,7 @@ public interface UserPartsRepository extends BaseRepository<UserPartEntity> {
     Long getPartCountInUserSets(@Param("userId") Long userId, @Param("partColorId") Long partColorId);
 
     /**
-     * Возвращает количество видов деталей владельца
+     * Возвращает количество видов деталей владельца.
      *
      * @param userId идентификатор владельца
      * @return количество видов деталей

@@ -14,7 +14,9 @@ import ru.shark.home.legomanager.dao.repository.UsersRepository;
 import java.text.MessageFormat;
 import java.util.List;
 
-import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.common.common.ErrorConstants.EMPTY_ENTITY;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
 
 @Component
 public class UsersDao extends BaseDao<UserEntity> {

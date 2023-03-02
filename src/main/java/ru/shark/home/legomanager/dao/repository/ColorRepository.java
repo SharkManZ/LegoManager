@@ -18,7 +18,7 @@ public interface ColorRepository extends BaseRepository<ColorEntity> {
     ColorEntity findColorByName(@Param("name") String name);
 
     /**
-     * Возвращает список всех цветов с сортировкой по названию
+     * Возвращает список всех цветов с сортировкой по названию.
      *
      * @return список
      */

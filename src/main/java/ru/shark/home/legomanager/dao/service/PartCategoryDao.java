@@ -16,7 +16,9 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
-import static ru.shark.home.common.common.ErrorConstants.*;
+import static ru.shark.home.common.common.ErrorConstants.EMPTY_ENTITY;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_ALREADY_EXISTS;
+import static ru.shark.home.common.common.ErrorConstants.ENTITY_NOT_FOUND_BY_ID;
 import static ru.shark.home.legomanager.common.ErrorConstants.PART_CATEGORY_DELETE_WITH_SETS;
 
 @Component

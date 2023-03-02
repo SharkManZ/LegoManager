@@ -1,6 +1,6 @@
 package ru.shark.home.legomanager.dao.dto;
 
-public class SeriesFullDto extends SeriesDto{
+public class SeriesFullDto extends SeriesDto {
     private Long setsCount;
     private String imgName;
 

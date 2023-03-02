@@ -14,7 +14,11 @@ import ru.shark.home.legomanager.dao.repository.PartNumberRepository;
 import ru.shark.home.legomanager.dao.service.PartColorDao;
 import ru.shark.home.legomanager.services.dto.SearchDto;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;

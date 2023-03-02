@@ -20,7 +20,7 @@ public interface UsersRepository extends BaseRepository<UserEntity> {
     UserEntity findUserByName(@Param("name") String name);
 
     /**
-     * Возвращает список всех владельцев с сортировкой по названию
+     * Возвращает список всех владельцев с сортировкой по названию.
      *
      * @return список
      */

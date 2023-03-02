@@ -3,7 +3,6 @@ package ru.shark.home.legomanager.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.shark.home.common.dao.service.HqlQueryService;
-import ru.shark.home.common.dao.service.QueryService;
 import ru.shark.home.common.dao.service.SqlQueryService;
 
 import javax.persistence.EntityManager;
