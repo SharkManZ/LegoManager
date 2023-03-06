@@ -35,6 +35,7 @@ public class ExportServiceTest extends BaseServiceTest {
         when(exportDao.exportPartCategories()).thenReturn(new ArrayList<>());
         when(exportDao.exportSeries()).thenReturn(new ArrayList<>());
         when(exportDao.exportUsers()).thenReturn(new ArrayList<>());
+        when(exportDao.exportPartLoadSkip()).thenReturn(new ArrayList<>());
 
         // WHEN
         Response response = exportService.exportAllData();
@@ -45,5 +46,6 @@ public class ExportServiceTest extends BaseServiceTest {
         verify(exportDao, times(1)).exportPartCategories();
         verify(exportDao, times(1)).exportSeries();
         verify(exportDao, times(1)).exportUsers();
+        verify(exportDao, times(1)).exportPartLoadSkip();
     }
 }

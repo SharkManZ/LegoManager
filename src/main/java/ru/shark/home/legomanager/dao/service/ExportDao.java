@@ -6,6 +6,7 @@ import ru.shark.home.legomanager.dao.dto.export.ColorDictionaryDto;
 import ru.shark.home.legomanager.dao.dto.export.NumberDictionaryDto;
 import ru.shark.home.legomanager.dao.dto.export.PartCategoryDictionaryDto;
 import ru.shark.home.legomanager.dao.dto.export.PartDictionaryDto;
+import ru.shark.home.legomanager.dao.dto.export.PartLoadSkipDto;
 import ru.shark.home.legomanager.dao.dto.export.SeriesDictionaryDto;
 import ru.shark.home.legomanager.dao.dto.export.SetDictionaryDto;
 import ru.shark.home.legomanager.dao.dto.export.SetPartDictionaryDto;
@@ -23,9 +24,11 @@ import ru.shark.home.legomanager.dao.entity.SetPartEntity;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.dao.entity.UserPartEntity;
 import ru.shark.home.legomanager.dao.entity.UserSetEntity;
+import ru.shark.home.legomanager.dao.entity.load.PartLoadSkipEntity;
 import ru.shark.home.legomanager.dao.repository.ColorRepository;
 import ru.shark.home.legomanager.dao.repository.PartCategoryRepository;
 import ru.shark.home.legomanager.dao.repository.PartColorRepository;
+import ru.shark.home.legomanager.dao.repository.PartLoadSkipRepository;
 import ru.shark.home.legomanager.dao.repository.PartRepository;
 import ru.shark.home.legomanager.dao.repository.SeriesRepository;
 import ru.shark.home.legomanager.dao.repository.SetPartRepository;
@@ -37,6 +40,7 @@ import ru.shark.home.legomanager.dao.repository.UsersRepository;
 import javax.validation.ValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -52,6 +56,7 @@ public class ExportDao {
     private UsersRepository usersRepository;
     private UserSetsRepository userSetsRepository;
     private UserPartsRepository userPartsRepository;
+    private PartLoadSkipRepository partLoadSkipRepository;
 
     /**
      * Экспорт цветов.
@@ -91,6 +96,13 @@ public class ExportDao {
     public List<UserDictionaryDto> exportUsers() {
         List<UserEntity> list = usersRepository.getAllUsers();
         return list.stream().map(this::userEntityToDictionary).collect(Collectors.toList());
+    }
+
+    public List<PartLoadSkipDto> exportPartLoadSkip() {
+        return partLoadSkipRepository.getAllPartSkip()
+                .stream()
+                .map(entity -> new PartLoadSkipDto(entity.getPattern()))
+                .collect(Collectors.toList());
     }
 
     private UserDictionaryDto userEntityToDictionary(UserEntity entity) {
@@ -239,5 +251,10 @@ public class ExportDao {
     @Autowired
     public void setUserPartsRepository(UserPartsRepository userPartsRepository) {
         this.userPartsRepository = userPartsRepository;
+    }
+
+    @Autowired
+    public void setPartLoadSkipRepository(PartLoadSkipRepository partLoadSkipRepository) {
+        this.partLoadSkipRepository = partLoadSkipRepository;
     }
 }

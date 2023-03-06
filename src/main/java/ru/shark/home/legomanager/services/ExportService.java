@@ -22,7 +22,8 @@ public class ExportService {
         List<FileDto> files = Arrays.asList(new FileDto("colors.json", exportDao.exportColors()),
                 new FileDto("partCategories.json", exportDao.exportPartCategories()),
                 new FileDto("series.json", exportDao.exportSeries()),
-                new FileDto("users.json", exportDao.exportUsers()));
+                new FileDto("users.json", exportDao.exportUsers()),
+                new FileDto("partLoadSkip.json", exportDao.exportPartLoadSkip()));
         byte[] bytes = ZipUtils.objectsListToZip(files);
         String dateStr = DateFormatUtils.format(new Date(), "dd.MM.yyyy");
         String fileName = "lego_data_export_" + dateStr + ".zip";
