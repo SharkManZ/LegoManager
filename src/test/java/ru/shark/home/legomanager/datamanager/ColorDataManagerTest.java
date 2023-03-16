@@ -107,6 +107,18 @@ public class ColorDataManagerTest extends DbTest {
         Assertions.assertEquals(2, colors.size());
     }
 
+    @Test
+    public void getPartNotExistsColors() {
+        // GIVEN
+        Long partId = entityFinder.findPartId("3010");
+
+        // WHEN
+        List<ColorDto> list = colorDataManager.getPartNotExistsColors(partId);
+
+        // THEN
+        Assertions.assertEquals(1L, list.size());
+    }
+
     private ColorDto prepareDto() {
         ColorDto dto = new ColorDto();
         dto.setName("green");

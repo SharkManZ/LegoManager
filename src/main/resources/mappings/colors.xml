@@ -18,4 +18,10 @@
         where sp.set.id = :setId
         order by c.name</query>
     </named-query>
+    <named-query name="getNotAddedPartColorsByPartId">
+        <query>select c from ColorEntity c
+            where not exists (select 1 from PartColorEntity pc where pc.part.id = :partId and pc.color.id = c.id)
+            order by c.name
+        </query>
+    </named-query>
 </entity-mappings>

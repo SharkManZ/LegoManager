@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.dto.PartDto;
+import ru.shark.home.legomanager.services.ColorService;
 import ru.shark.home.legomanager.services.PartColorService;
 import ru.shark.home.legomanager.services.PartService;
 
@@ -23,6 +24,7 @@ public class PartEndpoint {
 
     private PartService service;
     private PartColorService partColorService;
+    private ColorService colorService;
 
     @POST
     @Path("/list")
@@ -48,6 +50,12 @@ public class PartEndpoint {
         return Response.ok(partColorService.getListByPart(id, search)).build();
     }
 
+    @POST
+    @Path("/{id}/color/not/exists/list")
+    public Response getNotExistsColorsList(@PathParam("id") Long id) {
+        return Response.ok(colorService.getPartNotExistsColors(id)).build();
+    }
+
     @Autowired
     public void setService(PartService service) {
         this.service = service;
@@ -56,5 +64,10 @@ public class PartEndpoint {
     @Autowired
     public void setPartColorService(PartColorService partColorService) {
         this.partColorService = partColorService;
+    }
+
+    @Autowired
+    public void setColorService(ColorService colorService) {
+        this.colorService = colorService;
     }
 }

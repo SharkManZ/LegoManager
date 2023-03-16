@@ -199,6 +199,18 @@ public class ColorDaoTest extends DbTest {
         Assertions.assertEquals(2, colors.size());
     }
 
+    @Test
+    public void getPartNotExistsColors() {
+        // GIVEN
+        Long partId = entityFinder.findPartId("3010");
+
+        // WHEN
+        List<ColorEntity> list = colorDao.getPartNotExistsColors(partId);
+
+        // THEN
+        Assertions.assertEquals(1L, list.size());
+    }
+
     private ColorEntity prepareEntity() {
         ColorEntity entity = new ColorEntity();
         entity.setName("Green");

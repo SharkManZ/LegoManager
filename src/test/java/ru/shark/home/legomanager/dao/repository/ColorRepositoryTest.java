@@ -53,7 +53,7 @@ public class ColorRepositoryTest extends DbTest {
         List<ColorEntity> colors = colorRepository.getAllColors();
 
         // THEN
-        Assertions.assertEquals(2, colors.size());
+        Assertions.assertEquals(3, colors.size());
         Assertions.assertTrue(ordering.isOrdered(colors));
     }
 
@@ -67,5 +67,17 @@ public class ColorRepositoryTest extends DbTest {
 
         // THEN
         Assertions.assertEquals(2, colors.size());
+    }
+
+    @Test
+    public void getNotAddedPartColorsByPartId() {
+        // GIVEN
+        Long partId = entityFinder.findPartId("3010");
+
+        // WHEN
+        List<ColorEntity> list = colorRepository.getNotAddedPartColorsByPartId(partId);
+
+        // THEN
+        Assertions.assertEquals(1L, list.size());
     }
 }

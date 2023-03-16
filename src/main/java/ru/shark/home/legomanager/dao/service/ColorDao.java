@@ -71,6 +71,10 @@ public class ColorDao extends BaseDao<ColorEntity> {
         return colorRepository.getColorsBySetId(setId);
     }
 
+    public List<ColorEntity> getPartNotExistsColors(Long partId) {
+        return colorRepository.getNotAddedPartColorsByPartId(partId);
+    }
+
     @Autowired
     public void setColorRepository(ColorRepository colorRepository) {
         this.colorRepository = colorRepository;

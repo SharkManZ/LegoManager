@@ -33,4 +33,13 @@ public interface ColorRepository extends BaseRepository<ColorEntity> {
      */
     @Query(name = "getColorsBySetId")
     List<ColorEntity> getColorsBySetId(@Param("setId") Long setId);
+
+    /**
+     * Возвращает цвета, которых нет в указанном виде детали.
+     *
+     * @param partId идентификатор вида детали
+     * @return список цветов
+     */
+    @Query(name = "getNotAddedPartColorsByPartId")
+    List<ColorEntity> getNotAddedPartColorsByPartId(@Param("partId") Long partId);
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.services.BaseLogicService;
 import ru.shark.home.common.services.dto.PageRequest;
+import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.ColorDto;
 import ru.shark.home.legomanager.datamanager.ColorDataManager;
@@ -64,6 +65,21 @@ public class ColorService extends BaseLogicService {
             response.setSuccess(true);
         } catch (Exception e) {
             response = BaseResponse.buildError(ERR_500, "Ошибка при удалении цвета: " + e.getMessage());
+        }
+
+        return response;
+    }
+
+    public BaseResponse getPartNotExistsColors(Long partId) {
+        BaseResponse response;
+
+        try {
+            response = new BaseResponse();
+            response.setBody(colorDataManager.getPartNotExistsColors(partId));
+            response.setSuccess(true);
+        } catch (Exception e) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при получении отсутствующих цветов детали: " +
+                    e.getMessage());
         }
 
         return response;

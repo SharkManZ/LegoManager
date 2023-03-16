@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.Search;
 import ru.shark.home.legomanager.dao.dto.PartDto;
+import ru.shark.home.legomanager.services.ColorService;
 import ru.shark.home.legomanager.services.PartColorService;
 import ru.shark.home.legomanager.services.PartService;
 import ru.shark.home.legomanager.util.BaseEndpointTest;
@@ -19,19 +20,22 @@ public class PartEndpointTest extends BaseEndpointTest {
     private PartEndpoint partEndpoint;
     private PartService partService;
     private PartColorService partColorService;
+    private ColorService colorService;
 
     @BeforeAll
     public void init() {
         partService = mock(PartService.class);
         partColorService = mock(PartColorService.class);
+        colorService = mock(ColorService.class);
         partEndpoint = new PartEndpoint();
         partEndpoint.setService(partService);
         partEndpoint.setPartColorService(partColorService);
+        partEndpoint.setColorService(colorService);
     }
 
     @BeforeEach
     public void initMethod() {
-        reset(partService, partColorService);
+        reset(partService, partColorService, colorService);
     }
 
     @Test
@@ -75,5 +79,15 @@ public class PartEndpointTest extends BaseEndpointTest {
         // THEN
         checkResponse(response);
         verify(partColorService, times(1)).getListByPart(anyLong(), any(Search.class));
+    }
+
+    @Test
+    public void getNotExistsColorsList() {
+        // WHEN
+        Response response = partEndpoint.getNotExistsColorsList(1L);
+
+        // THEN
+        checkResponse(response);
+        verify(colorService, times(1)).getPartNotExistsColors(anyLong());
     }
 }

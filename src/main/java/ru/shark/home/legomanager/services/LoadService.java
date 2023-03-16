@@ -54,6 +54,8 @@ public class LoadService extends BaseLogicService {
                 Pair.of("x77ac200", "4297719"));
         partsComparison.put("2850_Light Bluish Gray Technic Engine Cylinder (Undetermined Type)",
                 Pair.of("2850a", "4234251"));
+        partsComparison.put("4532_Reddish Brown Container, Cupboard 2 x 3 x 2 (Undetermined Type)",
+                Pair.of("4532", "6132732"));
     }
 
     public BaseResponse checkParts(String setNumber) {
