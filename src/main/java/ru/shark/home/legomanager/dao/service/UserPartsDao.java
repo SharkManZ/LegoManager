@@ -46,7 +46,7 @@ public class UserPartsDao extends BaseDao<UserPartEntity> {
         params.put("lowerCount", UserPartRequestType.LOWER_COUNT.equals(requestDto.getRequestType()) ? 1 : 0);
         List<String> searchFields = Arrays.asList("colorNumber", "alternateColorNumber", "number", "alternateNumber",
                 "categoryName", "partName");
-        return userPartsRepository.getNativeWithPagination("getUserPartsByUser", request, params, searchFields,
+        return getNativeWithPagination("getUserPartsByUser", request, params, searchFields,
                 "getUserPartsByUserMapping");
     }
 

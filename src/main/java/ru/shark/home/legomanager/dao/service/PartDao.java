@@ -58,7 +58,7 @@ public class PartDao extends BaseDao<PartEntity> {
         if (isEmpty(request.getSorts())) {
             request.setSorts(Arrays.asList(new RequestSort(NUMBER_FIELD, null)));
         }
-        return getListWithAdditionalFields(partRepository.getNativeWithPagination("getParts", request,
+        return getListWithAdditionalFields(getNativeWithPagination("getParts", request,
                 null, searchFields, advancedSearchFields, "getPartsColumns"));
     }
 

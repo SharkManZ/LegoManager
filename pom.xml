@@ -63,7 +63,7 @@
         <!-- UTIL -->
         <dependency>
             <groupId>ru.shark.home.common</groupId>
-            <artifactId>java-common</artifactId>
+            <artifactId>java-common-starter</artifactId>
             <version>${java.common.version}</version>
         </dependency>
         <dependency>

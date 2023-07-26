@@ -38,7 +38,7 @@ public class SetPartDao extends BaseDao<SetPartEntity> {
     public PageableList<SetPartFullDto> getPartsBySetId(Long setId, RequestCriteria requestCriteria) {
         Map<String, Object> params = new HashMap<>();
         params.put("setId", setId);
-        return setPartRepository.getNativeWithPagination("getSetPartsBySetId",
+        return getNativeWithPagination("getSetPartsBySetId",
                 requestCriteria, params,
                 Arrays.asList("colorNumber", "alternateColorNumber", "number",
                         "alternateNumber", "partName", "colorName"), "getSetPartsBySetIdColumns");

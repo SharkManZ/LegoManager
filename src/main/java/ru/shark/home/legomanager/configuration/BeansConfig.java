@@ -22,8 +22,6 @@ public class BeansConfig {
 
     @Bean
     public SqlQueryService sqlQueryService() {
-        SqlQueryService queryService = new SqlQueryService();
-        queryService.setEntityManager(entityManager);
-        return queryService;
+        return new SqlQueryService();
     }
 }
