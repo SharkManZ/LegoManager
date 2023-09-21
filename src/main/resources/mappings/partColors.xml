@@ -65,8 +65,8 @@
         <query>
             select  lpc.lego_id
             from lego_part_color lpc join lego_part lp on lp.lego_id = lpc.LEGO_PART_ID
-                where exists (select 1 from lego_part_number pn where pn.lego_part_id = lp.lego_id and lower(pn.lego_number) = :partNumber)
-                and exists (select 1 from lego_part_color_number pcn where pcn.lego_part_color_id = lpc.lego_id and lower(pcn.lego_number) = :colorNumber)
+                where exists (select 1 from lego_part_number pn where pn.lego_part_id = lp.lego_id and lower(pn.lego_number) = lower(:partNumber))
+                and exists (select 1 from lego_part_color_number pcn where pcn.lego_part_color_id = lpc.lego_id and lower(pcn.lego_number) = lower(:colorNumber))
         </query>
     </named-native-query>
 </entity-mappings>

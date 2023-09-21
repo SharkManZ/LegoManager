@@ -50,12 +50,18 @@ public class LoadService extends BaseLogicService {
                 Pair.of("92409", "4617848"));
         partsComparison.put("4532_White Container, Cupboard 2 x 3 x 2 (Undetermined Type)",
                 Pair.of("4532", "4619665"));
-        partsComparison.put("x77ac200_Black String, Cord Thin   200cm",
+        partsComparison.put("x77ac200_Black String, Cord Thin 200cm",
                 Pair.of("x77ac200", "4297719"));
         partsComparison.put("2850_Light Bluish Gray Technic Engine Cylinder (Undetermined Type)",
                 Pair.of("2850a", "4234251"));
         partsComparison.put("4532_Reddish Brown Container, Cupboard 2 x 3 x 2 (Undetermined Type)",
                 Pair.of("4532", "6132732"));
+        partsComparison.put("x77cc200_Dark Bluish Gray String, Cord Medium Thickness 200cm",
+                Pair.of("x77cc200", "6404233"));
+        partsComparison.put("x77cc350_Dark Bluish Gray String, Cord Medium Thickness 350cm",
+                Pair.of("x77cc350", "6404245"));
+        partsComparison.put("x77cc650_Dark Bluish Gray String, Cord Medium Thickness 650cm",
+                Pair.of("x77cc650", "6371192"));
     }
 
     public BaseResponse checkParts(String setNumber) {
@@ -164,7 +170,7 @@ public class LoadService extends BaseLogicService {
     }
 
     private RemoteSetPartsDto checkPartComparison(RemoteSetPartsDto dto) {
-        String partKey = dto.getNumber().trim() + "_" + dto.getName().trim();
+        String partKey = dto.getNumber().trim() + "_" + dto.getName().trim().replaceAll("\\s+", " ");
         Pair<String, String> comparison = partsComparison.getOrDefault(partKey, null);
         if (comparison != null) {
             dto.setNumber(comparison.getLeft());

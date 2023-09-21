@@ -40,7 +40,7 @@ public class PartDao extends BaseDao<PartEntity> {
     private static String NAME_FIELD = "name";
     private static String NUMBER_FIELD = "number";
     private static String ALTERNATE_NUMBER_FIELD_SEARCH = "exists (select 1 from lego_part_number lpn " +
-            "where lpn.lego_part_id = a.id and lpn.lego_number {0})";
+            "where lpn.lego_part_id = a.id and lower(lpn.lego_number) {0})";
 
     private PartRepository partRepository;
     private PartCategoryRepository partCategoryRepository;
