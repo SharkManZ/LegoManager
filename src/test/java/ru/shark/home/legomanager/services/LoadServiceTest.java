@@ -5,9 +5,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.shark.home.common.dao.common.PageableList;
+import ru.shark.home.common.dao.common.RequestCriteria;
+import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.PartColorDto;
 import ru.shark.home.legomanager.dao.dto.PartDto;
+import ru.shark.home.legomanager.dao.dto.load.PartLoadSkipDto;
 import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
 import ru.shark.home.legomanager.datamanager.PartLoadSkipDataManager;
@@ -93,20 +97,36 @@ public class LoadServiceTest extends BaseServiceTest {
         verify(setDataLoader, times(1)).loadSetParts(eq("42082"), anyList());
     }
 
+    @Test
+    public void getPartLoadSkipList() {
+        // GIVEN
+        PageRequest pageRequest = new PageRequest(0, 10);
+        when(partLoadSkipDataManager.getWithPagination(any(RequestCriteria.class))).thenReturn(new PageableList<>(List.of(new PartLoadSkipDto()), 1L));
+
+        // WHEN
+        BaseResponse baseResponse = loadService.getPartLoadSkipList(pageRequest);
+
+        // THEN
+        checkPagingResponse(baseResponse);
+        verify(partLoadSkipDataManager, times(1)).getWithPagination(any(RequestCriteria.class));
+    }
+
+    @Test
+    public void partLoadSkipSave() {
+        // GIVEN
+        when(partLoadSkipDataManager.save(any(PartLoadSkipDto.class))).thenReturn(new PartLoadSkipDto());
+
+        // WHEN
+        BaseResponse baseResponse = loadService.partLoadSkipSave(new PartLoadSkipDto());
+
+        // THEN
+        checkResponse(baseResponse);
+        verify(partLoadSkipDataManager, times(1)).save(any(PartLoadSkipDto.class));
+    }
+
     private String getFileData(String path) throws IOException, URISyntaxException {
         File fl = new File(this.getClass().getResource(path).toURI());
         return FileUtils.readFileToString(fl, StandardCharsets.UTF_8);
-    }
-
-    private PartColorDto createPartColor(String partNumber, String colorNumber) {
-        PartColorDto dto = new PartColorDto();
-        dto.setId(1L);
-        dto.setNumber(colorNumber);
-        dto.setPart(new PartDto());
-        dto.getPart().setNumber(partNumber);
-        dto.getPart().setName("part name " + partNumber);
-
-        return dto;
     }
 
     private RemoteSetPartsDto prepareRemoteDto(Long id, String number, String colorNumber, Integer count) {

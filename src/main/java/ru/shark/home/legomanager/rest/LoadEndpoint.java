@@ -2,6 +2,8 @@ package ru.shark.home.legomanager.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.shark.home.common.services.dto.PageRequest;
+import ru.shark.home.legomanager.dao.dto.load.PartLoadSkipDto;
 import ru.shark.home.legomanager.services.LoadService;
 
 import javax.ws.rs.Consumes;
@@ -30,6 +32,18 @@ public class LoadEndpoint {
     @Path("/{setNumber}/loadParts")
     public Response loadSetParts(@PathParam("setNumber") String setNumber) {
         return Response.ok(loadService.loadSetParts(setNumber)).build();
+    }
+
+    @POST
+    @Path("/part/skip/list")
+    public Response partLoadSkipList(PageRequest request) {
+        return Response.ok(loadService.getPartLoadSkipList(request)).build();
+    }
+
+    @POST
+    @Path("/part/skip/save")
+    public Response partLoadSkipSave(PartLoadSkipDto dto) {
+        return Response.ok(loadService.partLoadSkipSave(dto)).build();
     }
 
     @Autowired

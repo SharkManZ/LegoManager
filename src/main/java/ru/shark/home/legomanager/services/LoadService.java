@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.services.BaseLogicService;
+import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.load.PartLoadSkipDto;
 import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
@@ -99,6 +100,32 @@ public class LoadService extends BaseLogicService {
         } catch (Exception e) {
             response = BaseResponse.buildError(ERR_500, "Ошибка при загрузка деталей набора " + setNumber +
                     ": " + e.getMessage());
+        }
+
+        return response;
+    }
+
+    public BaseResponse getPartLoadSkipList(PageRequest request) {
+        BaseResponse response;
+        try {
+            response = new BaseResponse();
+            response.setBody(partLoadSkipDataManager.getWithPagination(getCriteria(request, PartLoadSkipDto.class)));
+            response.setSuccess(true);
+        } catch (Exception ex) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при получении списка деталей пропускаемых при импорте: " + ex.getMessage());
+        }
+
+        return response;
+    }
+
+    public BaseResponse partLoadSkipSave(PartLoadSkipDto dto) {
+        BaseResponse response;
+        try {
+            response = new BaseResponse();
+            response.setBody(partLoadSkipDataManager.save(dto));
+            response.setSuccess(true);
+        } catch (Exception ex) {
+            response = BaseResponse.buildError(ERR_500, "Ошибка при сохранении пропускаемой при импорте детали: " + ex.getMessage());
         }
 
         return response;
