@@ -1,6 +1,6 @@
 package ru.shark.home.legomanager.dao.dto.load;
 
-public class RemoteSetPartsDto {
+public class RemoteSetPartDto {
     private Long id;
     private Integer count;
     private String number;

@@ -8,11 +8,12 @@ import ru.shark.home.common.services.BaseLogicService;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.load.PartLoadSkipDto;
-import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
+import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
 import ru.shark.home.legomanager.datamanager.PartLoadSkipDataManager;
 import ru.shark.home.legomanager.exception.RemoteDataException;
 import ru.shark.home.legomanager.loader.SetDataLoader;
+import ru.shark.home.legomanager.services.dto.RemoteSetPartsDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,11 +140,16 @@ public class LoadService extends BaseLogicService {
                 .orElse(null);
     }
 
-    private List<RemoteSetPartsDto> getMissingParts(String setId, String setNumber) {
-        return setDataLoader.findMissingParts(getPartsFromRemote(setId, setNumber));
+    private RemoteSetPartsDto getMissingParts(String setId, String setNumber) {
+        List<RemoteSetPartDto> parts = getPartsFromRemote(setId, setNumber);
+        RemoteSetPartsDto result = new RemoteSetPartsDto();
+        result.setDiffPartsCount(parts.size());
+        result.setParts(setDataLoader.findMissingParts(parts));
+        result.setMissingDiffPartsCount(result.getParts().size());
+        return result;
     }
 
-    private List<RemoteSetPartsDto> getPartsFromRemote(String setId, String setNumber) {
+    private List<RemoteSetPartDto> getPartsFromRemote(String setId, String setNumber) {
         List<String> skipPatterns = partLoadSkipDataManager.findALl().stream().map(PartLoadSkipDto::getPattern)
                 .collect(Collectors.toList());
         String partsData = remoteDataProvider.getDataFromUrl(String.format(SOURCE_PORTAL + PARTS_URL, setId, setNumber),
@@ -152,15 +158,16 @@ public class LoadService extends BaseLogicService {
         int idx = 0;
         long id = 0L;
         boolean tableStarted = false;
-        List<RemoteSetPartsDto> result = new ArrayList<>();
-        RemoteSetPartsDto dto;
+        RemoteSetPartsDto result = new RemoteSetPartsDto();
+        List<RemoteSetPartDto> parts = new ArrayList<>();
+        RemoteSetPartDto dto;
         while (idx < rows.length) {
             String row = rows[idx];
             if (row.contains("pciinvItemTypeHeader")) {
                 tableStarted = true;
             } else if (tableStarted && row.contains("TD") && row.contains("src=")) {
                 id++;
-                dto = new RemoteSetPartsDto();
+                dto = new RemoteSetPartDto();
                 dto.setId(id);
                 String rowPart = row.substring(row.indexOf("src=")).replace("src=\"", "");
                 dto.setImgUrl(rowPart.substring(2, rowPart.indexOf("\" ")));
@@ -186,17 +193,17 @@ public class LoadService extends BaseLogicService {
                         .replace(" ", "")
                         .replace("or", ", ")
                 );
-                result.add(checkPartComparison(dto));
+                parts.add(checkPartComparison(dto));
                 idx = idx + 3;
             } else if (tableStarted && row.contains("Extra Items")) {
                 break;
             }
             idx++;
         }
-        return result;
+        return parts;
     }
 
-    private RemoteSetPartsDto checkPartComparison(RemoteSetPartsDto dto) {
+    private RemoteSetPartDto checkPartComparison(RemoteSetPartDto dto) {
         String partKey = dto.getNumber().trim() + "_" + dto.getName().trim().replaceAll("\\s+", " ");
         Pair<String, String> comparison = partsComparison.getOrDefault(partKey, null);
         if (comparison != null) {

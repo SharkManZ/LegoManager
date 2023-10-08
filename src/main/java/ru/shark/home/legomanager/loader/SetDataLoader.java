@@ -4,7 +4,7 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
-import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
+import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartDto;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.SetEntity;
 import ru.shark.home.legomanager.dao.entity.SetPartEntity;
@@ -44,7 +44,7 @@ public class SetDataLoader {
     private PartColorRepository partColorRepository;
     private EntityManager em;
 
-    public List<RemoteSetPartsDto> findMissingParts(List<RemoteSetPartsDto> parts) {
+    public List<RemoteSetPartDto> findMissingParts(List<RemoteSetPartDto> parts) {
         clearLoadTables();
         loadParts(parts);
         loadPartNumbers(parts);
@@ -54,13 +54,13 @@ public class SetDataLoader {
         return parts.stream().filter(item -> missingIds.contains(item.getId())).collect(Collectors.toList());
     }
 
-    private void loadParts(List<RemoteSetPartsDto> parts) {
+    private void loadParts(List<RemoteSetPartDto> parts) {
         em.unwrap(Session.class).doWork(connection -> {
             String insertString = "insert into LEGO_PART_LOAD_TABLE (LEGO_ID, LEGO_COUNT, LEGO_NAME, LEGO_URL) " +
                     " values (?, ?, ?, ?)";
             int rowNum = 1;
             try (PreparedStatement st = connection.prepareStatement(insertString)) {
-                for (RemoteSetPartsDto part : parts) {
+                for (RemoteSetPartDto part : parts) {
                     st.setLong(1, part.getId());
                     st.setInt(2, part.getCount());
                     st.setString(3, part.getName());
@@ -83,13 +83,13 @@ public class SetDataLoader {
         em.createNativeQuery("delete from LEGO_PART_LOAD_NUMBER_TABLE").executeUpdate();
     }
 
-    private void loadPartNumbers(List<RemoteSetPartsDto> parts) {
+    private void loadPartNumbers(List<RemoteSetPartDto> parts) {
         em.unwrap(Session.class).doWork(connection -> {
             String insertString = "insert into LEGO_PART_LOAD_NUMBER_TABLE (LEGO_PART_ID, LEGO_NUMBER, LEGO_TYPE) " +
                     " values (?, ?, ?)";
             int rowNum = 1;
             try (PreparedStatement st = connection.prepareStatement(insertString)) {
-                for (RemoteSetPartsDto part : parts) {
+                for (RemoteSetPartDto part : parts) {
                     rowNum = processStatement(st, part.getId(), part.getNumber().trim(), LoadNumberType.MAIN, rowNum);
                     for (String number : Arrays.asList(part.getColorNumber().split(","))) {
                         rowNum = processStatement(st, part.getId(), number.trim(), LoadNumberType.COLOR, rowNum);
@@ -115,9 +115,9 @@ public class SetDataLoader {
         return rowNum;
     }
 
-    public void loadSetParts(String setNumber, List<RemoteSetPartsDto> setParts) {
+    public void loadSetParts(String setNumber, List<RemoteSetPartDto> setParts) {
         SetEntity setEntity = validateSet(setNumber, setParts);
-        for (RemoteSetPartsDto dto : setParts) {
+        for (RemoteSetPartDto dto : setParts) {
             SetPartEntity entity = new SetPartEntity();
             entity.setSet(setEntity);
             Long partColorId = partColorRepository
@@ -132,7 +132,7 @@ public class SetDataLoader {
         }
     }
 
-    private SetEntity validateSet(String setNumber, List<RemoteSetPartsDto> setParts) {
+    private SetEntity validateSet(String setNumber, List<RemoteSetPartDto> setParts) {
         if (isBlank(setNumber)) {
             throw new ValidationException(EMPTY_SET_NUMBER);
         }

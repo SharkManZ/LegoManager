@@ -9,13 +9,12 @@ import ru.shark.home.common.dao.common.PageableList;
 import ru.shark.home.common.dao.common.RequestCriteria;
 import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
-import ru.shark.home.legomanager.dao.dto.PartColorDto;
-import ru.shark.home.legomanager.dao.dto.PartDto;
 import ru.shark.home.legomanager.dao.dto.load.PartLoadSkipDto;
-import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
+import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartDto;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
 import ru.shark.home.legomanager.datamanager.PartLoadSkipDataManager;
 import ru.shark.home.legomanager.loader.SetDataLoader;
+import ru.shark.home.legomanager.services.dto.RemoteSetPartsDto;
 import ru.shark.home.legomanager.util.BaseServiceTest;
 
 import java.io.File;
@@ -71,8 +70,10 @@ public class LoadServiceTest extends BaseServiceTest {
 
         // THEN
         checkResponseWithBody(response);
-        List<RemoteSetPartsDto> body = (List<RemoteSetPartsDto>) response.getBody();
-        Assertions.assertEquals(2, body.size());
+        RemoteSetPartsDto body = (RemoteSetPartsDto) response.getBody();
+        Assertions.assertEquals(2, body.getParts().size());
+        Assertions.assertEquals(264, body.getDiffPartsCount());
+        Assertions.assertEquals(2, body.getMissingDiffPartsCount());
         verify(setDataLoader, times(1)).findMissingParts(anyList());
         verify(remoteDataProvider, times(2)).getDataFromUrl(anyString(), anyString());
     }
@@ -129,8 +130,8 @@ public class LoadServiceTest extends BaseServiceTest {
         return FileUtils.readFileToString(fl, StandardCharsets.UTF_8);
     }
 
-    private RemoteSetPartsDto prepareRemoteDto(Long id, String number, String colorNumber, Integer count) {
-        RemoteSetPartsDto dto = new RemoteSetPartsDto();
+    private RemoteSetPartDto prepareRemoteDto(Long id, String number, String colorNumber, Integer count) {
+        RemoteSetPartDto dto = new RemoteSetPartDto();
         dto.setId(id);
         dto.setNumber(number);
         dto.setColorNumber(colorNumber);

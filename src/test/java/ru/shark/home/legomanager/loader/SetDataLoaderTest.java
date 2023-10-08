@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartsDto;
+import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartDto;
 import ru.shark.home.legomanager.util.DbTest;
 
 import javax.validation.ValidationException;
@@ -34,7 +34,7 @@ public class SetDataLoaderTest extends DbTest {
     public void loadSetParts() {
         // GIVEN
         String setNum = "60296";
-        List<RemoteSetPartsDto> list = Arrays.asList(prepareRemoteDto(1L, "3010", "112231", 10),
+        List<RemoteSetPartDto> list = Arrays.asList(prepareRemoteDto(1L, "3010", "112231", 10),
                 prepareRemoteDto(2L, "555", "55531", 5));
         Long partColorId1 = entityFinder.findPartColorId("112231");
         Long partColorId2 = entityFinder.findPartColorId("55531");
@@ -54,7 +54,7 @@ public class SetDataLoaderTest extends DbTest {
     public void loadSetPartsWithValidateErrors() {
         // GIVEN
         String setNum = "60296";
-        List<RemoteSetPartsDto> list = Arrays.asList(prepareRemoteDto(1L, "3010", "112231", 10),
+        List<RemoteSetPartDto> list = Arrays.asList(prepareRemoteDto(1L, "3010", "112231", 10),
                 prepareRemoteDto(2L, "555", "55531", 5));
         // WHEN
         loadWithError(null, list, EMPTY_SET_NUMBER);
@@ -69,7 +69,7 @@ public class SetDataLoaderTest extends DbTest {
     public void loadSetPartsWithNotFound() {
         // GIVEN
         String setNum = "60296";
-        List<RemoteSetPartsDto> list = Arrays.asList(prepareRemoteDto(1L, "3010", "112231", 10),
+        List<RemoteSetPartDto> list = Arrays.asList(prepareRemoteDto(1L, "3010", "112231", 10),
                 prepareRemoteDto(2L, "555", "55532", 5));
         Long partColorId1 = entityFinder.findPartColorId("112231");
         Long partColorId2 = entityFinder.findPartColorId("55531");
@@ -87,18 +87,18 @@ public class SetDataLoaderTest extends DbTest {
     @Test
     public void findMissingParts() {
         // GIVEN
-        List<RemoteSetPartsDto> list = Arrays.asList(prepareRemoteDto(1L, "3010", "112231, 212231", 10),
+        List<RemoteSetPartDto> list = Arrays.asList(prepareRemoteDto(1L, "3010", "112231, 212231", 10),
                 prepareRemoteDto(2L, "555", "55531", 5));
 
         // WHEN
-        List<RemoteSetPartsDto> result = setDataLoader.findMissingParts(list);
+        List<RemoteSetPartDto> result = setDataLoader.findMissingParts(list);
 
         // THEN
         Assertions.assertEquals(1, result.size());
         Assertions.assertEquals("3010", result.get(0).getNumber());
     }
 
-    private void loadWithError(String setNum, List<RemoteSetPartsDto> list, String err) {
+    private void loadWithError(String setNum, List<RemoteSetPartDto> list, String err) {
         try {
             setDataLoader.loadSetParts(setNum, list);
             Assertions.fail();
@@ -107,8 +107,8 @@ public class SetDataLoaderTest extends DbTest {
         }
     }
 
-    private RemoteSetPartsDto prepareRemoteDto(Long id, String number, String colorNumber, Integer count) {
-        RemoteSetPartsDto dto = new RemoteSetPartsDto();
+    private RemoteSetPartDto prepareRemoteDto(Long id, String number, String colorNumber, Integer count) {
+        RemoteSetPartDto dto = new RemoteSetPartDto();
         dto.setId(id);
         dto.setNumber(number);
         dto.setColorNumber(colorNumber);
