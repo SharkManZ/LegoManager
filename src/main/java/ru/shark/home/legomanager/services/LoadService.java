@@ -179,7 +179,7 @@ public class LoadService extends BaseLogicService {
                 dto.setNumber(numberRow.substring(2, numberRow.indexOf("</A>")));
                 String lastRow = rows[idx + 3];
                 lastRow = lastRow.substring(lastRow.indexOf("<b>"));
-                String partName = lastRow.substring(3, lastRow.indexOf("</b>"));
+                String partName = lastRow.substring(3, lastRow.indexOf("</b>")).replaceAll("\\s+", " ").trim();
 
                 if (skipPatterns.stream().anyMatch(item -> partName.toLowerCase().contains(item.toLowerCase()))) {
                     idx++;
