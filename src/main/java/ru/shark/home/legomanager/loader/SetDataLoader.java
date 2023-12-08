@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -61,6 +62,10 @@ public class SetDataLoader {
             int rowNum = 1;
             try (PreparedStatement st = connection.prepareStatement(insertString)) {
                 for (RemoteSetPartDto part : parts) {
+                    // пропускаем детали которые ранее уже нашли в таблице сопоставлений
+                    if (part.getComparisonPartColorId() != null) {
+                        continue;
+                    }
                     st.setLong(1, part.getId());
                     st.setInt(2, part.getCount());
                     st.setString(3, part.getName());
@@ -90,6 +95,9 @@ public class SetDataLoader {
             int rowNum = 1;
             try (PreparedStatement st = connection.prepareStatement(insertString)) {
                 for (RemoteSetPartDto part : parts) {
+                    if (part.getComparisonPartColorId() != null) {
+                        continue;
+                    }
                     rowNum = processStatement(st, part.getId(), part.getNumber().trim(), LoadNumberType.MAIN, rowNum);
                     for (String number : Arrays.asList(part.getColorNumber().split(","))) {
                         rowNum = processStatement(st, part.getId(), number.trim(), LoadNumberType.COLOR, rowNum);
@@ -120,8 +128,9 @@ public class SetDataLoader {
         for (RemoteSetPartDto dto : setParts) {
             SetPartEntity entity = new SetPartEntity();
             entity.setSet(setEntity);
-            Long partColorId = partColorRepository
-                    .getPartColorIdByPartColorNumberAndPartNumber(dto.getNumber(), dto.getColorNumber().split(",")[0].trim());
+            Long partColorId = Optional.ofNullable(dto.getComparisonPartColorId()).orElse(partColorRepository
+                    .getPartColorIdByPartColorNumberAndPartNumber(dto.getNumber(), dto.getColorNumber().split(",")[0].trim()));
+
             if (partColorId == null) {
                 throw new ValidationException(MessageFormat.format(PART_NOT_FOUND, dto.getNumber(), dto.getColorNumber()));
             }

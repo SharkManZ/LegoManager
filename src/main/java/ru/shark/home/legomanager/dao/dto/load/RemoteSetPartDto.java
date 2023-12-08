@@ -7,6 +7,7 @@ public class RemoteSetPartDto {
     private String colorNumber;
     private String name;
     private String imgUrl;
+    private Long comparisonPartColorId;
 
     public Long getId() {
         return id;
@@ -54,5 +55,13 @@ public class RemoteSetPartDto {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public Long getComparisonPartColorId() {
+        return comparisonPartColorId;
+    }
+
+    public void setComparisonPartColorId(Long comparisonPartColorId) {
+        this.comparisonPartColorId = comparisonPartColorId;
     }
 }

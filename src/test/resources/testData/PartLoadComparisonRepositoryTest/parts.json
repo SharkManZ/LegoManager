@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Brick 1x4",
+    "numbers": [
+      {
+        "number": "3010",
+        "main": true
+      },
+      {
+        "number": "30101"
+      },
+      {
+        "number": "30102"
+      }
+    ],
+    "category": "Brick",
+    "colors": [
+      {
+        "color": "Black",
+        "numbers": [
+          {
+            "number": "112231",
+            "main": true
+          },
+          {
+            "number": "898"
+          },
+          {
+            "number": "899"
+          }
+        ]
+      },
+      {
+        "color": "Red",
+        "numbers": [
+          {
+            "number": "332221",
+            "main": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Brick 1x4",
+    "numbers": [
+      {
+        "number": "3011",
+        "main": true
+      }
+    ],
+    "category": "Brick",
+    "colors": [
+      {
+        "color": "Black",
+        "numbers": [
+          {
+            "number": "1122311",
+            "main": true
+          }
+        ]
+      },
+      {
+        "color": "Red",
+        "numbers": [
+          {
+            "number": "3322211",
+            "main": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Brick 2x4",
+    "numbers": [
+      {
+        "number": "3001",
+        "main": true
+      }
+    ],
+    "category": "Brick"
+  }
+]

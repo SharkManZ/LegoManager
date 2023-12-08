@@ -1,7 +1,5 @@
 package ru.shark.home.legomanager.services;
 
-import com.google.common.collect.Maps;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.common.services.BaseLogicService;
@@ -9,6 +7,8 @@ import ru.shark.home.common.services.dto.PageRequest;
 import ru.shark.home.common.services.dto.response.BaseResponse;
 import ru.shark.home.legomanager.dao.dto.load.PartLoadSkipDto;
 import ru.shark.home.legomanager.dao.dto.load.RemoteSetPartDto;
+import ru.shark.home.legomanager.dao.entity.PartColorEntity;
+import ru.shark.home.legomanager.dao.repository.PartLoadComparisonRepository;
 import ru.shark.home.legomanager.datamanager.PartColorDataManager;
 import ru.shark.home.legomanager.datamanager.PartLoadSkipDataManager;
 import ru.shark.home.legomanager.exception.RemoteDataException;
@@ -17,10 +17,10 @@ import ru.shark.home.legomanager.services.dto.RemoteSetPartsDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static ru.shark.home.common.common.ErrorConstants.ERR_500;
 
 @Component
@@ -34,37 +34,7 @@ public class LoadService extends BaseLogicService {
     private RemoteDataProvider remoteDataProvider;
     private SetDataLoader setDataLoader;
     private PartLoadSkipDataManager partLoadSkipDataManager;
-    private final Map<String, Pair<String, String>> partsComparison;
-
-    public LoadService() {
-        partsComparison = Maps.newHashMap();
-        partsComparison.put("6628_Black Technic, Pin with Friction Ridges and Tow Ball (Undetermined Type)",
-                Pair.of("6628a", "4184169"));
-        partsComparison.put("6628_Red Technic, Pin with Friction Ridges and Tow Ball (Undetermined Type)",
-                Pair.of("6628a", "6254216"));
-        partsComparison.put("66645_Plastic Sails with '42105', 'Kool Keels', 'Anchor Bouy', and Waves with Dots Pattern, Sheet of 2",
-                Pair.of("66645", "6289128"));
-        partsComparison.put("5102c10_Black Hose, Pneumatic 4mm D. 10L / 8.0cm",
-                Pair.of("5102c10", "6217913"));
-        partsComparison.put("44567_Black Hinge Plate 1 x 2 Locking with 1 Finger on Side (Undetermined Type)",
-                Pair.of("44567b", "4185620"));
-        partsComparison.put("51011u_Black Tire 17.5mm D. x 6mm with Shallow Staggered Treads (Undetermined Type)",
-                Pair.of("92409", "4617848"));
-        partsComparison.put("4532_White Container, Cupboard 2 x 3 x 2 (Undetermined Type)",
-                Pair.of("4532", "4619665"));
-        partsComparison.put("x77ac200_Black String, Cord Thin 200cm",
-                Pair.of("x77ac200", "4297719"));
-        partsComparison.put("2850_Light Bluish Gray Technic Engine Cylinder (Undetermined Type)",
-                Pair.of("2850a", "4234251"));
-        partsComparison.put("4532_Reddish Brown Container, Cupboard 2 x 3 x 2 (Undetermined Type)",
-                Pair.of("4532", "6132732"));
-        partsComparison.put("x77cc200_Dark Bluish Gray String, Cord Medium Thickness 200cm",
-                Pair.of("x77cc200", "6404233"));
-        partsComparison.put("x77cc350_Dark Bluish Gray String, Cord Medium Thickness 350cm",
-                Pair.of("x77cc350", "6404245"));
-        partsComparison.put("x77cc650_Dark Bluish Gray String, Cord Medium Thickness 650cm",
-                Pair.of("x77cc650", "6371192"));
-    }
+    private PartLoadComparisonRepository partLoadComparisonRepository;
 
     public BaseResponse checkParts(String setNumber) {
         BaseResponse response;
@@ -158,7 +128,6 @@ public class LoadService extends BaseLogicService {
         int idx = 0;
         long id = 0L;
         boolean tableStarted = false;
-        RemoteSetPartsDto result = new RemoteSetPartsDto();
         List<RemoteSetPartDto> parts = new ArrayList<>();
         RemoteSetPartDto dto;
         while (idx < rows.length) {
@@ -193,6 +162,9 @@ public class LoadService extends BaseLogicService {
                         .replace(" ", "")
                         .replace("or", ", ")
                 );
+                if (dto.getColorNumber().contains("CodeMissing")) {
+                    dto.setColorNumber("");
+                }
                 parts.add(checkPartComparison(dto));
                 idx = idx + 3;
             } else if (tableStarted && row.contains("Extra Items")) {
@@ -204,11 +176,15 @@ public class LoadService extends BaseLogicService {
     }
 
     private RemoteSetPartDto checkPartComparison(RemoteSetPartDto dto) {
-        String partKey = dto.getNumber().trim() + "_" + dto.getName().trim().replaceAll("\\s+", " ");
-        Pair<String, String> comparison = partsComparison.getOrDefault(partKey, null);
-        if (comparison != null) {
-            dto.setNumber(comparison.getLeft());
-            dto.setColorNumber(comparison.getRight());
+        if (!isEmpty(dto.getColorNumber())) {
+            return dto;
+        }
+        String number = dto.getNumber().trim();
+        String name = dto.getName().trim().replaceAll("\\s+", " ");
+        PartColorEntity comparisonPartColor = partLoadComparisonRepository.findPartColorByLoadPartComparisonByNumberAndName(number, name);
+        if (comparisonPartColor != null) {
+            dto.setComparisonPartColorId(comparisonPartColor.getId());
+            return dto;
         }
         return dto;
     }
@@ -231,5 +207,10 @@ public class LoadService extends BaseLogicService {
     @Autowired
     public void setPartLoadSkipDataManager(PartLoadSkipDataManager partLoadSkipDataManager) {
         this.partLoadSkipDataManager = partLoadSkipDataManager;
+    }
+
+    @Autowired
+    public void setPartLoadComparisonRepository(PartLoadComparisonRepository partLoadComparisonRepository) {
+        this.partLoadComparisonRepository = partLoadComparisonRepository;
     }
 }

@@ -22,3 +22,7 @@ spring:
       - mappings/userParts.xml
       - mappings/loader.xml
     show-sql: true
+logging:
+  level:
+    ru: INFO
+    org: INFO

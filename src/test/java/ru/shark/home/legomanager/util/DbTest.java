@@ -71,6 +71,10 @@ public class DbTest {
         testDataLoader.loadPartSkip(files);
     }
 
+    protected void loadPartLoadComparison(String... files) {
+        testDataLoader.loadPartLoadComparison(files);
+    }
+
     protected <E extends BaseEntity> boolean isDeleted(E entity) {
         Long count = (Long) em.createQuery("select count(e.id) from " + entity.getClass().getSimpleName() + " e " +
                         "where e.id = " +

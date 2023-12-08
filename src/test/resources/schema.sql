@@ -198,3 +198,17 @@ CREATE TABLE LEGO_PART_LOAD_SKIP
     LEGO_PATTERN       CHARACTER VARYING(255) NOT NULL,
     CONSTRAINT PK_PART_LOAD_SKIP PRIMARY KEY (LEGO_ID)
 );
+
+-- Таблица сопоставления деталей без номера с заведенной деталью
+create sequence LEGO_PART_LOAD_COMPARISON_SEQ;
+create table LEGO_PART_LOAD_COMPARISON
+(
+    LEGO_ID				BIGINT not null,
+    LEGO_LOAD_NUMBER	character varying (50) not null,
+    LEGO_PART_NAME		character VARYING(255) not null,
+    LEGO_PART_COLOR_ID	BIGINT not null,
+    constraint PK_LEGO_PART_LOAD_COMPARISON primary key (LEGO_ID),
+    constraint FK_PART_LOAD_COMPARISON_PART_COLOR_NUMBER foreign key (LEGO_PART_COLOR_ID) references lego_part_color (LEGO_ID)
+);
+alter table LEGO_PART_LOAD_COMPARISON
+    add constraint UK_PART_LOAD_COMPARISON_NUMBER_NAME unique (LEGO_LOAD_NUMBER, LEGO_PART_NAME);

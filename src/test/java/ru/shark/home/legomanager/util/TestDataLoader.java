@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.shark.home.legomanager.dao.entity.*;
+import ru.shark.home.legomanager.dao.entity.load.PartLoadComparisonEntity;
 import ru.shark.home.legomanager.dao.entity.load.PartLoadSkipEntity;
 import ru.shark.home.legomanager.dao.repository.*;
 import ru.shark.home.legomanager.util.dto.*;
@@ -26,6 +27,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class TestDataLoader {
     private static final ObjectMapper mapper = new JsonMapper();
     private static final List<String> cleanUpLst = Arrays.asList(
+            "LEGO_PART_LOAD_COMPARISON",
             "LEGO_PART_LOAD_SKIP",
             "LEGO_USER_PARTS",
             "LEGO_USER_SETS",
@@ -82,6 +84,9 @@ public class TestDataLoader {
 
     @Autowired
     private PartLoadSkipRepository partLoadSkipRepository;
+
+    @Autowired
+    private PartLoadComparisonRepository partLoadComparisonRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -345,6 +350,31 @@ public class TestDataLoader {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void loadPartLoadComparison(String... files) {
+        for (String file : files) {
+            try {
+                File fl = new File(this.getClass().getResource("/testData/" + file).toURI());
+                List<PartLoadComparisonTestDto> list = mapper.readValue(fl, new TypeReference<>() {
+                });
+
+                for (PartLoadComparisonTestDto dto : list) {
+                    PartLoadComparisonEntity entity = new PartLoadComparisonEntity();
+                    entity.setLoadNumber(dto.getNumber());
+                    entity.setPartName(dto.getName());
+                    entity.setPartColor(partColorRepository.getPartColorByNumberPartNumber(dto.getPartColorNumber(), dto.getPartNumber()).iterator().next());
+                    partLoadComparisonRepository.save(entity);
+                }
+
+            } catch (URISyntaxException e) {
+                System.out.println("missing file: " + "/json/" + file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private UserEntity mapTestUserToEntity(UserTestDto dto) {

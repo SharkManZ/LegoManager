@@ -3,6 +3,7 @@ package ru.shark.home.legomanager.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shark.home.legomanager.dao.entity.*;
+import ru.shark.home.legomanager.dao.entity.load.PartLoadComparisonEntity;
 import ru.shark.home.legomanager.dao.entity.load.PartLoadSkipEntity;
 
 import javax.persistence.EntityManager;
@@ -164,6 +165,22 @@ public class TestEntityFinder {
     public PartLoadSkipEntity findPartLoadSkip(String pattern) {
         return (PartLoadSkipEntity) em.createQuery("select p from PartLoadSkipEntity p where lower(p.pattern) = :pattern")
                 .setParameter("pattern", pattern.toLowerCase())
+                .getSingleResult();
+    }
+
+    public Long findPartLoadComparisonId(String number, String name) {
+        return (Long) em.createQuery("select lc.id from PartLoadComparisonEntity lc " +
+                "where lower(lc.loadNumber) = lower(:number) and lower(lc.partName) = lower(:name)")
+                .setParameter("number", number)
+                .setParameter("name", name)
+                .getSingleResult();
+    }
+
+    public PartLoadComparisonEntity findPartLoadComparison(String number, String name) {
+        return (PartLoadComparisonEntity) em.createQuery("select lc from PartLoadComparisonEntity lc " +
+                        "where lower(lc.loadNumber) = lower(:number) and lower(lc.partName) = lower(:name)")
+                .setParameter("number", number)
+                .setParameter("name", name)
                 .getSingleResult();
     }
 }
