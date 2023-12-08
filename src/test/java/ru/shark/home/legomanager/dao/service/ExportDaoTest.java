@@ -25,6 +25,7 @@ public class ExportDaoTest extends DbTest {
         loadSets("ExportDaoTest/sets.json");
         loadUsers("ExportDaoTest/users.json");
         loadPartSkip("ExportDaoTest/partLoadSkip.json");
+        loadPartLoadComparison("ExportDaoTest/loadComparison.json");
     }
 
     @Autowired
@@ -144,5 +145,16 @@ public class ExportDaoTest extends DbTest {
         // THEN
         Assertions.assertEquals(2L, list.size());
         Assertions.assertTrue(list.stream().allMatch(item -> !isBlank(item.getPtn())));
+    }
+
+    @Test
+    public void exportPartLoadComparison() {
+        // WHEN
+        List<PartLoadComparisonDto> list = exportDao.exportPartLoadComparison();
+
+        // THEN
+        Assertions.assertEquals(2L, list.size());
+        Assertions.assertTrue(list.stream().allMatch(item -> !isBlank(item.getNumber()) && !isBlank(item.getName()) &&
+                !isBlank(item.getPartNumber()) && !isBlank(item.getPartColorNumber())));
     }
 }

@@ -6,6 +6,7 @@ import ru.shark.home.legomanager.dao.dto.export.ColorDictionaryDto;
 import ru.shark.home.legomanager.dao.dto.export.NumberDictionaryDto;
 import ru.shark.home.legomanager.dao.dto.export.PartCategoryDictionaryDto;
 import ru.shark.home.legomanager.dao.dto.export.PartDictionaryDto;
+import ru.shark.home.legomanager.dao.dto.export.PartLoadComparisonDto;
 import ru.shark.home.legomanager.dao.dto.export.PartLoadSkipDto;
 import ru.shark.home.legomanager.dao.dto.export.SeriesDictionaryDto;
 import ru.shark.home.legomanager.dao.dto.export.SetDictionaryDto;
@@ -24,10 +25,12 @@ import ru.shark.home.legomanager.dao.entity.SetPartEntity;
 import ru.shark.home.legomanager.dao.entity.UserEntity;
 import ru.shark.home.legomanager.dao.entity.UserPartEntity;
 import ru.shark.home.legomanager.dao.entity.UserSetEntity;
+import ru.shark.home.legomanager.dao.entity.load.PartLoadComparisonEntity;
 import ru.shark.home.legomanager.dao.entity.load.PartLoadSkipEntity;
 import ru.shark.home.legomanager.dao.repository.ColorRepository;
 import ru.shark.home.legomanager.dao.repository.PartCategoryRepository;
 import ru.shark.home.legomanager.dao.repository.PartColorRepository;
+import ru.shark.home.legomanager.dao.repository.PartLoadComparisonRepository;
 import ru.shark.home.legomanager.dao.repository.PartLoadSkipRepository;
 import ru.shark.home.legomanager.dao.repository.PartRepository;
 import ru.shark.home.legomanager.dao.repository.SeriesRepository;
@@ -57,6 +60,7 @@ public class ExportDao {
     private UserSetsRepository userSetsRepository;
     private UserPartsRepository userPartsRepository;
     private PartLoadSkipRepository partLoadSkipRepository;
+    private PartLoadComparisonRepository partLoadComparisonRepository;
 
     /**
      * Экспорт цветов.
@@ -103,6 +107,22 @@ public class ExportDao {
                 .stream()
                 .map(entity -> new PartLoadSkipDto(entity.getPattern()))
                 .collect(Collectors.toList());
+    }
+
+    public List<PartLoadComparisonDto> exportPartLoadComparison() {
+        return partLoadComparisonRepository.getAllPartLoadComparison()
+                .stream()
+                .map(this::partLoadComparisonToDto)
+                .collect(Collectors.toList());
+    }
+
+    private PartLoadComparisonDto partLoadComparisonToDto(PartLoadComparisonEntity entity) {
+        PartLoadComparisonDto dto = new PartLoadComparisonDto();
+        dto.setNumber(entity.getLoadNumber());
+        dto.setName(entity.getPartName());
+        dto.setPartNumber(entity.getPartColor().getPart().getNumbers().stream().filter(PartNumberEntity::getMain).findFirst().get().getNumber());
+        dto.setPartColorNumber(entity.getPartColor().getNumbers().stream().filter(PartColorNumberEntity::getMain).findFirst().get().getNumber());
+        return dto;
     }
 
     private UserDictionaryDto userEntityToDictionary(UserEntity entity) {
@@ -256,5 +276,10 @@ public class ExportDao {
     @Autowired
     public void setPartLoadSkipRepository(PartLoadSkipRepository partLoadSkipRepository) {
         this.partLoadSkipRepository = partLoadSkipRepository;
+    }
+
+    @Autowired
+    public void setPartLoadComparisonRepository(PartLoadComparisonRepository partLoadComparisonRepository) {
+        this.partLoadComparisonRepository = partLoadComparisonRepository;
     }
 }

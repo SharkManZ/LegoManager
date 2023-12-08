@@ -6,6 +6,8 @@ import ru.shark.home.common.dao.repository.BaseRepository;
 import ru.shark.home.legomanager.dao.entity.PartColorEntity;
 import ru.shark.home.legomanager.dao.entity.load.PartLoadComparisonEntity;
 
+import java.util.List;
+
 public interface PartLoadComparisonRepository extends BaseRepository<PartLoadComparisonEntity> {
 
     /**
@@ -18,4 +20,12 @@ public interface PartLoadComparisonRepository extends BaseRepository<PartLoadCom
     @Query(name = "findPartColorByLoadPartComparisonByNumberAndName")
     PartColorEntity findPartColorByLoadPartComparisonByNumberAndName(@Param("number") String number,
                                                                      @Param("name") String name);
+
+    /**
+     * Возвращает все сопоставления деталей.
+     *
+     * @return коллекция сопоставлений
+     */
+    @Query(value = "select p from PartLoadComparisonEntity p ")
+    List<PartLoadComparisonEntity> getAllPartLoadComparison();
 }
