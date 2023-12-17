@@ -49,6 +49,7 @@ public class UsersDao extends BaseDao<UserEntity> {
                     UserEntity.getDescription(), entity.getName()));
         }
 
+        entity.setName(entity.getName().trim());
         return super.save(entity);
     }
 

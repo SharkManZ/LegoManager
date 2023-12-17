@@ -48,7 +48,7 @@ public class ColorDao extends BaseDao<ColorEntity> {
             throw new IllegalArgumentException(MessageFormat.format(ENTITY_ALREADY_EXISTS,
                     ColorEntity.getDescription(), entity.getName()));
         }
-
+        entity.setName(entity.getName().trim());
         return super.save(entity);
     }
 

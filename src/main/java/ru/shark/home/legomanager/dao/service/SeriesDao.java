@@ -77,6 +77,7 @@ public class SeriesDao extends BaseDao<SeriesEntity> {
                     SeriesEntity.getDescription(), entity.getName()));
         }
 
+        entity.setName(entity.getName().trim());
         return super.save(entity);
     }
 

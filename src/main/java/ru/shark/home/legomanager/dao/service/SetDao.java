@@ -96,6 +96,8 @@ public class SetDao extends BaseDao<SetEntity> {
             throw new ValidationException(MessageFormat.format(ENTITY_ALREADY_EXISTS, SetEntity.getDescription(),
                     entity.getNumber()));
         }
+
+        entity.setName(entity.getName().trim());
         return super.save(entity);
     }
 

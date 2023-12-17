@@ -106,6 +106,7 @@ public class PartDao extends BaseDao<PartEntity> {
             }
         }
         PartEntity entity = getConverterUtil().dtoToEntity(dto, PartEntity.class);
+        entity.setName(entity.getName().trim());
         entity = super.save(entity);
         PartDto result = getConverterUtil().entityToDto(entity, PartDto.class);
         List<PartNumberEntity> numberDtos = partNumberDao.savePartNumbers(entity, numbersListDto);
